@@ -4,9 +4,9 @@
   
   
   <entry>
-    <title></title>
-    <link href="/2026/06/01/suanfa/"/>
-    <url>/2026/06/01/suanfa/</url>
+    <title>算法</title>
+    <link href="/2026/06/01/%E7%AE%97%E6%B3%95/"/>
+    <url>/2026/06/01/%E7%AE%97%E6%B3%95/</url>
     
     <content type="html"><![CDATA[<h1 id="suanfa"><a href="#suanfa" class="headerlink" title="suanfa"></a>suanfa</h1><ol><li>两数之和💚哈希表优化</li><li>字母异位词分组💚排序+哈希表优化</li><li>最长连续序列❤️哈希表+减少重复不必要计算</li><li>移动零💛快慢指针+交换</li><li>盛最多水的容器💚左右指针+贪心</li><li>三数之和 ❤️左右指针+排序+n方复杂度</li><li>接雨水❤️左右指针+贪心</li><li>无重复字符的最长子串❤️滑动窗口</li><li>找到字符串中所有字母异位词❤️滑动窗口+Arrays.equals()</li><li>和为 K 的子数组❤️不能用滑动窗口。前缀和+两数之和（记录所有可能结果）</li></ol><table><thead><tr><th>特性</th><th><code>new String(char[] chars)</code></th><th><code>Arrays.toString(char[] chars)</code></th></tr></thead><tbody><tr><td><strong>输出格式</strong></td><td>纯字符拼接，无任何额外符号（如 <code>world</code>）</td><td>带方括号<code>[]</code>、逗号 + 空格分隔，char 元素无单引号（如 <code>[w, o, r, l, d]</code>）</td></tr><tr><td><strong>设计目的</strong></td><td>将 char 数组转换为<strong>业务可用的常规字符串</strong></td><td>格式化展示数组的<strong>结构和内容</strong>（用于调试 &#x2F; 日志输出）</td></tr><tr><td><strong>适用数组类型</strong></td><td>仅支持 <code>char[]</code> 类型（传入 int []&#x2F;String [] 会编译报错）</td><td>通用方法，支持所有类型数组（int []、String []、char [] 等）</td></tr><tr><td><strong>底层逻辑</strong></td><td>String 类的构造方法，直接拼接字符数组的每个元素</td><td>Arrays 工具类的静态方法，遍历数组并拼接成 “数组格式字符串”</td></tr></tbody></table><p><a href="https://blog.csdn.net/devnn/article/details/82716447">【Java】Java双端队列Deque使用详解_dequeuejava-CSDN博客</a></p><p>offer()队列满了返回false，add()队列满了抛异常。所以生产环境用offer，开发和测试环境用add</p>]]></content>
     
