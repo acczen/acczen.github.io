@@ -1,0 +1,1034 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="使用单调双端队列在 O(n) 时间内求出每个滑动窗口的最大值，理解&quot;无用元素剔除&quot;的核心思想">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 239. 滑动窗口最大值（sliding-window-maximum）">
+<meta property="og:url" content="http://example.com/2026/07/13/11-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="使用单调双端队列在 O(n) 时间内求出每个滑动窗口的最大值，理解&quot;无用元素剔除&quot;的核心思想">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T09:57:36.134Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="Hot 100">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="单调队列">
+<meta property="article:tag" content="双端队列">
+<meta property="article:tag" content="滑动窗口">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>LeetCode 239. 滑动窗口最大值（sliding-window-maximum） - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="LeetCode 239. 滑动窗口最大值（sliding-window-maximum）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LeetCode 239. 滑动窗口最大值（sliding-window-maximum）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sliding-window-maximum/">LeetCode 239. sliding-window-maximum</a></p>
+</blockquote>
+<p>给你一个整数数组 <code>nums</code>，有一个大小为 <code>k</code> 的滑动窗口从数组的最左侧移动到最右侧。你只可以看到在滑动窗口内的 <code>k</code> 个数字。滑动窗口每次只向右移动一位。</p>
+<p>返回 <strong>滑动窗口中的最大值</strong>。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs subunit">输入：nums = [1,3,<span class="hljs-string">-1</span>,<span class="hljs-string">-3</span>,5,3,6,7], k = 3<br>输出：[3,3,5,5,6,7]<br>解释：<br>滑动窗口的位置                最大值<br>---------------               -----<br>[1  3  <span class="hljs-string">-1</span>] <span class="hljs-string">-3</span>  5  3  6  7       3<br> 1 [3  <span class="hljs-string">-1</span>  <span class="hljs-string">-3</span>] 5  3  6  7       3<br> 1  3 [<span class="hljs-string">-1</span>  <span class="hljs-string">-3</span>  5] 3  6  7       5<br> 1  3  <span class="hljs-string">-1</span> [<span class="hljs-string">-3</span>  5  3] 6  7       5<br> 1  3  <span class="hljs-string">-1</span>  <span class="hljs-string">-3</span> [5  3  6] 7       6<br> 1  3  <span class="hljs-string">-1</span>  <span class="hljs-string">-3</span>  5 [3  6  7]      7<br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs inform7">输入：nums = <span class="hljs-comment">[1]</span>, k = 1<br>输出：<span class="hljs-comment">[1]</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>$1 \le \text{nums.length} \le 10^5$</li>
+<li>$-10^4 \le \text{nums}[i] \le 10^4$</li>
+<li>$1 \le k \le \text{nums.length}$</li>
+</ul>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们不妨先问自己一个问题：</p>
+<blockquote>
+<p>如果没有任何时间限制，最简单的做法是什么？</p>
+</blockquote>
+<p>当然是<strong>暴力枚举</strong>——对每一个窗口，遍历其中的 $k$ 个元素，找出最大值。这样一共有 $n - k + 1$ 个窗口，每个窗口花 $O(k)$ 时间，总时间复杂度是 $O(n \times k)$。</p>
+<p>那么问题来了：<strong>为什么暴力不够好？瓶颈到底出在哪里？</strong></p>
+<p>试试在脑子里跑一遍示例。当窗口从 <code>[1, 3, -1]</code> 滑到 <code>[3, -1, -3]</code> 时，你看看这两个窗口：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs subunit">[1, 3, <span class="hljs-string">-1</span>]   → 最大值是 3<br>[3, <span class="hljs-string">-1</span>, <span class="hljs-string">-3</span>]  → 最大值还是 3<br></code></pre></td></tr></table></figure>
+
+<p>两个窗口共享了两个元素 <code>3</code> 和 <code>-1</code>，但暴力做法会<strong>把共享的元素重新扫描一遍</strong>。这就是浪费的根源。</p>
+<blockquote>
+<p>相邻窗口之间只有两个变化：一个元素离开，一个元素进入。我们能不能利用这个”增量”信息，避免重复扫描？</p>
+</blockquote>
+<p>顺着这个思路，我们的需求变得清晰了：我们需要一个数据结构，能在窗口滑动的时候：</p>
+<ol>
+<li>快速知道<strong>当前窗口的最大值</strong>是谁</li>
+<li>当一个元素滑出窗口左边界时，能把它<strong>移除</strong></li>
+<li>当新元素进入窗口时，能<strong>更新</strong>最大值信息</li>
+</ol>
+<p>这听起来像什么？——能两端操作、还能快速查最大值的队列。</p>
+<p>下一个问题：</p>
+<blockquote>
+<p>如果新进来的元素 $x$ 比窗口里某些”老元素”大，那些老元素还有机会成为最大值吗？</p>
+</blockquote>
+<p>仔细想想：只要 $x$ 还在窗口里，比它小的元素就永远不可能成为最大值。因为 $x$ 既比它们大，又比它们<strong>更靠右</strong>（更晚离开窗口）。</p>
+<p>这意味着：<strong>比新元素小的老元素，可以直接丢弃。</strong> 它们是”无用”的。</p>
+<p>于是我们得到了核心洞察：维护一个<strong>单调递减</strong>的序列。窗口内的元素值从左到右递减，队首永远是当前窗口的最大值。当新元素进来时，从队尾把比它小的统统踢掉，再把自己加到队尾。</p>
+<p>这就是<strong>单调队列</strong>的思想。</p>
+<h2 id="解法：单调双端队列"><a href="#解法：单调双端队列" class="headerlink" title="解法：单调双端队列"></a>解法：单调双端队列</h2><p>我们选用双端队列（<code>Deque</code>），但里面存的不是元素值，而是<strong>元素的下标</strong>。为什么存下标？因为我们需要判断队首元素是否已经滑出窗口的左边界——只有下标能告诉我们这件事。</p>
+<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><p>遍历数组，对于每个下标 $i$：</p>
+<ol>
+<li><strong>清理过期元素</strong>：检查队首下标，如果 $\text{队首} \le i - k$，说明它已经不在当前窗口里了，从队首弹出。</li>
+<li><strong>维护单调性</strong>：从队尾开始，把所有值 $\le \text{nums}[i]$ 的元素下标弹出——它们遇到 $\text{nums}[i]$ 就永远没机会当最大值了。</li>
+<li><strong>加入当前元素</strong>：把 $i$ 加入队尾。</li>
+<li><strong>收集答案</strong>：当 $i \ge k - 1$（第一个窗口形成之后），队首对应的值就是当前窗口的最大值。</li>
+</ol>
+<h3 id="为什么选择双端队列？"><a href="#为什么选择双端队列？" class="headerlink" title="为什么选择双端队列？"></a>为什么选择双端队列？</h3><table>
+<thead>
+<tr>
+<th>备选方案</th>
+<th>操作</th>
+<th>复杂度</th>
+<th>问题</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>大顶堆</td>
+<td>堆顶即最大值</td>
+<td>$O(n \log n)$</td>
+<td>删除过期元素时，堆不支持高效删除<strong>任意</strong>元素，需要”惰性删除”（延迟清理），实现繁琐</td>
+</tr>
+<tr>
+<td>平衡树（TreeMap）</td>
+<td>可增删查</td>
+<td>$O(n \log k)$</td>
+<td>可行但重，常数大，且引入不必要的排序开销</td>
+</tr>
+<tr>
+<td>单调队列</td>
+<td>队首即最大值</td>
+<td>$O(n)$</td>
+<td>每个元素入队一次、出队一次，摊还 $O(1)$；只处理”两端”，刚好匹配滑动窗口的语义</td>
+</tr>
+</tbody></table>
+<p>单调队列是这道题的最优解——时间线性，空间可控，而且思路直观地对应着”滑动窗口”的物理过程。</p>
+<h3 id="手动模拟"><a href="#手动模拟" class="headerlink" title="手动模拟"></a>手动模拟</h3><p>以 <code>nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3</code> 为例，队列存的是<strong>下标</strong>（为了方便阅读，下面同时标注对应的值）：</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>i</th>
+<th>nums[i]</th>
+<th>窗口范围</th>
+<th>清理过期</th>
+<th>弹出队尾</th>
+<th>入队后队列</th>
+<th>答案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><code>[0(1)]</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+<td>—</td>
+<td>—</td>
+<td>弹出 0（1≤3 太小了）</td>
+<td><code>[1(3)]</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>3</td>
+<td>2</td>
+<td>-1</td>
+<td><code>[0,2]</code></td>
+<td>—</td>
+<td>—</td>
+<td><code>[1(3), 2(-1)]</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3</td>
+<td>-3</td>
+<td><code>[1,3]</code></td>
+<td>—</td>
+<td>—</td>
+<td><code>[1(3), 2(-1), 3(-3)]</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td>5</td>
+<td>4</td>
+<td>5</td>
+<td><code>[2,4]</code></td>
+<td>1 过期，弹出</td>
+<td>全部弹出（都比 5 小）</td>
+<td><code>[4(5)]</code></td>
+<td>5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>5</td>
+<td>3</td>
+<td><code>[3,5]</code></td>
+<td>—</td>
+<td>—</td>
+<td><code>[4(5), 5(3)]</code></td>
+<td>5</td>
+</tr>
+<tr>
+<td>7</td>
+<td>6</td>
+<td>6</td>
+<td><code>[4,6]</code></td>
+<td>—</td>
+<td>弹出 5（3≤6）</td>
+<td><code>[6(6)]</code></td>
+<td>6</td>
+</tr>
+<tr>
+<td>8</td>
+<td>7</td>
+<td>7</td>
+<td><code>[5,7]</code></td>
+<td>—</td>
+<td>弹出 6（6≤7）</td>
+<td><code>[7(7)]</code></td>
+<td>7</td>
+</tr>
+</tbody></table>
+<p>每一步中，队首始终指向当前窗口的最大值。注意第 5 步——当 5 进来时，队列里所有老元素都被干掉了，因为它们都比 5 小且更早过期，彻底”无用”。</p>
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>分析</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>时间复杂度</td>
+<td>$O(n)$ — 每个元素恰好入队一次、出队一次，所有队列操作摊还下来都是常数时间</td>
+</tr>
+<tr>
+<td>空间复杂度</td>
+<td>$O(k)$ — 队列最多同时持有 $k$ 个元素（窗口大小），最坏情况即数组严格递减时</td>
+</tr>
+</tbody></table>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayDeque;<br><span class="hljs-keyword">import</span> java.util.Deque;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[] maxSlidingWindow(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> k) &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        <span class="hljs-type">int</span>[] ans = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[n - k + <span class="hljs-number">1</span>];<br>        <span class="hljs-comment">// 双端队列，存储的是元素下标</span><br>        Deque&lt;Integer&gt; deque = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayDeque</span>&lt;&gt;();<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// 1. 清理过期元素：队首下标如果已滑出窗口，就移除</span><br>            <span class="hljs-keyword">if</span> (!deque.isEmpty() &amp;&amp; deque.peekFirst() &lt;= i - k) &#123;<br>                deque.pollFirst();<br>            &#125;<br><br>            <span class="hljs-comment">// 2. 维护单调递减：从队尾弹出所有值 &lt;= 当前值的下标</span><br>            <span class="hljs-comment">//    因为它们面对 nums[i] 永远不可能成为最大值了</span><br>            <span class="hljs-keyword">while</span> (!deque.isEmpty() &amp;&amp; nums[deque.peekLast()] &lt;= nums[i]) &#123;<br>                deque.pollLast();<br>            &#125;<br><br>            <span class="hljs-comment">// 3. 将当前下标加入队尾</span><br>            deque.offerLast(i);<br><br>            <span class="hljs-comment">// 4. 窗口形成后（i &gt;= k-1），队首即为当前窗口最大值</span><br>            <span class="hljs-keyword">if</span> (i &gt;= k - <span class="hljs-number">1</span>) &#123;<br>                ans[i - k + <span class="hljs-number">1</span>] = nums[deque.peekFirst()];<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> collections <span class="hljs-keyword">import</span> deque<br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">maxSlidingWindow</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], k: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>        n = <span class="hljs-built_in">len</span>(nums)<br>        ans = []<br>        <span class="hljs-comment"># 双端队列，存储的是元素下标</span><br>        dq = deque()<br><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-comment"># 1. 清理过期元素：队首下标如果已滑出窗口，就移除</span><br>            <span class="hljs-keyword">if</span> dq <span class="hljs-keyword">and</span> dq[<span class="hljs-number">0</span>] &lt;= i - k:<br>                dq.popleft()<br><br>            <span class="hljs-comment"># 2. 维护单调递减：从队尾弹出所有值 &lt;= 当前值的下标</span><br>            <span class="hljs-comment">#    因为它们面对 nums[i] 永远不可能成为最大值了</span><br>            <span class="hljs-keyword">while</span> dq <span class="hljs-keyword">and</span> nums[dq[-<span class="hljs-number">1</span>]] &lt;= nums[i]:<br>                dq.pop()<br><br>            <span class="hljs-comment"># 3. 将当前下标加入队尾</span><br>            dq.append(i)<br><br>            <span class="hljs-comment"># 4. 窗口形成后（i &gt;= k-1），队首即为当前窗口最大值</span><br>            <span class="hljs-keyword">if</span> i &gt;= k - <span class="hljs-number">1</span>:<br>                ans.append(nums[dq[<span class="hljs-number">0</span>]])<br><br>        <span class="hljs-keyword">return</span> ans<br></code></pre></td></tr></table></figure>
+
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
+<p>学到了什么？</p>
+</blockquote>
+<p>单调队列的核心不是”队列”这个数据结构本身，而是**”无用元素剔除”**的思维模式——当一个元素的存在被另一个更优的元素完全覆盖时，它可以被安全地丢弃。这种”一旦没用了就扔掉”的思想，在单调栈、双指针、贪心等场景中反复出现。</p>
+<blockquote>
+<p>下次遇到类似问题，你会优先观察什么？</p>
+</blockquote>
+<p>问自己一句话：<strong>“一个元素在什么条件下会变得永远无用？”</strong>——找到这个条件，往往就找到了 $O(n)$ 解法的钥匙。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
+      
+        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
+      
+        <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="print-no-link">#滑动窗口</a>
+      
+        <a href="/tags/%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97/" class="print-no-link">#单调队列</a>
+      
+        <a href="/tags/%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97/" class="print-no-link">#双端队列</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LeetCode 239. 滑动窗口最大值（sliding-window-maximum）</div>
+      <div>http://example.com/2026/07/13/11-滑动窗口最大值/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/12-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/" title="LeetCode 76. 最小覆盖子串（minimum-window-substring）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LeetCode 76. 最小覆盖子串（minimum-window-substring）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/13-%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/" title="LeetCode 53. 最大子数组和（maximum-subarray）">
+                        <span class="hidden-mobile">LeetCode 53. 最大子数组和（maximum-subarray）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

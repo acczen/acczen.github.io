@@ -1,0 +1,923 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="给定未排序整数数组，找出数字连续的最长序列长度，要求 O(n) 时间复杂度。核心技巧：哈希集合 + 只从序列起点开始计数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 128. 最长连续序列（longest-consecutive-sequence）">
+<meta property="og:url" content="http://example.com/2026/07/13/03-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="给定未排序整数数组，找出数字连续的最长序列长度，要求 O(n) 时间复杂度。核心技巧：哈希集合 + 只从序列起点开始计数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T09:57:25.954Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="Hot 100">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="数组">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>LeetCode 128. 最长连续序列（longest-consecutive-sequence） - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="LeetCode 128. 最长连续序列（longest-consecutive-sequence）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          29 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LeetCode 128. 最长连续序列（longest-consecutive-sequence）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/longest-consecutive-sequence/">LeetCode 128. longest-consecutive-sequence</a></p>
+</blockquote>
+<p>给定一个<strong>未排序</strong>的整数数组 <code>nums</code>，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。请你设计并实现时间复杂度为 $O(n)$ 的算法解决此问题。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入：nums = <span class="hljs-string">[100,4,200,1,3,2]</span><br>输出：<span class="hljs-number">4</span><br>解释：最长数字连续序列是 <span class="hljs-string">[1, 2, 3, 4]</span>。它的长度为 <span class="hljs-number">4</span>。<br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入：nums = <span class="hljs-string">[0,3,7,2,5,8,4,6,0,1]</span><br>输出：<span class="hljs-number">9</span><br>解释：最长数字连续序列是 <span class="hljs-string">[0, 1, 2, 3, 4, 5, 6, 7, 8]</span>。<br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">输入：nums <span class="hljs-operator">=</span> []<br>输出：<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>$0 \le nums.length \le 10^5$</li>
+<li>$-10^9 \le nums[i] \le 10^9$</li>
+</ul>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们最容易想到的做法是什么？</p>
+<p>排序。把数组排好序，然后一趟扫描，看相邻元素是否连续，就能轻松找出最长连续段。这个思路清晰直接，时间复杂度 $O(n \log n)$，空间复杂度 $O(1)$（如果允许原地排序）。</p>
+<p>那么问题来了：<strong>题目为什么非要卡 $O(n)$？排序差在哪？</strong></p>
+<p>因为排序的 $O(n \log n)$ 在面对 $n &#x3D; 10^5$ 时固然能跑，但如果我们能把时间压到 $O(n)$，就说明我们真正”理解”了连续性的本质——<strong>连续意味着 <code>x</code> 和 <code>x+1</code> 之间只差 1</strong>，我们不需要”全局排序”来获得这个信息，只需要能<strong>快速查询某个数是否存在</strong>。</p>
+<p>这就引出了核心思考方向：能不能换一种数据结构，让我们能以 $O(1)$ 的代价判断”当前数的下一个数是否在数组中”？</p>
+<p>答案呼之欲出——<strong>哈希集合</strong>（<code>HashSet</code>）。</p>
+<p>把所有数扔进哈希集合里，查 <code>num + 1</code> 是否存在就是 $O(1)$ 的。现在我们从任意一个数出发，不断 <code>+1</code> 往后找，就能测出一段连续序列的长度。</p>
+<p>但是——这样真的 $O(n)$ 吗？如果每个数都向后展开一遍，最坏情况是不是 $O(n^2)$？</p>
+<p>对，这正是我们需要面对的挑战。假设数组是 <code>[1,2,3,4,5]</code>，如果我们对 <code>1</code> 展开一次得到了长度 5，然后对 <code>2</code>、<code>3</code>、<code>4</code>、<code>5</code> 又各自展开一次，就做了大量重复工作。</p>
+<p><strong>突破口在哪？</strong></p>
+<p>我们问自己一个问题：一段连续序列 <code>[x, x+1, x+2, ..., x+k]</code> 中，有哪一个位置是”独特的”——一旦我们从那里出发，就不会有人再从序列中间出发做无用功？</p>
+<p>想想看：<strong><code>x</code> 的前驱 <code>x-1</code> 不在数组中</strong>。只有起点才具备这个性质。对于 <code>x+1</code>，它的前驱 <code>x</code> 在数组中，所以它不可能是一个”新序列的起点”——它必然已经被 <code>x</code> 覆盖了。</p>
+<p>于是策略变为：</p>
+<blockquote>
+<p><strong>只从”前驱不存在”的数开始向后延伸。每一个数如果在某个序列中但不是起点，就跳过。</strong></p>
+</blockquote>
+<p>这样一来，数组中的每个数最多被访问两次：一次在外层循环判断”我是不是起点”，一次在内层 <code>while</code> 中被前驱数”扫过”。总时间复杂度稳稳地落在 $O(n)$。</p>
+<h3 id="思考链条回顾"><a href="#思考链条回顾" class="headerlink" title="思考链条回顾"></a>思考链条回顾</h3><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss">暴力枚举所有子数组 → <span class="hljs-built_in">O</span>(n³)，不可接受<br>    ↓<br>排序 + 一趟扫描 → <span class="hljs-built_in">O</span>(n log n)，不符合 <span class="hljs-built_in">O</span>(n) 要求<br>    ↓<br>哈希集合 <span class="hljs-built_in">O</span>(<span class="hljs-number">1</span>) 查找 → 但每个数都展开会 <span class="hljs-built_in">O</span>(n²)<br>    ↓<br>只从起点展开，避免重复 → <span class="hljs-built_in">O</span>(n) ✓<br></code></pre></td></tr></table></figure>
+
+<h2 id="解法：哈希集合-贪心起点扫描"><a href="#解法：哈希集合-贪心起点扫描" class="headerlink" title="解法：哈希集合 + 贪心起点扫描"></a>解法：哈希集合 + 贪心起点扫描</h2><p>这是本题的唯一最优解，没有中间过渡方案。</p>
+<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
+<li><strong>构建哈希集合</strong>：将 <code>nums</code> 中所有元素加入 <code>HashSet</code>，自动去重。</li>
+<li><strong>遍历集合中的每个数 <code>num</code></strong>：<ul>
+<li><strong>起点判断</strong>：检查 <code>num - 1</code> 是否在集合中。如果在，说明 <code>num</code> 不是一段连续序列的起点，直接跳过。</li>
+<li><strong>序列延伸</strong>：如果 <code>num - 1</code> 不在集合中，则 <code>num</code> 是起点。从 <code>num</code> 开始不断 <code>+1</code>，用 <code>while</code> 循环向后探测，累加当前序列长度。</li>
+<li><strong>更新全局最大值</strong>。</li>
+</ul>
+</li>
+<li><strong>返回最长长度</strong>。</li>
+</ol>
+<h3 id="为什么不用排序？"><a href="#为什么不用排序？" class="headerlink" title="为什么不用排序？"></a>为什么不用排序？</h3><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>可行性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>排序 + 扫描</td>
+<td>$O(n \log n)$</td>
+<td>$O(1)$</td>
+<td>可 AC，但不满足题意</td>
+</tr>
+<tr>
+<td>哈希 + 起点扫描</td>
+<td>$O(n)$</td>
+<td>$O(n)$</td>
+<td>最优解</td>
+</tr>
+</tbody></table>
+<h3 id="为什么不用并查集（Union-Find）？"><a href="#为什么不用并查集（Union-Find）？" class="headerlink" title="为什么不用并查集（Union Find）？"></a>为什么不用并查集（Union Find）？</h3><p>并查集也能做——把相邻的数合并到同一个连通分量里，最后看哪个分量最大。但并查集需要维护 <code>parent</code> 映射和 <code>size</code> 映射，额外常数较大，且不如哈希集合方案直观。对于这道题，哈希集合方案已经足够简洁高效，没有必要引入更重的数据结构。</p>
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>分析</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>时间复杂度</td>
+<td>$O(n)$ — 构建哈希集合 $O(n)$；外层循环遍历每个数，但每个数最多在内层 <code>while</code> 中被访问一次（被访问过的数一定满足 <code>num-1</code> 在集合中，之后会被跳过），所有 <code>while</code> 循环的总执行次数不超过 $n$。哈希查找 $O(1)$，总计 $O(n)$。</td>
+</tr>
+<tr>
+<td>空间复杂度</td>
+<td>$O(n)$ — 哈希集合存储所有不重复的元素，最坏情况下所有元素都不重复。</td>
+</tr>
+</tbody></table>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.HashSet;<br><span class="hljs-keyword">import</span> java.util.Set;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">longestConsecutive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-comment">// 边界处理：空数组直接返回 0</span><br>        <span class="hljs-keyword">if</span> (nums == <span class="hljs-literal">null</span> || nums.length == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br><br>        <span class="hljs-comment">// 将所有元素放入哈希集合，自动去重</span><br>        Set&lt;Integer&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>            set.add(num);<br>        &#125;<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">longest</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>        <span class="hljs-comment">// 遍历集合中的每个数</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : set) &#123;<br>            <span class="hljs-comment">// 核心优化：只有当 num 是连续序列的起点时，才开始向后延伸</span><br>            <span class="hljs-comment">// 起点特征：num - 1 不在集合中</span><br>            <span class="hljs-keyword">if</span> (!set.contains(num - <span class="hljs-number">1</span>)) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">currentNum</span> <span class="hljs-operator">=</span> num;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">currentStreak</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br>                <span class="hljs-comment">// 不断 +1，向后延伸直到断裂</span><br>                <span class="hljs-keyword">while</span> (set.contains(currentNum + <span class="hljs-number">1</span>)) &#123;<br>                    currentNum++;<br>                    currentStreak++;<br>                &#125;<br><br>                <span class="hljs-comment">// 更新全局最长长度</span><br>                longest = Math.max(longest, currentStreak);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> longest;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">longestConsecutive</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># 边界处理：空数组直接返回 0</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> nums:<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 将所有元素放入哈希集合，自动去重</span><br>        num_set = <span class="hljs-built_in">set</span>(nums)<br>        longest = <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 遍历集合中的每个数</span><br>        <span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> num_set:<br>            <span class="hljs-comment"># 核心优化：只有当 num 是连续序列的起点时，才开始向后延伸</span><br>            <span class="hljs-comment"># 起点特征：num - 1 不在集合中</span><br>            <span class="hljs-keyword">if</span> num - <span class="hljs-number">1</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> num_set:<br>                current_num = num<br>                current_streak = <span class="hljs-number">1</span><br><br>                <span class="hljs-comment"># 不断 +1，向后延伸直到断裂</span><br>                <span class="hljs-keyword">while</span> current_num + <span class="hljs-number">1</span> <span class="hljs-keyword">in</span> num_set:<br>                    current_num += <span class="hljs-number">1</span><br>                    current_streak += <span class="hljs-number">1</span><br><br>                <span class="hljs-comment"># 更新全局最长长度</span><br>                longest = <span class="hljs-built_in">max</span>(longest, current_streak)<br><br>        <span class="hljs-keyword">return</span> longest<br></code></pre></td></tr></table></figure>
+
+<h3 id="代码要点提醒"><a href="#代码要点提醒" class="headerlink" title="代码要点提醒"></a>代码要点提醒</h3><ol>
+<li><strong>遍历 <code>set</code> 而不是 <code>nums</code></strong>：<code>set</code> 已经去重，遍历它可以避免对重复元素做无意义的起点判断。虽然遍历 <code>nums</code> 再用 <code>set</code> 做判断在渐进复杂度上一样，但遍历 <code>set</code> 常数更优。</li>
+<li><strong>空数组检查</strong>：<code>nums.length == 0</code> 时直接返回 0，Java 中还要检查 <code>nums == null</code>。</li>
+<li><strong><code>num - 1</code> 的判断是灵魂</strong>：去掉这行判断，代码逻辑仍然正确，但会退化为 $O(n^2)$——这正是本题区分 $O(n)$ 和 $O(n^2)$ 的关键一行。</li>
+</ol>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
+<p>学到了什么？</p>
+</blockquote>
+<p>这道题教给我们一个重要的思维模式：<strong>用空间换时间不是终点，找到”不必重复计算的起点”才是真正的优化核心。</strong> 哈希集合给了我们 $O(1)$ 的查询能力，而”只从起点出发”这条贪心规则，让我们把 $O(n^2)$ 的重复劳动压缩到了 $O(n)$。二者缺一不可。</p>
+<blockquote>
+<p>下次遇到类似问题，你会优先观察什么？</p>
+</blockquote>
+<p>优先观察：<strong>“我能不能找到一个性质，只从某个特殊位置开始计算，而跳过所有已经被覆盖的冗余位置？”</strong> 这个启发式不仅适用于连续序列问题，也适用于任何需要”枚举区间&#x2F;子数组&#x2F;子序列”但想避免重复工作的场景——先思考有没有一个”唯一入口”能够代表整个区间。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
+      
+        <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="print-no-link">#哈希表</a>
+      
+        <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
+      
+        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LeetCode 128. 最长连续序列（longest-consecutive-sequence）</div>
+      <div>http://example.com/2026/07/13/03-最长连续序列/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/01-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" title="LeetCode 1. 两数之和（two-sum）">
+                        <span class="hidden-mobile">LeetCode 1. 两数之和（two-sum）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

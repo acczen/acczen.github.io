@@ -1,0 +1,944 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="给定一个 n x n 的二维矩阵，将其原地顺时针旋转 90 度，要求不使用额外矩阵空间。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode 48. 旋转图像（rotate-image）">
+<meta property="og:url" content="http://example.com/2026/07/13/20-%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="给定一个 n x n 的二维矩阵，将其原地顺时针旋转 90 度，要求不使用额外矩阵空间。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T09:57:45.180Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="Hot 100">
+<meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="数学">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="矩阵">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>LeetCode 48. 旋转图像（rotate-image） - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="LeetCode 48. 旋转图像（rotate-image）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">LeetCode 48. 旋转图像（rotate-image）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/rotate-image/">LeetCode 48. rotate-image</a></p>
+</blockquote>
+<p>给定一个 $n \times n$ 的二维矩阵 <code>matrix</code> 表示一个图像。请你将图像顺时针旋转 90 度。</p>
+<p>你必须在<strong>原地</strong>旋转图像，这意味着你需要直接修改输入的二维矩阵。<strong>请不要</strong>使用另一个矩阵来旋转图像。</p>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lua">输入：matrix = <span class="hljs-string">[[1,2,3],[4,5,6],[7,8,9]]</span><br>输出：<span class="hljs-string">[[7,4,1],[8,5,2],[9,6,3]]</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs inform7">输入：matrix = <span class="hljs-comment">[<span class="hljs-comment">[5,1,9,11]</span>,<span class="hljs-comment">[2,4,8,10]</span>,<span class="hljs-comment">[13,3,6,7]</span>,<span class="hljs-comment">[15,14,12,16]</span>]</span><br>输出：<span class="hljs-comment">[<span class="hljs-comment">[15,13,2,5]</span>,<span class="hljs-comment">[14,3,4,1]</span>,<span class="hljs-comment">[12,6,8,9]</span>,<span class="hljs-comment">[16,7,10,11]</span>]</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>提示：</strong></p>
+<ul>
+<li>$n &#x3D; matrix.length &#x3D; matrix[i].length$</li>
+<li>$1 \le n \le 20$</li>
+<li>$-1000 \le matrix[i][j] \le 1000$</li>
+</ul>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们先看看能不能”暴力”解决。</p>
+<h3 id="找到目标位置"><a href="#找到目标位置" class="headerlink" title="找到目标位置"></a>找到目标位置</h3><p>最直接的想法：我们创建一个同样大小的新矩阵 <code>newMatrix</code>，然后对于原矩阵的每个元素 <code>matrix[i][j]</code>，算出它在旋转后的新位置，填进去，最后拷贝回来。</p>
+<p>现在的问题是：<code>matrix[i][j]</code> 旋转 90 度后去哪了？</p>
+<p>让我们用 $3 \times 3$ 的例子找规律。把坐标标出来：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-attr">[0,0]</span> <span class="hljs-selector-attr">[0,1]</span> <span class="hljs-selector-attr">[0,2]</span>          <span class="hljs-selector-attr">[2,0]</span> <span class="hljs-selector-attr">[1,0]</span> <span class="hljs-selector-attr">[0,0]</span><br><span class="hljs-selector-attr">[1,0]</span> <span class="hljs-selector-attr">[1,1]</span> <span class="hljs-selector-attr">[1,2]</span>    →     <span class="hljs-selector-attr">[2,1]</span> <span class="hljs-selector-attr">[1,1]</span> <span class="hljs-selector-attr">[0,1]</span><br><span class="hljs-selector-attr">[2,0]</span> <span class="hljs-selector-attr">[2,1]</span> <span class="hljs-selector-attr">[2,2]</span>          <span class="hljs-selector-attr">[2,2]</span> <span class="hljs-selector-attr">[1,2]</span> <span class="hljs-selector-attr">[0,2]</span><br></code></pre></td></tr></table></figure>
+
+<p>你发现了什么？旋转后：</p>
+<ul>
+<li>原来的<strong>行号</strong>变成了新位置的<strong>列号</strong>（而且是倒序）</li>
+<li>原来的<strong>列号</strong>变成了新位置的<strong>行号</strong></li>
+</ul>
+<p>更精确地说，<code>matrix[i][j]</code> 旋转后的位置是 <code>newMatrix[j][n-1-i]</code>。验证一下：左上角 <code>(0,0)</code> 去了 <code>(0, 2)</code>，即 <code>newMatrix[0][3-1-0] = [0][2]</code>，对应输出第一行第三列的 7 … 不对，<code>(0,0)</code> 的值是 1，旋转后应该在最右上角也就是第一行第三列——没错，输出是 <code>[7,4,1]</code>，1 确实在第 0 行第 2 列。</p>
+<p>所以借助额外数组的解法是可行的，时间 $O(n^2)$，空间 $O(n^2)$。</p>
+<blockquote>
+<p>但题目明确要求<strong>原地</strong>旋转。难点就在这——我们不能让所有元素同时搬家，因为每次修改都会覆盖掉还没用过的旧值。怎么办？</p>
+</blockquote>
+<h3 id="能不能”逐个换位”？"><a href="#能不能”逐个换位”？" class="headerlink" title="能不能”逐个换位”？"></a>能不能”逐个换位”？</h3><p>一个自然的想法是：像拧魔方一样，看一个元素旋转 4 次之后回到原位。比如 <code>(0,0)</code> 上的值 1，旋转 90 度到 <code>(0,2)</code>，再旋转 90 度到 <code>(2,2)</code>，再到 <code>(2,0)</code>，最后回到 <code>(0,0)</code>。这恰好是一个四元环！</p>
+<p>如果能把每个这样的”四人组”一次性轮换到位，就能只用一个临时变量完成原地旋转。这是一种可行的思路（称”环形替换”），但需要处理”哪些位置是新的轮换起点”这个边界问题。</p>
+<blockquote>
+<p>不过，还有没有更直观、更不容易写错的方法？矩阵操作中，有没有”<strong>用已知操作组合出新操作</strong>“的技巧？</p>
+</blockquote>
+<h3 id="换个角度：把旋转拆成两步"><a href="#换个角度：把旋转拆成两步" class="headerlink" title="换个角度：把旋转拆成两步"></a>换个角度：把旋转拆成两步</h3><p>回想一下：在”轮转数组”那道题里，我们用”反转”这个简单操作，通过<strong>三次组合</strong>完成了轮转。矩阵有没有类似的”原子操作”可以用？</p>
+<p>顺时针旋转 90 度，可以拆成两个更简单、各自也容易在原地实现的操作：</p>
+<ol>
+<li><strong>转置</strong>（Transpose）：沿着主对角线翻转，<code>matrix[i][j]</code> ↔ <code>matrix[j][i]</code></li>
+<li><strong>水平翻转</strong>（每行反转）：把每一行的元素左右颠倒</li>
+</ol>
+<p>来看看对不对：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs inform7">原始:        转置后:       再水平翻转每行:<br><span class="hljs-comment">[1, 2, 3]</span>   <span class="hljs-comment">[1, 4, 7]</span>    <span class="hljs-comment">[7, 4, 1]</span><br><span class="hljs-comment">[4, 5, 6]</span> → <span class="hljs-comment">[2, 5, 8]</span>  → <span class="hljs-comment">[8, 5, 2]</span><br><span class="hljs-comment">[7, 8, 9]</span>   <span class="hljs-comment">[3, 6, 9]</span>    <span class="hljs-comment">[9, 6, 3]</span><br></code></pre></td></tr></table></figure>
+
+<p>与示例输出 <code>[[7,4,1],[8,5,2],[9,6,3]]</code> 完全一致！</p>
+<blockquote>
+<p>这样一来，问题就变成了”如何原地完成转置和水平翻转”——两个小问题，各自都非常清晰。</p>
+</blockquote>
+<p>转置只需要遍历主对角线右上方的元素（即 $j &gt; i$ 的元素），与对称位置的元素交换。水平翻转更简单——对每一行用双指针交换首尾元素直到中间。</p>
+<p><strong>另一种拆法</strong>（逆时针旋转 90 度则是”转置 + 垂直翻转”），但顺时针这道题用”转置 + 水平翻转”最自然。</p>
+<h3 id="总结思考链条"><a href="#总结思考链条" class="headerlink" title="总结思考链条"></a>总结思考链条</h3><p>暴力法（借助额外矩阵观察规律）→ 发现四元环替换 → 但实现复杂 → 想到”用简单操作组合出旋转” → 转置 + 行翻转，两步都在 $O(1)$ 空间内轻松完成。</p>
+<h2 id="解法：转置-水平翻转"><a href="#解法：转置-水平翻转" class="headerlink" title="解法：转置 + 水平翻转"></a>解法：转置 + 水平翻转</h2><h3 id="为什么选择这个解法？"><a href="#为什么选择这个解法？" class="headerlink" title="为什么选择这个解法？"></a>为什么选择这个解法？</h3><table>
+<thead>
+<tr>
+<th>方案</th>
+<th>时间</th>
+<th>空间</th>
+<th>代码复杂度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>额外矩阵</td>
+<td>$O(n^2)$</td>
+<td>$O(n^2)$</td>
+<td>低，但不满足原地要求</td>
+</tr>
+<tr>
+<td>四元环替换</td>
+<td>$O(n^2)$</td>
+<td>$O(1)$</td>
+<td>高，需处理边界和循环起点</td>
+</tr>
+<tr>
+<td><strong>转置 + 水平翻转</strong></td>
+<td><strong>$O(n^2)$</strong></td>
+<td><strong>$O(1)$</strong></td>
+<td><strong>低，两个简单操作的组合</strong></td>
+</tr>
+</tbody></table>
+<p>转置 + 水平翻转的妙处在于：每一步的含义都非常明确，各自可以用经典的双指针&#x2F;对称交换实现，几乎不会写出 bug。面试中这个解法也容易解释清楚——“顺时针旋转 &#x3D; 转置 + 水平翻转”是一个经典的线性代数结论。</p>
+<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
+<li><strong>转置</strong>：遍历矩阵的上三角区域（$j &gt; i$），交换 <code>matrix[i][j]</code> 和 <code>matrix[j][i]</code>。</li>
+<li><strong>水平翻转</strong>：对于每一行，反转该行所有元素。即交换 <code>matrix[i][j]</code> 和 <code>matrix[i][n-1-j]</code>，$j$ 从 $0$ 到 $\lfloor n&#x2F;2 \rfloor - 1$。</li>
+</ol>
+<p>两步可以分开写，也可以合并为同一个双层循环（但分开写更清晰，减少出错的可能）。</p>
+<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>分析</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>时间复杂度</td>
+<td>$O(n^2)$ — 转置遍历了约 $n(n-1)&#x2F;2$ 个元素，水平翻转遍历了全部 $n^2$ 个元素（每行 $n&#x2F;2$ 次交换，共 $n$ 行），总体 $O(n^2)$。矩阵中的每个元素至少被访问一次是绕不开的下限——因为旋转操作改变了每个元素的依赖关系。</td>
+</tr>
+<tr>
+<td>空间复杂度</td>
+<td>$O(1)$ — 只用了几个临时变量做交换，没有任何与 $n$ 相关的额外空间分配。</td>
+</tr>
+</tbody></table>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 将 n×n 矩阵顺时针旋转 90 度，原地修改。</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">rotate</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] matrix)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> matrix.length;<br><br>        <span class="hljs-comment">// 第一步：转置 —— 沿主对角线翻转</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// 只遍历 j &gt; i 的上三角区域，避免重复交换</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i + <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> matrix[i][j];<br>                matrix[i][j] = matrix[j][i];<br>                matrix[j][i] = tmp;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 第二步：水平翻转 —— 每行左右颠倒</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, right = n - <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">while</span> (left &lt; right) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> matrix[i][left];<br>                matrix[i][left] = matrix[i][right];<br>                matrix[i][right] = tmp;<br>                left++;<br>                right--;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">rotate</span>(<span class="hljs-params">self, matrix: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]</span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        将 n×n 矩阵顺时针旋转 90 度，原地修改。</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        n = <span class="hljs-built_in">len</span>(matrix)<br><br>        <span class="hljs-comment"># 第一步：转置 —— 沿主对角线翻转</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-comment"># 只遍历 j &gt; i 的上三角区域，避免重复交换</span><br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(i + <span class="hljs-number">1</span>, n):<br>                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]<br><br>        <span class="hljs-comment"># 第二步：水平翻转 —— 每行左右颠倒</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            left, right = <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span><br>            <span class="hljs-keyword">while</span> left &lt; right:<br>                matrix[i][left], matrix[i][right] = matrix[i][right], matrix[i][left]<br>                left += <span class="hljs-number">1</span><br>                right -= <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
+<p>学到了什么？</p>
+</blockquote>
+<p>矩阵的复合变换（旋转）往往可以分解为若干<strong>简单原子操作</strong>的组合——就像轮转数组里的”反转”一样，转置和行&#x2F;列翻转是矩阵操作中最基础也最实用的原子动作。熟悉这些简单操作，以后遇到更复杂的矩阵变换时，就能试着问自己：能不能把它拆成转置 + 翻转 + 行交换之类的组合？</p>
+<blockquote>
+<p>下次遇到类似问题，你会优先观察什么？</p>
+</blockquote>
+<p>遇到要求”原地变换矩阵&#x2F;数组”的题目，优先思考：<strong>这个变换能否分解为两个或多个你已经会写的简单操作？</strong> 拿出纸笔，先画一个 $3 \times 3$ 的小例子，跟踪每个元素在分解步骤中的位置变化——很多时候，结论会比你预想的更优雅。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
+      
+        <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
+      
+        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
+      
+        <a href="/tags/%E6%95%B0%E5%AD%A6/" class="print-no-link">#数学</a>
+      
+        <a href="/tags/%E7%9F%A9%E9%98%B5/" class="print-no-link">#矩阵</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LeetCode 48. 旋转图像（rotate-image）</div>
+      <div>http://example.com/2026/07/13/20-旋转图像/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/17-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" title="LeetCode 41. 缺失的第一个正数（first-missing-positive）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LeetCode 41. 缺失的第一个正数（first-missing-positive）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/12/%E8%AE%A9AI%E5%8A%A9%E4%BD%A0%E7%90%86%E8%A7%A3Hot100%E7%AE%97%E6%B3%95%E9%A2%98/" title="让AI助你理解Hot100算法题">
+                        <span class="hidden-mobile">让AI助你理解Hot100算法题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
