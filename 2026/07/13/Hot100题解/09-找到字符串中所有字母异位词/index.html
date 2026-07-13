@@ -1,0 +1,921 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="使用滑动窗口 + 频率数组高效找出字符串中所有字母异位词的起始索引。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="找到字符串中所有字母异位词">
+<meta property="og:url" content="http://example.com/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/09-%E6%89%BE%E5%88%B0%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%89%80%E6%9C%89%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="使用滑动窗口 + 频率数组高效找出字符串中所有字母异位词的起始索引。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:59:31.308Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="字符串">
+<meta property="article:tag" content="滑动窗口">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>找到字符串中所有字母异位词 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="找到字符串中所有字母异位词"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">找到字符串中所有字母异位词</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="找到字符串中所有字母异位词"><a href="#找到字符串中所有字母异位词" class="headerlink" title="找到字符串中所有字母异位词"></a>找到字符串中所有字母异位词</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="从暴力解法出发"><a href="#从暴力解法出发" class="headerlink" title="从暴力解法出发"></a>从暴力解法出发</h3><p>题目给了我们两个字符串 <code>s</code> 和 <code>p</code>，要找出 <code>s</code> 中所有 <code>p</code> 的”字母异位词”子串的起始索引。所谓字母异位词，就是两个字符串包含的字符相同、每个字符出现的次数也相同，只是排列顺序不同。</p>
+<p>不妨想一下，如果没有任何技巧，我们第一反应会怎么做？</p>
+<p><strong>最直接的思路：</strong> 遍历 <code>s</code> 中每一个可能的起始位置，截取一个和 <code>p</code> 等长的子串，然后判断这个子串是不是 <code>p</code> 的字母异位词。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt;= s.length() - p.length(); i++) &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">sub</span> <span class="hljs-operator">=</span> s.substring(i, i + p.length());<br>    <span class="hljs-keyword">if</span> (isAnagram(sub, p)) &#123;<br>        result.add(i);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>而判断两个字符串是否为字母异位词，最朴素的方式就是统计两个字符串的字符频率，然后逐一比较。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">boolean</span> <span class="hljs-title function_">isAnagram</span><span class="hljs-params">(String a, String b)</span> &#123;<br>    <span class="hljs-type">int</span>[] count = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[<span class="hljs-number">26</span>];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">char</span> c : a.toCharArray()) count[c - <span class="hljs-string">&#x27;a&#x27;</span>]++;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">char</span> c : b.toCharArray()) count[c - <span class="hljs-string">&#x27;a&#x27;</span>]--;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x : count) <span class="hljs-keyword">if</span> (x != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>这个解法的问题在哪里？</strong></p>
+<p>我们来分析一下复杂度。假设 <code>s</code> 的长度为 <code>n</code>，<code>p</code> 的长度为 <code>m</code>。外层循环有 <code>O(n)</code> 个起始位置，每次截取子串并统计频率需要 <code>O(m)</code> 时间，所以总时间复杂度是 <strong>O(n * m)</strong>。</p>
+<p>如果 <code>n</code> 和 <code>m</code> 都在 10⁴ 甚至 10⁵ 的量级，这个平方级的复杂度显然是不可接受的。</p>
+<h3 id="有没有办法减少重复计算？"><a href="#有没有办法减少重复计算？" class="headerlink" title="有没有办法减少重复计算？"></a>有没有办法减少重复计算？</h3><p>让我们来思考一个关键现象：当我们把窗口从位置 <code>i</code> 移动到位置 <code>i+1</code> 时，窗口内的内容发生了怎样的变化？</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">s = <span class="hljs-string">&quot;c b a e b a b a c d&quot;</span><br>窗口<span class="hljs-number">1</span>: <span class="hljs-selector-attr">[c b a]</span> e <span class="hljs-selector-tag">b</span> <span class="hljs-selector-tag">a</span> <span class="hljs-selector-tag">b</span> <span class="hljs-selector-tag">a</span> c d<br>窗口<span class="hljs-number">2</span>: c <span class="hljs-selector-attr">[b a e]</span> <span class="hljs-selector-tag">b</span> <span class="hljs-selector-tag">a</span> <span class="hljs-selector-tag">b</span> <span class="hljs-selector-tag">a</span> c d<br></code></pre></td></tr></table></figure>
+
+<p>窗口从 <code>[c, b, a]</code> 变成 <code>[b, a, e]</code>——我们<strong>移出了</strong>一个 <code>c</code>，<strong>移入了</strong>一个 <code>e</code>。窗口中的其他字符（<code>b</code> 和 <code>a</code>）没有变化。</p>
+<p>这是一个很重要的观察：<strong>相邻两个窗口之间只差两个字符</strong>。如果我们每次重新统计整个窗口的频率，那就是在重复计算大量已经知道的信息。</p>
+<p>这自然而然地引出了<strong>滑动窗口</strong>的思想——维护一个”窗口”在 <code>s</code> 上移动，每次只需要更新移出和移入的两个字符的频率，就可以得到新窗口的频率分布。</p>
+<h3 id="具体怎么做？"><a href="#具体怎么做？" class="headerlink" title="具体怎么做？"></a>具体怎么做？</h3><p>我们维护一个长度为 <code>len(p)</code> 的滑动窗口，同时维护两个频率数组：</p>
+<ul>
+<li><code>pCount[26]</code>：字符串 <code>p</code> 中每个字符的出现次数（固定不变）</li>
+<li><code>windowCount[26]</code>：当前窗口中每个字符的出现次数（动态更新）</li>
+</ul>
+<p>每次窗口滑动时：</p>
+<ol>
+<li>右边界新字符 <code>s[right]</code> 进入窗口 → <code>windowCount[s[right] - &#39;a&#39;]++</code></li>
+<li>左边界旧字符 <code>s[left]</code> 离开窗口 → <code>windowCount[s[left] - &#39;a&#39;]--</code></li>
+<li>比较 <code>windowCount</code> 和 <code>pCount</code> 是否相等</li>
+</ol>
+<p>这样每次滑动只需要 O(1) 的时间来更新频率，比较也是 O(1)（固定 26 个字母）。总时间复杂度降为 <strong>O(n)</strong>。</p>
+<h3 id="还能再优化一点吗？"><a href="#还能再优化一点吗？" class="headerlink" title="还能再优化一点吗？"></a>还能再优化一点吗？</h3><p>每次滑动后都完整地比较两个长度为 26 的数组，虽然已经是 O(1)，但我们能不能连这 26 次比较也省掉？</p>
+<p>可以引入一个 <strong><code>diff</code> 计数器</strong>，记录当前窗口与 <code>p</code> 之间”有多少个字符的频率是匹配的”。</p>
+<ul>
+<li>初始化时，我们先比较第一个窗口和 <code>p</code>，统计出有多少个字符的频率已经相等（<code>diff</code> 初始值）。</li>
+<li>每次滑动窗口时，只更新受影响的字符（移出和移入的两个字符）的匹配状态：<ul>
+<li>如果一个字符从”频率相等”变为”不相等”，<code>diff--</code></li>
+<li>如果一个字符从”频率不相等”变为”相等”，<code>diff++</code></li>
+</ul>
+</li>
+<li>当 <code>diff == 26</code> 时，说明所有字符的频率都匹配，当前窗口就是一个字母异位词。</li>
+</ul>
+<p>这样我们就完全避免了每次滑动后的数组扫描，每次滑动只需要常数次操作。</p>
+<hr>
+<p><strong>小结一下这个思考过程：</strong></p>
+<ol>
+<li>暴力法：遍历每个起始位置，每次 O(m) 统计频率 → O(n * m)</li>
+<li>滑动窗口优化：维护频率数组，每次只更新两个字符 → O(n) 时间，但每次仍需 O(1) 比较 26 个元素</li>
+<li>引入 diff 计数器：连 26 次比较也省去 → O(n) 时间，常数更小</li>
+</ol>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> List&lt;Integer&gt; <span class="hljs-title function_">findAnagrams</span><span class="hljs-params">(String s, String p)</span> &#123;<br>        List&lt;Integer&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> s.length(), m = p.length();<br><br>        <span class="hljs-comment">// 如果 s 比 p 短，不可能有异位词</span><br>        <span class="hljs-keyword">if</span> (n &lt; m) <span class="hljs-keyword">return</span> result;<br><br>        <span class="hljs-type">int</span>[] pCount = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[<span class="hljs-number">26</span>];<br>        <span class="hljs-type">int</span>[] windowCount = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[<span class="hljs-number">26</span>];<br><br>        <span class="hljs-comment">// 统计 p 中字符频率，同时初始化第一个窗口的频率</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>            pCount[p.charAt(i) - <span class="hljs-string">&#x27;a&#x27;</span>]++;<br>            windowCount[s.charAt(i) - <span class="hljs-string">&#x27;a&#x27;</span>]++;<br>        &#125;<br><br>        <span class="hljs-comment">// 检查第一个窗口</span><br>        <span class="hljs-keyword">if</span> (matches(pCount, windowCount)) &#123;<br>            result.add(<span class="hljs-number">0</span>);<br>        &#125;<br><br>        <span class="hljs-comment">// 滑动窗口</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> m; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// 新字符进入窗口</span><br>            windowCount[s.charAt(i) - <span class="hljs-string">&#x27;a&#x27;</span>]++;<br>            <span class="hljs-comment">// 旧字符离开窗口</span><br>            windowCount[s.charAt(i - m) - <span class="hljs-string">&#x27;a&#x27;</span>]--;<br>            <span class="hljs-comment">// 检查当前起始位置 i - m + 1</span><br>            <span class="hljs-keyword">if</span> (matches(pCount, windowCount)) &#123;<br>                result.add(i - m + <span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>    <span class="hljs-comment">// 比较两个频率数组是否完全相同</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">matches</span><span class="hljs-params">(<span class="hljs-type">int</span>[] a, <span class="hljs-type">int</span>[] b)</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">26</span>; i++) &#123;<br>            <span class="hljs-keyword">if</span> (a[i] != b[i]) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="Java-优化版（使用-diff-计数器）"><a href="#Java-优化版（使用-diff-计数器）" class="headerlink" title="Java 优化版（使用 diff 计数器）"></a>Java 优化版（使用 diff 计数器）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> List&lt;Integer&gt; <span class="hljs-title function_">findAnagrams</span><span class="hljs-params">(String s, String p)</span> &#123;<br>        List&lt;Integer&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> s.length(), m = p.length();<br>        <span class="hljs-keyword">if</span> (n &lt; m) <span class="hljs-keyword">return</span> result;<br><br>        <span class="hljs-type">int</span>[] count = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[<span class="hljs-number">26</span>];  <span class="hljs-comment">// 差值数组：p 的频次减去窗口的频次</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>            count[p.charAt(i) - <span class="hljs-string">&#x27;a&#x27;</span>]++;   <span class="hljs-comment">// p 中字符标记为正</span><br>            count[s.charAt(i) - <span class="hljs-string">&#x27;a&#x27;</span>]--;   <span class="hljs-comment">// 窗口中字符标记为负</span><br>        &#125;<br><br>        <span class="hljs-comment">// diff 记录有多少个字符的差值不为 0</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">diff</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x : count) &#123;<br>            <span class="hljs-keyword">if</span> (x != <span class="hljs-number">0</span>) diff++;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (diff == <span class="hljs-number">0</span>) result.add(<span class="hljs-number">0</span>);<br><br>        <span class="hljs-comment">// 滑动窗口</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> m; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// 移入字符 s[i]</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">in</span> <span class="hljs-operator">=</span> s.charAt(i) - <span class="hljs-string">&#x27;a&#x27;</span>;<br>            count[in]--;        <span class="hljs-comment">// 窗口多了一个 in，差值减 1</span><br>            <span class="hljs-keyword">if</span> (count[in] == <span class="hljs-number">0</span>) diff--;   <span class="hljs-comment">// 从不等变为相等</span><br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (count[in] == -<span class="hljs-number">1</span>) diff++;  <span class="hljs-comment">// 从相等变为不等</span><br><br>            <span class="hljs-comment">// 移出字符 s[i - m]</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">out</span> <span class="hljs-operator">=</span> s.charAt(i - m) - <span class="hljs-string">&#x27;a&#x27;</span>;<br>            count[out]++;       <span class="hljs-comment">// 窗口少了一个 out，差值加 1</span><br>            <span class="hljs-keyword">if</span> (count[out] == <span class="hljs-number">0</span>) diff--;   <span class="hljs-comment">// 从不等变为相等</span><br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (count[out] == <span class="hljs-number">1</span>) diff++;   <span class="hljs-comment">// 从相等变为不等</span><br><br>            <span class="hljs-keyword">if</span> (diff == <span class="hljs-number">0</span>) result.add(i - m + <span class="hljs-number">1</span>);<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">findAnagrams</span>(<span class="hljs-params">self, s: <span class="hljs-built_in">str</span>, p: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>        n, m = <span class="hljs-built_in">len</span>(s), <span class="hljs-built_in">len</span>(p)<br>        <span class="hljs-keyword">if</span> n &lt; m:<br>            <span class="hljs-keyword">return</span> []<br><br>        <span class="hljs-comment"># 频率数组</span><br>        p_count = [<span class="hljs-number">0</span>] * <span class="hljs-number">26</span><br>        window_count = [<span class="hljs-number">0</span>] * <span class="hljs-number">26</span><br><br>        <span class="hljs-comment"># 统计 p 的频率，并初始化第一个窗口</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m):<br>            p_count[<span class="hljs-built_in">ord</span>(p[i]) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;a&#x27;</span>)] += <span class="hljs-number">1</span><br>            window_count[<span class="hljs-built_in">ord</span>(s[i]) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;a&#x27;</span>)] += <span class="hljs-number">1</span><br><br>        result = []<br>        <span class="hljs-keyword">if</span> p_count == window_count:<br>            result.append(<span class="hljs-number">0</span>)<br><br>        <span class="hljs-comment"># 滑动窗口</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m, n):<br>            window_count[<span class="hljs-built_in">ord</span>(s[i]) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;a&#x27;</span>)] += <span class="hljs-number">1</span>           <span class="hljs-comment"># 移入</span><br>            window_count[<span class="hljs-built_in">ord</span>(s[i - m]) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;a&#x27;</span>)] -= <span class="hljs-number">1</span>       <span class="hljs-comment"># 移出</span><br>            <span class="hljs-keyword">if</span> p_count == window_count:<br>                result.append(i - m + <span class="hljs-number">1</span>)<br><br>        <span class="hljs-keyword">return</span> result<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 优化版：使用差值数组 + diff 计数器</span><br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">findAnagrams</span>(<span class="hljs-params">self, s: <span class="hljs-built_in">str</span>, p: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>        n, m = <span class="hljs-built_in">len</span>(s), <span class="hljs-built_in">len</span>(p)<br>        <span class="hljs-keyword">if</span> n &lt; m:<br>            <span class="hljs-keyword">return</span> []<br><br>        count = [<span class="hljs-number">0</span>] * <span class="hljs-number">26</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m):<br>            count[<span class="hljs-built_in">ord</span>(p[i]) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;a&#x27;</span>)] += <span class="hljs-number">1</span><br>            count[<span class="hljs-built_in">ord</span>(s[i]) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;a&#x27;</span>)] -= <span class="hljs-number">1</span><br><br>        diff = <span class="hljs-built_in">sum</span>(<span class="hljs-number">1</span> <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> count <span class="hljs-keyword">if</span> x != <span class="hljs-number">0</span>)<br>        result = [<span class="hljs-number">0</span>] <span class="hljs-keyword">if</span> diff == <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> []<br><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m, n):<br>            <span class="hljs-comment"># 移入字符</span><br>            idx_in = <span class="hljs-built_in">ord</span>(s[i]) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;a&#x27;</span>)<br>            count[idx_in] -= <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> count[idx_in] == <span class="hljs-number">0</span>:<br>                diff -= <span class="hljs-number">1</span><br>            <span class="hljs-keyword">elif</span> count[idx_in] == -<span class="hljs-number">1</span>:<br>                diff += <span class="hljs-number">1</span><br><br>            <span class="hljs-comment"># 移出字符</span><br>            idx_out = <span class="hljs-built_in">ord</span>(s[i - m]) - <span class="hljs-built_in">ord</span>(<span class="hljs-string">&#x27;a&#x27;</span>)<br>            count[idx_out] += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">if</span> count[idx_out] == <span class="hljs-number">0</span>:<br>                diff -= <span class="hljs-number">1</span><br>            <span class="hljs-keyword">elif</span> count[idx_out] == <span class="hljs-number">1</span>:<br>                diff += <span class="hljs-number">1</span><br><br>            <span class="hljs-keyword">if</span> diff == <span class="hljs-number">0</span>:<br>                result.append(i - m + <span class="hljs-number">1</span>)<br><br>        <span class="hljs-keyword">return</span> result<br></code></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力法</td>
+<td>O(n * m)</td>
+<td>O(1)</td>
+<td>遍历每个起始位置，每次重新统计整个子串的字符频率</td>
+</tr>
+<tr>
+<td>滑动窗口（频率数组比较）</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>每次滑动只更新两个字符的频率，但每次需要扫描 26 个元素做比较</td>
+</tr>
+<tr>
+<td>滑动窗口 + diff 计数器</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>引入 diff 变量跟踪匹配的字符数，省去每次的数组扫描</td>
+</tr>
+</tbody></table>
+<p>空间复杂度为 O(1) 是因为频率数组大小固定为 26，不随输入规模增长。</p>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><p><strong>这道题让我们学到了什么？</strong></p>
+<p>滑动窗口解决的是”固定长度的连续子串&#x2F;子数组”问题。当我们在一个序列上寻找特定长度的连续片段时，相邻片段之间有大量重叠——这正是滑动窗口发挥威力的场景。通过只更新变化的部分而不是重新计算整个片段，我们可以将 O(n * m) 降到 O(n)。</p>
+<p>另外，题目只包含小写字母这个条件让我们能用固定大小的数组代替哈希表，这在处理字符集有限的场景中是一个非常实用的优化技巧。</p>
+<p><strong>下次遇到类似问题优先观察什么？</strong></p>
+<ol>
+<li><strong>是否涉及”连续子串&#x2F;子数组”的查找？</strong> 如果是，滑动窗口通常是一个值得优先考虑的方案。</li>
+<li><strong>窗口的移动规律是什么？</strong> 相邻两个窗口之间只有两个元素发生变化（一个移入、一个移出），这是滑动窗口能高效工作的前提。</li>
+<li><strong>“相等”的判断能否增量计算？</strong> 本题中用 diff 计数器追踪匹配状态，避免了每次完整比较——如果判断条件可以差分更新，就不要每次都重新算一遍。</li>
+</ol>
+<p>类似的题目：LeetCode 567（字符串的排列）本质上和本题一模一样，只是返回值从”所有起始位置”变成了”是否存在”；LeetCode 76（最小覆盖子串）则是变长的滑动窗口，判断条件也从”完全相等”变成了”包含所有字符”。</p>
+<hr>
+<blockquote>
+<p>本文由 <a target="_blank" rel="noopener" href="https://algomentor.cn/">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a target="_blank" rel="noopener" href="https://algomentor.cn/">https://algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Hot100%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">Hot100算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="print-no-link">#哈希表</a>
+      
+        <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="print-no-link">#字符串</a>
+      
+        <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="print-no-link">#滑动窗口</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>找到字符串中所有字母异位词</div>
+      <div>http://example.com/2026/07/13/Hot100题解/09-找到字符串中所有字母异位词/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/12-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/" title="最小覆盖子串">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">最小覆盖子串</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/11-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/" title="滑动窗口最大值">
+                        <span class="hidden-mobile">滑动窗口最大值</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

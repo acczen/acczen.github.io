@@ -1,0 +1,976 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="用两个堆维护数据流的中位数，在动态插入中保持 O(log n) 的平衡，将&quot;寻找中位数&quot;问题转化为&quot;维护两个堆顶&quot;的优雅解法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据流的中位数">
+<meta property="og:url" content="http://example.com/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/76-%E6%95%B0%E6%8D%AE%E6%B5%81%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="用两个堆维护数据流的中位数，在动态插入中保持 O(log n) 的平衡，将&quot;寻找中位数&quot;问题转化为&quot;维护两个堆顶&quot;的优雅解法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:59:31.358Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="优先队列">
+<meta property="article:tag" content="堆">
+<meta property="article:tag" content="数据流">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>数据流的中位数 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="数据流的中位数"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          37 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">数据流的中位数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="数据流的中位数"><a href="#数据流的中位数" class="headerlink" title="数据流的中位数"></a>数据流的中位数</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一反应：排序数组"><a href="#第一反应：排序数组" class="headerlink" title="第一反应：排序数组"></a>第一反应：排序数组</h3><p>如果面试官抛出这个问题——“设计一个数据结构，支持往一个数据流中添加数字，并且能随时返回当前所有数字的中位数”——我们会怎么想？</p>
+<p>最直接的办法：用一个数组存下所有数字，每次 <code>findMedian()</code> 时排序，然后取中间位置的数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;Integer&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addNum</span><span class="hljs-params">(<span class="hljs-type">int</span> num)</span> &#123;<br>    list.add(num);<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">findMedian</span><span class="hljs-params">()</span> &#123;<br>    Collections.sort(list);<br>    <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> list.size();<br>    <span class="hljs-keyword">return</span> n % <span class="hljs-number">2</span> == <span class="hljs-number">1</span> ? list.get(n / <span class="hljs-number">2</span>) : (list.get(n / <span class="hljs-number">2</span> - <span class="hljs-number">1</span>) + list.get(n / <span class="hljs-number">2</span>)) / <span class="hljs-number">2.0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这种方法的问题显而易见：每次找中位数都要排序，时间复杂度是 O(n log n)。如果调用 <code>findMedian()</code> 的次数很多，性能完全扛不住。</p>
+<p><strong>能不能让数组始终有序？</strong></p>
+<p>既然排序太慢，那我们可以换一种思路：每次插入新数字时，直接把它插入到合适的位置，维护一个始终有序的数组。这样 <code>findMedian()</code> 只需要 O(1) 时间取中间元素，但插入操作需要 O(n) 时间（因为要移动元素）。</p>
+<p>两种选择都不理想——要么插入快、查询慢，要么查询快、插入慢。我们能不能让两者都快？</p>
+<h3 id="自问：中位数的本质是什么？"><a href="#自问：中位数的本质是什么？" class="headerlink" title="自问：中位数的本质是什么？"></a>自问：中位数的本质是什么？</h3><p>让我们停下来想一想：中位数到底是什么？</p>
+<p>对于一个有序序列，中位数将序列分成<strong>左半</strong>和<strong>右半</strong>两个部分：</p>
+<ul>
+<li>左半的所有元素 ≤ 中位数</li>
+<li>右半的所有元素 ≥ 中位数</li>
+<li>左半和右半的元素个数相差不超过 1</li>
+</ul>
+<p>如果我们只需要知道中位数，<strong>我们真的需要整个数组有序吗？</strong></p>
+<p>不妨这样想：如果我们能知道左半部分的最大值，和右半部分的最小值，中位数不就由这两个数决定了吗？</p>
+<ul>
+<li>奇数个元素：中位数就是左半的最大值（或者右半的最小值，取决于我们如何分配）</li>
+<li>偶数个元素：中位数是左半最大值和右半最小值的平均值</li>
+</ul>
+<p><strong>那么问题转化为：如何高效地维护左半部分的最大值和右半部分的最小值？</strong></p>
+<h3 id="突破口：两个堆"><a href="#突破口：两个堆" class="headerlink" title="突破口：两个堆"></a>突破口：两个堆</h3><p>这里有一个非常自然的思路：</p>
+<ul>
+<li>用<strong>大顶堆</strong>维护左半部分——堆顶就是左半的最大值</li>
+<li>用<strong>小顶堆</strong>维护右半部分——堆顶就是右半的最小值</li>
+</ul>
+<p>只要保证两个堆的大小平衡（相差不超过 1），中位数就可以直接从堆顶得到。</p>
+<p>现在的问题是：<strong>如何插入一个新数字并保持这种平衡？</strong></p>
+<p>不妨模拟一下这个过程：</p>
+<ol>
+<li>先决定新数字去哪个堆。如果它比左半的最大值小，或者左半为空，它应该去左半（大顶堆）；否则去右半（小顶堆）。</li>
+<li>检查两个堆的大小，如果失衡，就把一个堆的堆顶移到另一个堆。</li>
+</ol>
+<p>这样就保证了每一步都是平衡的。</p>
+<h3 id="另一种更优雅的插入策略"><a href="#另一种更优雅的插入策略" class="headerlink" title="另一种更优雅的插入策略"></a>另一种更优雅的插入策略</h3><p>上面那种方式需要手动判断新数字和堆顶的大小关系，略显繁琐。还有一种更”自动化”的方式：</p>
+<ol>
+<li>总是先插入到大顶堆（左半）</li>
+<li>然后将大顶堆的最大值弹出，放入小顶堆（右半）</li>
+<li>如果小顶堆比大顶堆多了一个元素，就把小顶堆的最小值移回大顶堆</li>
+</ol>
+<p>这种策略的精妙之处在于：<strong>我们不需要手动比较大小，堆本身帮我们完成了排序和筛选。</strong></p>
+<p>让我们用例子走一遍：</p>
+<p>插入 5：</p>
+<ul>
+<li>大顶堆插入 5 → 大顶堆：[5]，小顶堆：[]</li>
+<li>将大顶堆最大值 5 移到小顶堆 → 大顶堆：[]，小顶堆：[5]</li>
+<li>小顶堆大小 &gt; 大顶堆大小，将小顶堆最小值 5 移回大顶堆 → 大顶堆：[5]，小顶堆：[]</li>
+<li>中位数：5</li>
+</ul>
+<p>插入 2：</p>
+<ul>
+<li>大顶堆插入 2 → 大顶堆：[5, 2]，小顶堆：[]</li>
+<li>将大顶堆最大值 5 移到小顶堆 → 大顶堆：[2]，小顶堆：[5]</li>
+<li>小顶堆和大顶堆大小相等，不调整</li>
+<li>中位数：(2 + 5) &#x2F; 2 &#x3D; 3.5</li>
+</ul>
+<p>插入 10：</p>
+<ul>
+<li>大顶堆插入 10 → 大顶堆：[10, 2]，小顶堆：[5]</li>
+<li>将大顶堆最大值 10 移到小顶堆 → 大顶堆：[2]，小顶堆：[5, 10]</li>
+<li>小顶堆大小 &gt; 大顶堆大小，将小顶堆最小值 5 移回大顶堆 → 大顶堆：[5, 2]，小顶堆：[10]</li>
+<li>中位数：5</li>
+</ul>
+<p>插入 1：</p>
+<ul>
+<li>大顶堆插入 1 → 大顶堆：[5, 2, 1]，小顶堆：[10]</li>
+<li>将大顶堆最大值 5 移到小顶堆 → 大顶堆：[2, 1]，小顶堆：[5, 10]</li>
+<li>小顶堆大小 &gt; 大顶堆大小，将小顶堆最小值 5 移回大顶堆 → 大顶堆：[5, 2, 1]，小顶堆：[10]</li>
+<li>中位数：5 + ? 等一下，实际有 4 个数字 (1, 2, 5, 10)，中位数应该是 (2+5)&#x2F;2 &#x3D; 3.5</li>
+</ul>
+<p>让我们仔细算一下当前各堆状态：</p>
+<ul>
+<li>大顶堆：[5, 2, 1]，堆顶 5</li>
+<li>小顶堆：[10]，堆顶 10</li>
+<li>大顶堆 3 个元素，小顶堆 1 个元素</li>
+</ul>
+<p>等等，插入了四个数：5, 2, 10, 1</p>
+<p>我们上面的策略是怎么说的？再仔细核查一下：</p>
+<p>插入 1：</p>
+<ul>
+<li>总是先插入大顶堆 → 大顶堆：[5, 2, 1]，小顶堆：[10]</li>
+<li>然后大顶堆最大值移到小顶堆 → 大顶堆：[2, 1]，小顶堆：[5, 10]</li>
+<li>小顶堆 2 个 &gt; 大顶堆 2 个？不对，此时都是 2 个，不调整</li>
+<li>所以最终：大顶堆 [2, 1]（堆顶 2），小顶堆 [5, 10]（堆顶 5）</li>
+<li>中位数：(2 + 5) &#x2F; 2 &#x3D; 3.5 ✓</li>
+</ul>
+<p>这个策略是不是很巧妙？<strong>我们把”决定数字去哪个堆”的决策交给了堆，通过三步走的固定流程，自动维护了大小堆的平衡。</strong></p>
+<p>这个套路可以总结为：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">addNum</span><span class="hljs-params">(num)</span></span>:<br>    大顶堆<span class="hljs-selector-class">.offer</span>(num)          <span class="hljs-comment">// 先放入大顶堆</span><br>    小顶堆<span class="hljs-selector-class">.offer</span>(大顶堆<span class="hljs-selector-class">.poll</span>()) <span class="hljs-comment">// 把大顶堆最大的放去小顶堆</span><br>    <span class="hljs-keyword">if</span> 小顶堆<span class="hljs-selector-class">.size</span> &gt; 大顶堆<span class="hljs-selector-class">.size</span>:<br>        大顶堆<span class="hljs-selector-class">.offer</span>(小顶堆<span class="hljs-selector-class">.poll</span>()) <span class="hljs-comment">// 平衡大小</span><br></code></pre></td></tr></table></figure>
+
+<p>每次插入只需要 O(log n) 的时间，而取中位数只需要 O(1)。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MedianFinder</span> &#123;<br>    <span class="hljs-comment">// 大顶堆：维护左半部分（较小的数）</span><br>    <span class="hljs-keyword">private</span> PriorityQueue&lt;Integer&gt; left;<br>    <span class="hljs-comment">// 小顶堆：维护右半部分（较大的数）</span><br>    <span class="hljs-keyword">private</span> PriorityQueue&lt;Integer&gt; right;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">MedianFinder</span><span class="hljs-params">()</span> &#123;<br>        left = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PriorityQueue</span>&lt;&gt;((a, b) -&gt; b - a);<br>        right = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PriorityQueue</span>&lt;&gt;();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addNum</span><span class="hljs-params">(<span class="hljs-type">int</span> num)</span> &#123;<br>        <span class="hljs-comment">// 1. 先放入左半部分（大顶堆）</span><br>        left.offer(num);<br>        <span class="hljs-comment">// 2. 把左半部分的最大值移到右半部分</span><br>        right.offer(left.poll());<br>        <span class="hljs-comment">// 3. 如果右半部分比左半部分多，平衡一下</span><br>        <span class="hljs-keyword">if</span> (right.size() &gt; left.size()) &#123;<br>            left.offer(right.poll());<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">findMedian</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (left.size() == right.size()) &#123;<br>            <span class="hljs-comment">// 偶数个数，取两个堆顶的平均值</span><br>            <span class="hljs-keyword">return</span> (left.peek() + right.peek()) / <span class="hljs-number">2.0</span>;<br>        &#125;<br>        <span class="hljs-comment">// 奇数个数，左半部分多一个，堆顶就是中位数</span><br>        <span class="hljs-keyword">return</span> left.peek();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> heapq<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MedianFinder</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-comment"># 大顶堆：维护左半部分（Python 用负值模拟）</span><br>        <span class="hljs-variable language_">self</span>.left = []   <span class="hljs-comment"># 大顶堆，存负值</span><br>        <span class="hljs-comment"># 小顶堆：维护右半部分</span><br>        <span class="hljs-variable language_">self</span>.right = []  <span class="hljs-comment"># 小顶堆</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">addNum</span>(<span class="hljs-params">self, num: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-comment"># 1. 先放入左半部分（大顶堆）</span><br>        heapq.heappush(<span class="hljs-variable language_">self</span>.left, -num)<br>        <span class="hljs-comment"># 2. 把左半部分的最大值移到右半部分</span><br>        heapq.heappush(<span class="hljs-variable language_">self</span>.right, -heapq.heappop(<span class="hljs-variable language_">self</span>.left))<br>        <span class="hljs-comment"># 3. 如果右半部分比左半部分多，平衡一下</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(<span class="hljs-variable language_">self</span>.right) &gt; <span class="hljs-built_in">len</span>(<span class="hljs-variable language_">self</span>.left):<br>            heapq.heappush(<span class="hljs-variable language_">self</span>.left, -heapq.heappop(<span class="hljs-variable language_">self</span>.right))<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">findMedian</span>(<span class="hljs-params">self</span>) -&gt; <span class="hljs-built_in">float</span>:<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(<span class="hljs-variable language_">self</span>.left) == <span class="hljs-built_in">len</span>(<span class="hljs-variable language_">self</span>.right):<br>            <span class="hljs-comment"># 偶数个数，取两个堆顶的平均值</span><br>            <span class="hljs-keyword">return</span> (-<span class="hljs-variable language_">self</span>.left[<span class="hljs-number">0</span>] + <span class="hljs-variable language_">self</span>.right[<span class="hljs-number">0</span>]) / <span class="hljs-number">2.0</span><br>        <span class="hljs-comment"># 奇数个数，左半部分多一个</span><br>        <span class="hljs-keyword">return</span> -<span class="hljs-variable language_">self</span>.left[<span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>排序数组</td>
+<td>addNum: O(1), findMedian: O(n log n)</td>
+<td>O(n)</td>
+<td>每次查询都排序，查询极其昂贵</td>
+</tr>
+<tr>
+<td>有序插入</td>
+<td>addNum: O(n), findMedian: O(1)</td>
+<td>O(n)</td>
+<td>插入需要移动元素，插入昂贵</td>
+</tr>
+<tr>
+<td><strong>双堆法</strong></td>
+<td><strong>addNum: O(log n), findMedian: O(1)</strong></td>
+<td><strong>O(n)</strong></td>
+<td><strong>插入和查询都高效，最优解</strong></td>
+</tr>
+</tbody></table>
+<p>双堆法的精髓在于：</p>
+<ul>
+<li>每次 addNum 涉及 3 次堆操作（每次 O(log n)），总体仍然是 O(log n)</li>
+<li>findMedian 只需要看两个堆顶，是 O(1)</li>
+<li>空间复杂度 O(n) 是不可避免的，因为我们确实要存下所有数据</li>
+</ul>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>中位数这道题最宝贵的启发是：不要试图维护完整的有序性，只维护你真正需要的信息。</strong></p>
+<p>在整个序列中，我们关心的其实只有中间的那一两个数。与其费力地把所有数排好序，不如用两个堆把数据分成”较小的一半”和”较大的一半”，只追踪分界线上的两个极值。</p>
+<p>这和生活中的很多道理相通——<strong>做决策时，我们不需要知道所有细节，只需要知道关键的分界点在哪儿。</strong></p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><p>当我们在未来遇到”动态数据流”或”在线算法”类问题时，可以建立这样的思考顺序：</p>
+<ol>
+<li><strong>“我们需要知道什么信息？”</strong> 是所有元素的完整顺序，还是只需要某个特殊位置（最大值、最小值、中位数、Top K）？</li>
+<li><strong>“哪种数据结构天然适合这个场景？”</strong> 堆擅长维护极值，平衡树擅长维护相对顺序，前缀和擅长处理区间查询。</li>
+<li><strong>“能否把数据分成两半分别处理？”</strong> 双堆法本质上是”分治”思想在数据结构层面的体现。</li>
+</ol>
+<p>如果问题是”数据流中第 k 大的数”呢？那我们就只需要一个大小为 k 的小顶堆——让堆顶就是第 k 大的数。这比双堆更简单，因为只需要维护一个边界。</p>
+<p>如果问题是”数据流中出现频率最高的数”呢？那就需要哈希表 + 堆的组合了。</p>
+<p><strong>从需求出发，反推数据结构，而不是从数据结构出发寻找应用场景——这才是高手解题的思维模式。</strong></p>
+<hr>
+<blockquote>
+<p>下一篇预告：Hot 100 第 77 题——寻找重复数。当数组中有 n+1 个 1 到 n 之间的整数时，如何不用额外空间找到那个重复的数？</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>本文由 <a target="_blank" rel="noopener" href="https://algomentor.cn/">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a target="_blank" rel="noopener" href="https://algomentor.cn/">https://algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Hot100%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">Hot100算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" class="print-no-link">#优先队列</a>
+      
+        <a href="/tags/%E5%A0%86/" class="print-no-link">#堆</a>
+      
+        <a href="/tags/%E6%95%B0%E6%8D%AE%E6%B5%81/" class="print-no-link">#数据流</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>数据流的中位数</div>
+      <div>http://example.com/2026/07/13/Hot100题解/76-数据流的中位数/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/77-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8%E7%9A%84%E6%9C%80%E4%BD%B3%E6%97%B6%E6%9C%BA/" title="买卖股票的最佳时机">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">买卖股票的最佳时机</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/75-%E5%89%8D%20K%20%E4%B8%AA%E9%AB%98%E9%A2%91%E5%85%83%E7%B4%A0/" title="前 K 个高频元素">
+                        <span class="hidden-mobile">前 K 个高频元素</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

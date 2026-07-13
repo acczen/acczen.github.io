@@ -1,0 +1,910 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="将一棵二叉树原地展开为一条形似单链表的右指针链条，要求左指针全部置空且结点顺序为前序遍历顺序。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树展开为链表">
+<meta property="og:url" content="http://example.com/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/46-%E4%BA%8C%E5%8F%89%E6%A0%91%E5%B1%95%E5%BC%80%E4%B8%BA%E9%93%BE%E8%A1%A8/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="将一棵二叉树原地展开为一条形似单链表的右指针链条，要求左指针全部置空且结点顺序为前序遍历顺序。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:59:31.337Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="二叉树">
+<meta property="article:tag" content="前序遍历">
+<meta property="article:tag" content="原地算法">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>二叉树展开为链表 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="二叉树展开为链表"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">二叉树展开为链表</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="二叉树展开为链表"><a href="#二叉树展开为链表" class="headerlink" title="二叉树展开为链表"></a>二叉树展开为链表</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="暴力解法：前序遍历-重连"><a href="#暴力解法：前序遍历-重连" class="headerlink" title="暴力解法：前序遍历 + 重连"></a>暴力解法：前序遍历 + 重连</h3><p>拿到这道题，我们的第一反应通常是：<strong>展开后的顺序不就是前序遍历的顺序吗？</strong></p>
+<p>那最简单的方法就呼之欲出了——先做一次前序遍历，把所有结点存到一个列表里，然后再遍历这个列表，把每个结点的 <code>left</code> 置为 <code>null</code>，<code>right</code> 指向下一个结点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">flatten</span><span class="hljs-params">(TreeNode root)</span> &#123;<br>    List&lt;TreeNode&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    preorder(root, list);<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; list.size() - <span class="hljs-number">1</span>; i++) &#123;<br>        <span class="hljs-type">TreeNode</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> list.get(i);<br>        cur.left = <span class="hljs-literal">null</span>;<br>        cur.right = list.get(i + <span class="hljs-number">1</span>);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">preorder</span><span class="hljs-params">(TreeNode node, List&lt;TreeNode&gt; list)</span> &#123;<br>    <span class="hljs-keyword">if</span> (node == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span>;<br>    list.add(node);<br>    preorder(node.left, list);<br>    preorder(node.right, list);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个解法能通过，但存在一个明显的问题：<strong>我们用了 O(n) 的额外空间来存列表</strong>。题目给的是一个树，我们能不能直接在树上动手脚，不借助额外的存储呢？</p>
+<p>不妨想一下：我们要的结果是一棵”歪脖子树”——每个结点只有右孩子。那么能不能一边遍历一边重建？</p>
+<h3 id="自问自答：能不能一边遍历一边重构？"><a href="#自问自答：能不能一边遍历一边重构？" class="headerlink" title="自问自答：能不能一边遍历一边重构？"></a>自问自答：能不能一边遍历一边重构？</h3><p>让我们设想一下：从根结点开始，如果我们<strong>先把左子树拉平成一条链，再把右子树拉平成一条链</strong>，然后让左链的尾巴接上右链的头——看起来很有希望。</p>
+<p>不过这里有一个细节：<strong>左链的尾巴是谁？</strong> 对一棵树做前序遍历，左子树的最后一个结点就是左子树中最右边的那个结点。我们把左链接到根结点的 <code>right</code> 上之后，需要找到左链的末尾，再把右链接上去。</p>
+<p>这就引出了递归解法。</p>
+<h3 id="解法一：递归后序遍历"><a href="#解法一：递归后序遍历" class="headerlink" title="解法一：递归后序遍历"></a>解法一：递归后序遍历</h3><p>思路很清晰：</p>
+<ol>
+<li>递归地将左子树展开为链表</li>
+<li>递归地将右子树展开为链表</li>
+<li>将根结点的 <code>right</code> 指向展开后的左子树，<code>left</code> 置为 <code>null</code></li>
+<li>沿着新的右链走到末尾，把展开后的右子树接上去</li>
+</ol>
+<p>每一步都在做同一件事：<strong>把一棵树拍平成一条右链，同时返回这条链的最后一个结点</strong>（因为父结点需要知道在哪里接上右子树）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">flatten</span><span class="hljs-params">(TreeNode root)</span> &#123;<br>    flattenAndReturnTail(root);<br>&#125;<br><br><span class="hljs-keyword">private</span> TreeNode <span class="hljs-title function_">flattenAndReturnTail</span><span class="hljs-params">(TreeNode node)</span> &#123;<br>    <span class="hljs-keyword">if</span> (node == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br><br>    <span class="hljs-type">TreeNode</span> <span class="hljs-variable">leftTail</span>  <span class="hljs-operator">=</span> flattenAndReturnTail(node.left);<br>    <span class="hljs-type">TreeNode</span> <span class="hljs-variable">rightTail</span> <span class="hljs-operator">=</span> flattenAndReturnTail(node.right);<br><br>    <span class="hljs-comment">// 先接左子树</span><br>    <span class="hljs-keyword">if</span> (leftTail != <span class="hljs-literal">null</span>) &#123;<br>        leftTail.right = node.right;   <span class="hljs-comment">// 左链末尾接上右链</span><br>        node.right     = node.left;    <span class="hljs-comment">// 根结点右指针指向左链</span><br>        node.left      = <span class="hljs-literal">null</span>;         <span class="hljs-comment">// 左指针置空</span><br>    &#125;<br><br>    <span class="hljs-comment">// 返回整棵树的最后一个结点</span><br>    <span class="hljs-keyword">if</span> (rightTail != <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> rightTail;<br>    <span class="hljs-keyword">if</span> (leftTail  != <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> leftTail;<br>    <span class="hljs-keyword">return</span> node;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>时间 O(n)，空间 O(h)（递归栈深度，最坏 O(n)）。</p>
+<p>但递归解法在树退化成链时递归深度依然可能很大。有没有办法<strong>完全不用递归</strong>？</p>
+<h3 id="解法二：迭代-寻找前驱（Morris-思想）"><a href="#解法二：迭代-寻找前驱（Morris-思想）" class="headerlink" title="解法二：迭代 + 寻找前驱（Morris 思想）"></a>解法二：迭代 + 寻找前驱（Morris 思想）</h3><p>让我们回到刚才那个朴素的问题：<strong>展开链表 &#x3D; 前序遍历</strong>。如果我们能在遍历的过程中就完成指针重连，是不是就能做到 O(1) 空间？</p>
+<p>前序遍历的顺序是 <strong>根 → 左 → 右</strong>。对于一个结点 <code>cur</code>：</p>
+<ul>
+<li>如果 <code>cur</code> 没有左孩子，那就好办了——不用处理，直接往右走</li>
+<li>如果 <code>cur</code> 有左孩子，那么<strong>左子树在前序遍历中会紧跟在 <code>cur</code> 之后</strong>，而<strong>右子树会在整个左子树遍历完之后才轮到</strong></li>
+</ul>
+<p>那么关键来了：<strong>左子树遍历完之后的最后一个结点是谁？</strong> 是左子树最右边的那个结点（前驱结点）。这个结点遍历完之后，下一个就该轮到右子树了。</p>
+<p>所以我们的操作就清晰了：</p>
+<ol>
+<li>找到 <code>cur</code> 左子树中<strong>最右侧的结点</strong>（前驱）</li>
+<li>把这个前驱的 <code>right</code> 指向 <code>cur.right</code>（把右子树嫁接到左链末尾）</li>
+<li>把 <code>cur.right</code> 指向 <code>cur.left</code>，<code>cur.left</code> 置为 <code>null</code></li>
+<li><code>cur</code> 移到新的 <code>cur.right</code>，重复上述过程</li>
+</ol>
+<p>这个过程不需要额外空间，<strong>完全在指针层面完成了重构</strong>。</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs livescript">初始：<br>     <span class="hljs-number">1</span><br>    / <span class="hljs-string">\</span><br>   <span class="hljs-number">2</span>   <span class="hljs-number">5</span><br>  / <span class="hljs-string">\</span>   <span class="hljs-string">\</span><br> <span class="hljs-number">3</span>   <span class="hljs-number">4</span>   <span class="hljs-number">6</span><br><br>cur=<span class="hljs-number">1</span>，左子树最右侧结点是 <span class="hljs-number">4</span><br><span class="hljs-number">4.right</span> = <span class="hljs-number">5</span> (原右子树)，<span class="hljs-number">1.right</span> = <span class="hljs-number">2</span>，<span class="hljs-number">1.left</span> = <span class="hljs-literal">null</span><br>     <span class="hljs-number">1</span><br>      <span class="hljs-string">\</span><br>       <span class="hljs-number">2</span><br>      / <span class="hljs-string">\</span><br>     <span class="hljs-number">3</span>   <span class="hljs-number">4</span><br>          <span class="hljs-string">\</span><br>           <span class="hljs-number">5</span><br>            <span class="hljs-string">\</span><br>             <span class="hljs-number">6</span><br><br>cur=<span class="hljs-number">2</span>，左子树最右侧结点是 <span class="hljs-number">4</span><br><span class="hljs-number">4.right</span> = <span class="hljs-number">5</span> (已在正确位置)，<span class="hljs-number">2.right</span> = <span class="hljs-number">3</span>，<span class="hljs-number">2.left</span> = <span class="hljs-literal">null</span><br>     <span class="hljs-number">1</span><br>      <span class="hljs-string">\</span><br>       <span class="hljs-number">2</span><br>        <span class="hljs-string">\</span><br>         <span class="hljs-number">3</span><br>          <span class="hljs-string">\</span><br>           <span class="hljs-number">4</span><br>            <span class="hljs-string">\</span><br>             <span class="hljs-number">5</span><br>              <span class="hljs-string">\</span><br>               <span class="hljs-number">6</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="复杂度一览"><a href="#复杂度一览" class="headerlink" title="复杂度一览"></a>复杂度一览</h3><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前序遍历+重连</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>最直观，但用了额外列表</td>
+</tr>
+<tr>
+<td>递归后序</td>
+<td>O(n)</td>
+<td>O(h)</td>
+<td>h 为树高，最坏 O(n)</td>
+</tr>
+<tr>
+<td>Morris 迭代</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>原地修改，最优</td>
+</tr>
+</tbody></table>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">flatten</span><span class="hljs-params">(TreeNode root)</span> &#123;<br>        <span class="hljs-type">TreeNode</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> root;<br>        <span class="hljs-keyword">while</span> (cur != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">if</span> (cur.left != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-comment">// 找到左子树的最右结点（前驱）</span><br>                <span class="hljs-type">TreeNode</span> <span class="hljs-variable">predecessor</span> <span class="hljs-operator">=</span> cur.left;<br>                <span class="hljs-keyword">while</span> (predecessor.right != <span class="hljs-literal">null</span>) &#123;<br>                    predecessor = predecessor.right;<br>                &#125;<br><br>                <span class="hljs-comment">// 将右子树嫁接到前驱的右指针</span><br>                predecessor.right = cur.right;<br><br>                <span class="hljs-comment">// 将左子树移到右边，左指针置空</span><br>                cur.right = cur.left;<br>                cur.left = <span class="hljs-literal">null</span>;<br>            &#125;<br>            cur = cur.right;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">flatten</span>(<span class="hljs-params">self, root: <span class="hljs-type">Optional</span>[TreeNode]</span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Do not return anything, modify root in-place instead.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        cur = root<br>        <span class="hljs-keyword">while</span> cur:<br>            <span class="hljs-keyword">if</span> cur.left:<br>                <span class="hljs-comment"># 找到左子树的最右结点（前驱）</span><br>                predecessor = cur.left<br>                <span class="hljs-keyword">while</span> predecessor.right:<br>                    predecessor = predecessor.right<br><br>                <span class="hljs-comment"># 将右子树嫁接到前驱的右指针</span><br>                predecessor.right = cur.right<br><br>                <span class="hljs-comment"># 将左子树移到右边，左指针置空</span><br>                cur.right = cur.left<br>                cur.left = <span class="hljs-literal">None</span><br><br>            cur = cur.right<br></code></pre></td></tr></table></figure>
+
+<p>两个版本的逻辑完全一致。核心就是三句话：</p>
+<ol>
+<li>找前驱</li>
+<li>前驱.right &#x3D; cur.right</li>
+<li>cur.right &#x3D; cur.left, cur.left &#x3D; null</li>
+</ol>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>前序遍历与树结构之间的关系。</strong> 这道题本质上是在问：你能在不借助额外数组的情况下，按照前序遍历的顺序重新组织树的指针吗？答案是利用前驱结点的”桥梁”作用——左子树遍历完的最后一个结点恰好就是连接左右子树的天然位置。</p>
+<p>这也是一种”<strong>原地算法</strong>“的思维方式：当我们需要按照某种顺序重新组织数据时，先想想能不能<strong>通过调整指针本身</strong>来达成目标，而不是先复制再重建。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><p>如果题目要求<strong>原地修改树的结构</strong>，优先往这两个方向思考：</p>
+<ul>
+<li><strong>递归后序处理</strong>：先处理左右子树，再处理当前结点。这是一种自底向上的思维，很适合于”整棵树要变成另一种形态”的问题。</li>
+<li><strong>寻找前驱&#x2F;后继</strong>：如果问题涉及到遍历顺序，找前驱或后继结点往往能在原地完成指针重排。这和 Morris 遍历的思想一脉相承。</li>
+</ul>
+<p>另外，这道题也提醒我们：<strong>不要被”链表”二字迷惑</strong>——展开后的结构本质上仍然是一棵二叉树，只不过所有左孩子都为空而已。理解这一点，递归解法的正确性也就一目了然了。</p>
+<hr>
+<blockquote>
+<p>本文由 <a target="_blank" rel="noopener" href="https://algomentor.cn/">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a target="_blank" rel="noopener" href="https://algomentor.cn/">https://algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Hot100%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">Hot100算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%8E%9F%E5%9C%B0%E7%AE%97%E6%B3%95/" class="print-no-link">#原地算法</a>
+      
+        <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" class="print-no-link">#二叉树</a>
+      
+        <a href="/tags/%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86/" class="print-no-link">#前序遍历</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>二叉树展开为链表</div>
+      <div>http://example.com/2026/07/13/Hot100题解/46-二叉树展开为链表/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/43-%E9%AA%8C%E8%AF%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" title="验证二叉搜索树">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">验证二叉搜索树</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/47-%E4%BB%8E%E5%89%8D%E5%BA%8F%E4%B8%8E%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%BA%8F%E5%88%97%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/" title="从前序与中序遍历序列构造二叉树">
+                        <span class="hidden-mobile">从前序与中序遍历序列构造二叉树</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

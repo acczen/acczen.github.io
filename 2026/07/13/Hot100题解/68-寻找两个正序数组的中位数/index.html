@@ -1,0 +1,915 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="从合并数组的暴力解法出发，一步步推导出 O(log(min(m,n))) 的最优解法，理解「按位置分割」的二分思想">
+<meta property="og:type" content="article">
+<meta property="og:title" content="寻找两个正序数组的中位数">
+<meta property="og:url" content="http://example.com/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/68-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="从合并数组的暴力解法出发，一步步推导出 O(log(min(m,n))) 的最优解法，理解「按位置分割」的二分思想">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:59:31.352Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="二分查找">
+<meta property="article:tag" content="分治">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>寻找两个正序数组的中位数 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="寻找两个正序数组的中位数"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">寻找两个正序数组的中位数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="寻找两个正序数组的中位数"><a href="#寻找两个正序数组的中位数" class="headerlink" title="寻找两个正序数组的中位数"></a>寻找两个正序数组的中位数</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="首先，最简单的方法是什么？"><a href="#首先，最简单的方法是什么？" class="headerlink" title="首先，最简单的方法是什么？"></a>首先，最简单的方法是什么？</h3><p>题目给了我们两个已经排好序的数组，让我们找出它们合并后的中位数。</p>
+<p>最直接的办法——把两个数组合并成一个有序数组，然后直接取中间位置的值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span>[] merged = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[m + n];<br><span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, j = <span class="hljs-number">0</span>, k = <span class="hljs-number">0</span>;<br><span class="hljs-keyword">while</span> (i &lt; m &amp;&amp; j &lt; n) &#123;<br>    <span class="hljs-keyword">if</span> (nums1[i] &lt; nums2[j]) merged[k++] = nums1[i++];<br>    <span class="hljs-keyword">else</span> merged[k++] = nums2[j++];<br>&#125;<br><span class="hljs-comment">// 处理剩余元素...</span><br><span class="hljs-comment">// 然后取 merged[(m+n)/2] 或平均值</span><br></code></pre></td></tr></table></figure>
+
+<p>这种方法的时间复杂度是 O(m+n)，空间复杂度也是 O(m+n)。虽然能通过，但题目明确要求时间复杂度为 O(log(m+n))——看到 log，我们自然联想到<strong>二分查找</strong>。</p>
+<h3 id="不合并数组，能直接找到中位数吗？"><a href="#不合并数组，能直接找到中位数吗？" class="headerlink" title="不合并数组，能直接找到中位数吗？"></a>不合并数组，能直接找到中位数吗？</h3><p>让我们思考一下：中位数的本质是什么？</p>
+<blockquote>
+<p>中位数将一个有序序列分成左右两个等长的部分，且左半部分的所有元素都不大于右半部分的所有元素。</p>
+</blockquote>
+<p>也就是说，我们要在合并后的序列中找到一个<strong>分割点</strong>，使得左右两侧元素个数相等（或左侧多一个）。</p>
+<p>既然两个数组都是有序的，这个分割点必然同时落在两个数组上。换句话说，我们需要在 <code>nums1</code> 中选一个分割位置 <code>i</code>，在 <code>nums2</code> 中选一个分割位置 <code>j</code>，使得：</p>
+<ol>
+<li>左侧元素总数 &#x3D; 右侧元素总数（或左侧多一个）</li>
+<li>左侧的最大值 &lt;&#x3D; 右侧的最小值</li>
+</ol>
+<p>这样一来，中位数就由分割点两侧的元素决定。</p>
+<h3 id="怎么找到这个分割点？"><a href="#怎么找到这个分割点？" class="headerlink" title="怎么找到这个分割点？"></a>怎么找到这个分割点？</h3><p>假设 <code>nums1</code> 的长度为 <code>m</code>，<code>nums2</code> 的长度为 <code>n</code>。合并后的序列总长度为 <code>m+n</code>。</p>
+<p>如果我们把合并后序列的左侧定义为包含前 <code>(m+n+1)/2</code> 个元素（向下取整），那么左侧的元素个数就是固定的。</p>
+<p>设 <code>nums1</code> 左侧取了 <code>i</code> 个元素，则 <code>nums2</code> 左侧必须取 <code>j = (m+n+1)/2 - i</code> 个元素，这样两侧总数才匹配。</p>
+<p>现在问题转化为：找到一个 <code>i</code>（0 &lt;&#x3D; i &lt;&#x3D; m），使得：</p>
+<ul>
+<li><code>nums1[i-1] &lt;= nums2[j]</code> —— nums1 左侧的最大值不超过 nums2 右侧的最小值</li>
+<li><code>nums2[j-1] &lt;= nums1[i]</code> —— nums2 左侧的最大值不超过 nums1 右侧的最小值</li>
+</ul>
+<p>如果这两个条件都满足，我们就找到了正确的分割！</p>
+<h3 id="为什么用二分？"><a href="#为什么用二分？" class="headerlink" title="为什么用二分？"></a>为什么用二分？</h3><p><code>i</code> 的取值范围是 <code>[0, m]</code>，我们可以暴力尝试每一个 <code>i</code>，但这样是 O(m)。不过仔细观察会发现一个重要性质：</p>
+<blockquote>
+<p>如果 <code>nums1[i-1] &gt; nums2[j]</code>，说明 <code>nums1</code> 左侧取多了，<code>i</code> 应该减小（让 <code>nums1</code> 少贡献一些元素，<code>nums2</code> 多贡献一些）。</p>
+<p>如果 <code>nums2[j-1] &gt; nums1[i]</code>，说明 <code>nums1</code> 左侧取少了，<code>i</code> 应该增大。</p>
+</blockquote>
+<p>这就构成了二分的条件！我们可以在 <code>nums1</code> 上对 <code>i</code> 进行二分搜索。</p>
+<p>还有一个关键优化：我们总是在<strong>较短的数组</strong>上进行二分。因为二分的时间复杂度是 O(log m)，我们希望 m 尽可能小，所以取 <code>nums1</code> 为较短的数组。这样整体复杂度就是 O(log(min(m, n)))。</p>
+<h3 id="边界情况如何处理？"><a href="#边界情况如何处理？" class="headerlink" title="边界情况如何处理？"></a>边界情况如何处理？</h3><p>二分过程中，<code>i</code> 可能为 0（nums1 左侧没有元素）或 <code>m</code>（nums1 右侧没有元素），<code>j</code> 也可能为 0 或 <code>n</code>。我们需要用特殊值来处理：</p>
+<ul>
+<li>当 <code>i = 0</code> 时，<code>nums1[i-1]</code> 不存在，视为 <code>-∞</code></li>
+<li>当 <code>i = m</code> 时，<code>nums1[i]</code> 不存在，视为 <code>+∞</code></li>
+<li>当 <code>j = 0</code> 时，<code>nums2[j-1]</code> 不存在，视为 <code>-∞</code></li>
+<li>当 <code>j = n</code> 时，<code>nums2[j]</code> 不存在，视为 <code>+∞</code></li>
+</ul>
+<p>这样比较条件仍然可以统一处理。</p>
+<h3 id="找到分割后如何计算中位数？"><a href="#找到分割后如何计算中位数？" class="headerlink" title="找到分割后如何计算中位数？"></a>找到分割后如何计算中位数？</h3><ul>
+<li>如果 <code>(m+n)</code> 是奇数，中位数就是左侧的最大值：<code>max(nums1LeftMax, nums2LeftMax)</code></li>
+<li>如果 <code>(m+n)</code> 是偶数，中位数是左侧最大值和右侧最小值的平均：<code>(max(leftMax) + min(rightMin)) / 2</code></li>
+</ul>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">double</span> <span class="hljs-title function_">findMedianSortedArrays</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums1, <span class="hljs-type">int</span>[] nums2)</span> &#123;<br>        <span class="hljs-comment">// 保证 nums1 是较短的数组</span><br>        <span class="hljs-keyword">if</span> (nums1.length &gt; nums2.length) &#123;<br>            <span class="hljs-type">int</span>[] temp = nums1;<br>            nums1 = nums2;<br>            nums2 = temp;<br>        &#125;<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> nums1.length;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums2.length;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">totalLeft</span> <span class="hljs-operator">=</span> (m + n + <span class="hljs-number">1</span>) / <span class="hljs-number">2</span>;<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, right = m;<br><br>        <span class="hljs-keyword">while</span> (left &lt; right) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> left + (right - left + <span class="hljs-number">1</span>) / <span class="hljs-number">2</span>; <span class="hljs-comment">// nums1 左侧取 i 个</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> totalLeft - i;                  <span class="hljs-comment">// nums2 左侧取 j 个</span><br><br>            <span class="hljs-keyword">if</span> (nums1[i - <span class="hljs-number">1</span>] &gt; nums2[j]) &#123;<br>                <span class="hljs-comment">// nums1 左侧最大值太大，i 需要减小</span><br>                right = i - <span class="hljs-number">1</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// nums1 左侧最大值 &lt;= nums2[j]，尝试增大 i</span><br>                left = i;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> left;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> totalLeft - i;<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">nums1LeftMax</span>  <span class="hljs-operator">=</span> (i == <span class="hljs-number">0</span>)   ? Integer.MIN_VALUE : nums1[i - <span class="hljs-number">1</span>];<br>        <span class="hljs-type">int</span> <span class="hljs-variable">nums1RightMin</span> <span class="hljs-operator">=</span> (i == m)   ? Integer.MAX_VALUE : nums1[i];<br>        <span class="hljs-type">int</span> <span class="hljs-variable">nums2LeftMax</span>  <span class="hljs-operator">=</span> (j == <span class="hljs-number">0</span>)   ? Integer.MIN_VALUE : nums2[j - <span class="hljs-number">1</span>];<br>        <span class="hljs-type">int</span> <span class="hljs-variable">nums2RightMin</span> <span class="hljs-operator">=</span> (j == n)   ? Integer.MAX_VALUE : nums2[j];<br><br>        <span class="hljs-keyword">if</span> ((m + n) % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-keyword">return</span> Math.max(nums1LeftMax, nums2LeftMax);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> (Math.max(nums1LeftMax, nums2LeftMax)<br>                  + Math.min(nums1RightMin, nums2RightMin)) / <span class="hljs-number">2.0</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">findMedianSortedArrays</span>(<span class="hljs-params">self, nums1: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], nums2: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">float</span>:<br>        <span class="hljs-comment"># 确保 nums1 是较短的数组</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(nums1) &gt; <span class="hljs-built_in">len</span>(nums2):<br>            nums1, nums2 = nums2, nums1<br><br>        m, n = <span class="hljs-built_in">len</span>(nums1), <span class="hljs-built_in">len</span>(nums2)<br>        total_left = (m + n + <span class="hljs-number">1</span>) // <span class="hljs-number">2</span><br><br>        left, right = <span class="hljs-number">0</span>, m<br><br>        <span class="hljs-keyword">while</span> left &lt; right:<br>            i = left + (right - left + <span class="hljs-number">1</span>) // <span class="hljs-number">2</span>  <span class="hljs-comment"># nums1 左侧取 i 个</span><br>            j = total_left - i                  <span class="hljs-comment"># nums2 左侧取 j 个</span><br><br>            <span class="hljs-keyword">if</span> nums1[i - <span class="hljs-number">1</span>] &gt; nums2[j]:<br>                <span class="hljs-comment"># nums1 左侧最大值太大，i 需要减小</span><br>                right = i - <span class="hljs-number">1</span><br>            <span class="hljs-keyword">else</span>:<br>                left = i<br><br>        i = left<br>        j = total_left - i<br><br>        nums1_left_max  = <span class="hljs-built_in">float</span>(<span class="hljs-string">&#x27;-inf&#x27;</span>) <span class="hljs-keyword">if</span> i == <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> nums1[i - <span class="hljs-number">1</span>]<br>        nums1_right_min = <span class="hljs-built_in">float</span>(<span class="hljs-string">&#x27;inf&#x27;</span>)  <span class="hljs-keyword">if</span> i == m <span class="hljs-keyword">else</span> nums1[i]<br>        nums2_left_max  = <span class="hljs-built_in">float</span>(<span class="hljs-string">&#x27;-inf&#x27;</span>) <span class="hljs-keyword">if</span> j == <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> nums2[j - <span class="hljs-number">1</span>]<br>        nums2_right_min = <span class="hljs-built_in">float</span>(<span class="hljs-string">&#x27;inf&#x27;</span>)  <span class="hljs-keyword">if</span> j == n <span class="hljs-keyword">else</span> nums2[j]<br><br>        <span class="hljs-keyword">if</span> (m + n) % <span class="hljs-number">2</span> == <span class="hljs-number">1</span>:<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">max</span>(nums1_left_max, nums2_left_max)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> (<span class="hljs-built_in">max</span>(nums1_left_max, nums2_left_max)<br>                  + <span class="hljs-built_in">min</span>(nums1_right_min, nums2_right_min)) / <span class="hljs-number">2.0</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力合并</td>
+<td>O(m+n)</td>
+<td>O(m+n)</td>
+<td>合并两个数组到新数组，取中间值</td>
+</tr>
+<tr>
+<td>双指针模拟</td>
+<td>O(m+n)</td>
+<td>O(1)</td>
+<td>用两个指针遍历到中间位置，不实际合并</td>
+</tr>
+<tr>
+<td><strong>二分分割（最优）</strong></td>
+<td><strong>O(log(min(m,n)))</strong></td>
+<td><strong>O(1)</strong></td>
+<td>对较短的数组二分搜索分割点</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>理解中位数的定义比套模板更重要。</strong></p>
+<p>这道题最妙的地方在于：我们不是直接”找”中位数，而是通过中位数的定义——“将序列分为等长的左右两部分，且左 &lt;&#x3D; 右”——反过来构造出了分割方案。</p>
+<p>很多二分问题都是类似的：不是在一维数组上直接搜索目标值，而是搜索一个<strong>满足条件的位置</strong>。条件判断函数决定了二分的走向。</p>
+<p><strong>“在短数组上二分”是一个重要技巧。</strong></p>
+<p>当问题涉及两个数组且需要 O(log) 时间复杂度时，通常是对较短的数组进行二分，这样可以保证 log 的参数尽量小。这是一种”降维”思维：把二维的搜索问题转化为一维的二分搜索。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ol>
+<li><strong>看到 O(log) 的时间复杂度要求，立刻想到二分。</strong></li>
+<li><strong>两个有序数组 + 中位数 + O(log)，大概率是分割 + 二分。</strong></li>
+<li><strong>先问自己：能不能直接对短数组进行二分？</strong> 如果能找到单调性条件（比如某个值偏大需要减小分割点），二分就可行。</li>
+<li><strong>边界处理是这类题目的难点</strong>——提前想好 i&#x3D;0, i&#x3D;m, j&#x3D;0, j&#x3D;n 四种情况，用 ±∞ 统一处理，往往比写 if-else 分支更清晰。</li>
+</ol>
+<p>这道题是经典的”hard 题 soft 解”——核心思想并不复杂，难的是把边界情况考虑周全。理解了分割 + 二分的思路，以后遇到类似问题（比如在两个有序数组中找第 k 小的数），就能举一反三了。</p>
+<hr>
+<blockquote>
+<p>本文由 <a target="_blank" rel="noopener" href="https://algomentor.cn/">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a target="_blank" rel="noopener" href="https://algomentor.cn/">https://algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Hot100%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">Hot100算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="print-no-link">#二分查找</a>
+      
+        <a href="/tags/%E5%88%86%E6%B2%BB/" class="print-no-link">#分治</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>寻找两个正序数组的中位数</div>
+      <div>http://example.com/2026/07/13/Hot100题解/68-寻找两个正序数组的中位数/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/71-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%A7%A3%E7%A0%81/" title="字符串解码">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">字符串解码</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/72-%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/" title="每日温度">
+                        <span class="hidden-mobile">每日温度</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

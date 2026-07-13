@@ -1,0 +1,1002 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="从暴力解法出发，通过单调栈将每日温度问题的复杂度从 O(n²) 优化到 O(n)，在「下一个更大元素」类问题中建立标准解法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="每日温度">
+<meta property="og:url" content="http://example.com/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/72-%E6%AF%8F%E6%97%A5%E6%B8%A9%E5%BA%A6/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="从暴力解法出发，通过单调栈将每日温度问题的复杂度从 O(n²) 优化到 O(n)，在「下一个更大元素」类问题中建立标准解法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:59:31.355Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="单调栈">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="栈">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>每日温度 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="每日温度"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">每日温度</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="每日温度"><a href="#每日温度" class="headerlink" title="每日温度"></a>每日温度</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="从题目说起"><a href="#从题目说起" class="headerlink" title="从题目说起"></a>从题目说起</h3><p>给定一个整数数组 <code>temperatures</code>，表示每天的温度。我们需要返回一个等长的数组 <code>answer</code>，其中 <code>answer[i]</code> 表示在第 i 天之后，需要等多少天才能遇到更高的温度。如果之后的气温都不会再升高，则该位置为 0。</p>
+<p>举个例子：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs inform7">temperatures = <span class="hljs-comment">[73, 74, 75, 71, 69, 72, 76, 73]</span><br>输出:          <span class="hljs-comment">[ 1,  1,  4,  2,  1,  1,  0,  0]</span><br></code></pre></td></tr></table></figure>
+
+<p>第 0 天 73°，第二天 74° 就更高了，所以答案是 1；第 2 天 75°，要等到第 6 天 76° 才更高，相隔 4 天，所以答案是 4。最后两天之后没有更高的温度了，填 0。</p>
+<p>看起来不算复杂，那我们从最直觉的方式开始。</p>
+<h3 id="第一反应：双层循环"><a href="#第一反应：双层循环" class="headerlink" title="第一反应：双层循环"></a>第一反应：双层循环</h3><p>最直接的想法是：对于每一天，往后遍历，找到第一个比它高的温度，记录距离。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i + <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>        <span class="hljs-keyword">if</span> (temperatures[j] &gt; temperatures[i]) &#123;<br>            answer[i] = j - i;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个写法几乎不需要思考。但问题也很明显——每一天都要往后扫描，最坏情况下（温度单调递减）内层循环要走完整个数组，总复杂度是 <strong>O(n²)</strong>。当输入规模达到 10^5 时，这会超时。</p>
+<p><strong>那么，能不能让每一天不重复扫描那些已经看过的元素？</strong></p>
+<p>让我们停下来想一个问题：当我们处理第 i 天时，我们真正关心的是什么？是<strong>未来第一个比它大的值的位置</strong>。而未来尚未处理，我们不知道。</p>
+<p>但换个方向呢？如果我们从右往左处理，已经处理过的部分就是”未来”的信息——这听起来有道理，但似乎还是需要某种方式快速找到”第一个更大的”。</p>
+<p>让我们换一个更常见的视角。</p>
+<h3 id="换个角度：不是为每一天找未来，而是为未来记录今天"><a href="#换个角度：不是为每一天找未来，而是为未来记录今天" class="headerlink" title="换个角度：不是为每一天找未来，而是为未来记录今天"></a>换个角度：不是为每一天找未来，而是为未来记录今天</h3><p>假设我们正从左向右遍历。当我们站在第 i 天时，我们不知道未来会发生什么。但是，对于之前那些<strong>还没有遇到更高温度的</strong>日子来说，今天的温度可能就是它们的答案。</p>
+<p>换句话说，我们维护一个集合，里面存放那些”还在等待更高温度”的日子。每遇到一个新温度，就去看看这个集合里有没有比它还矮的——如果有，那些矮日子的答案就是今天。</p>
+<p>这个”还在等待的”日子有什么特征呢？如果我们把它们的温度画出来，会发现它们一定是<strong>递减</strong>的。为什么？因为如果某一天的温度高于它后面的某天，那么后面的那天在等待时，前面那天也在等待——而一旦遇到更高的温度，会先满足前面那天（因为它离得更近？不对，是更高的那天会先满足栈顶的元素）。</p>
+<p>等等，让我们重新整理一下直觉。</p>
+<h3 id="单调递减栈"><a href="#单调递减栈" class="headerlink" title="单调递减栈"></a>单调递减栈</h3><p>我们维护一个栈，栈里存的是<strong>还没有找到更高温度的日子的下标</strong>，并且这些下标对应的温度在栈中从底到顶是<strong>递减</strong>的。</p>
+<p>为什么保持递减？假设栈里有下标 a 和 b，a 在 b 下面（a 先入栈），那么 <code>temperatures[a] &gt;= temperatures[b]</code>。如果新来的温度 <code>t</code> 大于栈顶的温度，那么栈顶就找到了答案——它的答案就是 <code>i - stack.pop()</code>。</p>
+<p>弹出栈顶后，新的栈顶温度仍然大于等于之前那个（因为栈是递减的），如果 <code>t</code> 比它还大，继续弹出并更新答案。直到栈为空或者栈顶温度大于等于 <code>t</code>，我们再把当前下标 i 入栈。</p>
+<p>这样，每个元素最多入栈一次、出栈一次，总复杂度 O(n)。</p>
+<p>让我们用手上的例子走一遍来验证：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">temperatures</span> = [<span class="hljs-number">73</span>, <span class="hljs-number">74</span>, <span class="hljs-number">75</span>, <span class="hljs-number">71</span>, <span class="hljs-number">69</span>, <span class="hljs-number">72</span>, <span class="hljs-number">76</span>, <span class="hljs-number">73</span>]<br></code></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>当前温度</th>
+<th>栈（下标 -&gt; 温度）</th>
+<th>动作</th>
+<th>更新结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>73</td>
+<td>[]</td>
+<td>栈空，下标0入栈</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>74</td>
+<td>[0 -&gt; 73]</td>
+<td>74 &gt; 73，弹出0，answer[0]&#x3D;1-0&#x3D;1，下标1入栈</td>
+<td>[1]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>75</td>
+<td>[1 -&gt; 74]</td>
+<td>75 &gt; 74，弹出1，answer[1]&#x3D;2-1&#x3D;1，下标2入栈</td>
+<td>[1,1]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>71</td>
+<td>[2 -&gt; 75]</td>
+<td>71 &lt; 75，直接入栈</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>69</td>
+<td>[2 -&gt; 75, 3 -&gt; 71]</td>
+<td>69 &lt; 71，直接入栈</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>72</td>
+<td>[2 -&gt; 75, 3 -&gt; 71, 4 -&gt; 69]</td>
+<td>72 &gt; 69，弹出4，answer[4]&#x3D;5-4&#x3D;1</td>
+<td>[<em>,</em>,<em>,</em>,1]</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>[2 -&gt; 75, 3 -&gt; 71]</td>
+<td>72 &gt; 71，弹出3，answer[3]&#x3D;5-3&#x3D;2</td>
+<td>[<em>,</em>,_,2,1]</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>[2 -&gt; 75]</td>
+<td>72 &lt; 75，下标5入栈</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>76</td>
+<td>[2 -&gt; 75, 5 -&gt; 72]</td>
+<td>76 &gt; 72，弹出5，answer[5]&#x3D;6-5&#x3D;1</td>
+<td>[<em>,</em>,<em>,</em>,_,1]</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>[2 -&gt; 75]</td>
+<td>76 &gt; 75，弹出2，answer[2]&#x3D;6-2&#x3D;4</td>
+<td>[<em>,</em>,4,<em>,</em>,1]</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>[]</td>
+<td>栈空，下标6入栈</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>73</td>
+<td>[6 -&gt; 76]</td>
+<td>73 &lt; 76，直接入栈</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>遍历结束，栈里剩下的下标6、7对应的答案保持为0。最终结果：<code>[1, 1, 4, 2, 1, 1, 0, 0]</code>。</p>
+<p>完美匹配。</p>
+<p><strong>核心洞察：</strong> 单调栈的核心不在于栈本身，而在于我们利用了<strong>信息的延迟匹配</strong>——当温度 t 到来时，它一次性解决了栈中所有比它小的温度的”宿命”。栈保证了那些等待中的温度按降序排列，新来的温度只需要与栈顶比较即可。</p>
+<h3 id="为什么栈是递减的，而不是递增的？"><a href="#为什么栈是递减的，而不是递增的？" class="headerlink" title="为什么栈是递减的，而不是递增的？"></a>为什么栈是递减的，而不是递增的？</h3><p>这是一个很好的问题。如果我们维护一个递增栈，栈底最小、栈顶最大。那么新来的元素如果小于栈顶，栈顶永远不会等到更高的温度（因为新来的更小），所以递增栈帮不了我们。</p>
+<p>我们需要的是：<strong>栈顶是最”迫切”的那一天</strong>——它温度最低，离当前最近，最容易找到更高的温度。递减栈正好做到这一点：栈顶是最小的（最晚入栈的），它只要遇到一个比它大的就能出栈。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[] dailyTemperatures(<span class="hljs-type">int</span>[] temperatures) &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> temperatures.length;<br>        <span class="hljs-type">int</span>[] answer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[n];<br>        Deque&lt;Integer&gt; stack = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayDeque</span>&lt;&gt;();  <span class="hljs-comment">// 存下标，温度单调递减</span><br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">t</span> <span class="hljs-operator">=</span> temperatures[i];<br>            <span class="hljs-comment">// 当前温度比栈顶温度高 → 栈顶找到了更高温度</span><br>            <span class="hljs-keyword">while</span> (!stack.isEmpty() &amp;&amp; t &gt; temperatures[stack.peek()]) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">prevIndex</span> <span class="hljs-operator">=</span> stack.pop();<br>                answer[prevIndex] = i - prevIndex;<br>            &#125;<br>            stack.push(i);<br>        &#125;<br>        <span class="hljs-comment">// 栈中剩余元素自动保持 answer = 0（无需处理）</span><br>        <span class="hljs-keyword">return</span> answer;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>关键细节：</strong></p>
+<ul>
+<li>栈里存的是<strong>下标</strong>而非温度——因为我们要计算距离 <code>i - prevIndex</code>，存下标一举两得。</li>
+<li>用 <code>ArrayDeque</code> 而非 <code>Stack</code>（<code>Stack</code> 是线程安全的遗留类，性能较差）。</li>
+<li>循环结束后栈中剩余元素直接保留默认值 0。</li>
+</ul>
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">dailyTemperatures</span>(<span class="hljs-params">self, temperatures: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>        n = <span class="hljs-built_in">len</span>(temperatures)<br>        answer = [<span class="hljs-number">0</span>] * n<br>        stack = []  <span class="hljs-comment"># 存下标，温度单调递减</span><br><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            t = temperatures[i]<br>            <span class="hljs-keyword">while</span> stack <span class="hljs-keyword">and</span> t &gt; temperatures[stack[-<span class="hljs-number">1</span>]]:<br>                prev_index = stack.pop()<br>                answer[prev_index] = i - prev_index<br>            stack.append(i)<br><br>        <span class="hljs-keyword">return</span> answer<br></code></pre></td></tr></table></figure>
+
+<p>Python 直接用列表模拟栈即可，<code>stack[-1]</code> 取栈顶，<code>stack.pop()</code> 弹出栈顶。</p>
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力双层循环</td>
+<td>O(n²)</td>
+<td>O(1)（不计输出数组）</td>
+<td>每个元素向后扫描；最坏情况温度严格递减</td>
+</tr>
+<tr>
+<td>单调栈</td>
+<td>O(n)</td>
+<td>O(n)（栈 + 输出数组）</td>
+<td>每个元素入栈一次、出栈一次，n 为天数</td>
+</tr>
+</tbody></table>
+<p><strong>时间</strong>：单调栈版本中，外层循环遍历 n 个元素，内层 while 在整个算法中累计执行不超过 n 次（每个元素至多出栈一次），因此总操作次数为 O(n)。</p>
+<p><strong>空间</strong>：输出数组 answer 占 O(n)；栈在最坏情况下（温度严格递减）会存储所有 n 个下标，因此额外空间 O(n)。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>“下一个更大元素”的通用解法就是单调栈。</strong></p>
+<p>本题是”下一个更大元素”系列的经典原型（LeetCode 496、503、556 等都是同类问题）。核心思想是：在遍历数组的过程中，利用栈暂存”等待匹配”的元素，当前元素一次性解决所有可以匹配的等待者。这种”延迟匹配”的思路在括号匹配、直方图最大矩形（LeetCode 84）等问题中反复出现。</p>
+<p><strong>换个方向看问题往往豁然开朗。</strong></p>
+<p>从”为每一天往后找”变成”为栈顶元素找答案”，仅仅是把遍历和处理的方向调转了一下，复杂度就从 O(n²) 降到了 O(n)。这种视角转换是算法优化中最有力的武器之一。</p>
+<p><strong>维护栈的单调性是为了保证算法的正确性。</strong></p>
+<p>递减栈保证了栈顶永远是当前”最急迫”（温度最低、离当前位置最近）的元素。新来的温度只需要跟栈顶比较就能决定是否要弹出——如果比栈顶大，那么栈顶找到了答案；如果不比栈顶大，那栈中所有元素都不会被它满足（因为栈中温度 &gt;&#x3D; 栈顶温度），所以直接入栈即可。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ol>
+<li><strong>问题是否在问”下一个更大的 &#x2F; 更小的 &#x2F; 更远的”？</strong> 如果是，单调栈应当立即进入候选列表。</li>
+<li><strong>是否每个元素都需要跟它后面的元素比较？</strong> 如果是，尝试反向思考——让当前元素去”解决”前面等待的元素。</li>
+<li><strong>如果数组改为循环数组怎么办？</strong> 思考一下：如何用”拼接”或”取模”的方式扩展单调栈解法？（这就是 LeetCode 503 下一个更大元素 II 的解法思路。）</li>
+</ol>
+<p>希望这篇题解能帮助大家建立对单调栈的直觉。下次遇到”下一个更大元素”类题目，让我们一起试试单调栈吧！</p>
+<hr>
+<blockquote>
+<p>本文由 <a target="_blank" rel="noopener" href="https://algomentor.cn/">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a target="_blank" rel="noopener" href="https://algomentor.cn/">https://algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Hot100%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">Hot100算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
+      
+        <a href="/tags/%E5%8D%95%E8%B0%83%E6%A0%88/" class="print-no-link">#单调栈</a>
+      
+        <a href="/tags/%E6%A0%88/" class="print-no-link">#栈</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>每日温度</div>
+      <div>http://example.com/2026/07/13/Hot100题解/72-每日温度/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/68-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" title="寻找两个正序数组的中位数">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">寻找两个正序数组的中位数</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/70-%E6%9C%80%E5%B0%8F%E6%A0%88/" title="最小栈">
+                        <span class="hidden-mobile">最小栈</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

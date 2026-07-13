@@ -1,0 +1,991 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="利用数组本身的索引作为哈希表，在不占用额外空间的前提下找到第一个缺失的正整数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="缺失的第一个正数">
+<meta property="og:url" content="http://example.com/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/17-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="利用数组本身的索引作为哈希表，在不占用额外空间的前提下找到第一个缺失的正整数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:59:31.315Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="原地哈希">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="索引映射">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>缺失的第一个正数 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="缺失的第一个正数"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          44 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">缺失的第一个正数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="缺失的第一个正数"><a href="#缺失的第一个正数" class="headerlink" title="缺失的第一个正数"></a>缺失的第一个正数</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
+<p>给你一个未排序的整数数组 <code>nums</code>，请你找出其中没有出现的最小的正整数。</p>
+<p>请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。</p>
+</blockquote>
+<p><strong>示例 1：</strong></p>
+<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs fix"><span class="hljs-attr">输入：nums </span>=<span class="hljs-string"> [1,2,0]</span><br><span class="hljs-string">输出：3</span><br><span class="hljs-string">解释：1 和 2 都出现了，缺失的第一个正数是 3。</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 2：</strong></p>
+<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs fix"><span class="hljs-attr">输入：nums </span>=<span class="hljs-string"> [3,4,-1,1]</span><br><span class="hljs-string">输出：2</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>示例 3：</strong></p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入：nums = <span class="hljs-string">[7,8,9,11,12]</span><br>输出：<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>让我们像做一道数学证明题一样，从最朴素的想法开始，一步步逼近最优解。</p>
+<h3 id="第一反应：暴力排序"><a href="#第一反应：暴力排序" class="headerlink" title="第一反应：暴力排序"></a>第一反应：暴力排序</h3><p>如果没有任何技巧，我们第一反应会怎么做？</p>
+<p>“把数组排序一下，然后从 1 开始往后找，第一个没出现的正整数不就是答案吗？”</p>
+<p>确实，排序后数组变得有序，我们只需要这样扫描：</p>
+<blockquote>
+<p>从 1 开始递增，检查当前数是否等于这个期望值，如果不等或者已经超过数组长度，就找到了。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">Arrays.sort(nums);<br><span class="hljs-type">int</span> <span class="hljs-variable">expect</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>    <span class="hljs-keyword">if</span> (num == expect) expect++;<br>&#125;<br><span class="hljs-keyword">return</span> expect;<br></code></pre></td></tr></table></figure>
+
+<p>这个解法很直观，但是——<strong>排序本身就需要 O(n log n) 的时间</strong>。题目明确要求 O(n) 时间复杂度，这条路走不通。</p>
+<blockquote>
+<p>那能不能不排序？有没有办法在无序的数组中快速判断”某个数是否出现过”？</p>
+</blockquote>
+<h3 id="哈希集合：以空间换时间"><a href="#哈希集合：以空间换时间" class="headerlink" title="哈希集合：以空间换时间"></a>哈希集合：以空间换时间</h3><p>如果需要快速判断某个数是否存在，我们自然会想到哈希表。</p>
+<p>“把所有正数放进一个 HashSet，然后从 1 开始递增查询，第一个查不到的返回值就是答案。”</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java">Set&lt;Integer&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>    <span class="hljs-keyword">if</span> (num &gt; <span class="hljs-number">0</span>) set.add(num);<br>&#125;<br><span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><span class="hljs-keyword">while</span> (set.contains(i)) i++;<br><span class="hljs-keyword">return</span> i;<br></code></pre></td></tr></table></figure>
+
+<p>时间复杂度降到了 O(n)，完美满足时间要求。</p>
+<p>但代价是 O(n) 的额外空间——题目要求的是<strong>常数级别额外空间</strong>。</p>
+<blockquote>
+<p>问题来了：能不能既做到 O(n) 时间，又做到 O(1) 空间？</p>
+</blockquote>
+<p>这看起来像是”既要马儿跑，又要马儿不吃草”。但让我们想一想：<strong>哈希表的本质是什么？</strong></p>
+<p>哈希表本质上是一个”值→位置”的映射。我们为什么需要额外开一个哈希表？因为我们没有一个天然的、可以直接使用的映射结构。</p>
+<p>等一下——<strong>数组本身不就是一种天然的映射结构吗？</strong></p>
+<h3 id="关键洞察：答案的范围有界"><a href="#关键洞察：答案的范围有界" class="headerlink" title="关键洞察：答案的范围有界"></a>关键洞察：答案的范围有界</h3><p>让我们停下来思考一个问题：</p>
+<blockquote>
+<p>对于一个长度为 n 的数组，缺失的第一个正数最大可能是多少？</p>
+</blockquote>
+<p>假设数组里包含了 1, 2, 3, …, n 所有正整数，那答案就是 n+1。否则，缺失的那个数一定在 1 到 n 之间。</p>
+<p><strong>所以答案一定在 [1, n+1] 这个范围内。</strong></p>
+<p>这意味着什么？意味着<strong>我们只需要关心 1 到 n 之间的数</strong>，超出这个范围的数（负数、零、大于 n 的数）对答案没有任何影响。</p>
+<blockquote>
+<p>那我们是不是可以利用数组本身来”标记”哪些数字出现过？</p>
+</blockquote>
+<h3 id="原地哈希：把数组变成我们的哈希表"><a href="#原地哈希：把数组变成我们的哈希表" class="headerlink" title="原地哈希：把数组变成我们的哈希表"></a>原地哈希：把数组变成我们的哈希表</h3><p>核心思想：<strong>用数组的索引（下标）来映射数字，用数组元素的值来标记该数字是否出现过。</strong></p>
+<p>具体来说：</p>
+<ul>
+<li>数字 <code>x</code> 应该对应索引 <code>x-1</code></li>
+<li>如果 <code>x</code> 出现过，我们就在索引 <code>x-1</code> 上做一个”已出现”的标记</li>
+</ul>
+<p>那么问题来了：<strong>怎么做标记才不会丢失数组原有的信息？</strong></p>
+<p>有两种经典做法：</p>
+<h4 id="做法一：置换法"><a href="#做法一：置换法" class="headerlink" title="做法一：置换法"></a>做法一：置换法</h4><p>既然数字 <code>x</code> 应该放在索引 <code>x-1</code> 的位置上，那我们直接把每个数”送回家”不就行了？</p>
+<blockquote>
+<p>遍历数组，对于每个在 [1, n] 范围内的数，把它放到它应该在的位置上。然后再次遍历，第一个”位置不对”的地方就是答案。</p>
+</blockquote>
+<p>好比整理书架：每本书上都印着它应该在的层架号，我们只需要把每本书放到正确的位置。整理完之后，第一个空着的书架位就是我们要找的答案。</p>
+<h4 id="做法二：正负标记法"><a href="#做法二：正负标记法" class="headerlink" title="做法二：正负标记法"></a>做法二：正负标记法</h4><p>我们换一种思路——不移动元素，而是用正负号来标记。</p>
+<blockquote>
+<p>第一步：把所有非正数（&lt;&#x3D;0）和大于 n 的数替换成一个”无害”的值（比如 n+1）。</p>
+<p>第二步：遍历数组，每遇到一个在 [1, n] 范围内的数 x，就把索引 x-1 上的数标记为负数（取绝对值后再取反）。</p>
+<p>第三步：遍历数组，第一个正数所在的索引 +1 就是答案。</p>
+</blockquote>
+<p>这个过程就像在考勤表上打勾——每个数出现一次，就在对应的格子上画一个勾（这里是把数变成负数）。</p>
+<hr>
+<p>让我们用具体的例子走一遍”标记法”的流程，这样更清楚。</p>
+<p>以 <code>nums = [3, 4, -1, 1]</code> 为例，n &#x3D; 4：</p>
+<p><strong>第一步：清理</strong><br>把 &lt;&#x3D; 0 或 &gt; n 的数替换成 n+1 &#x3D; 5：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"><span class="hljs-string">[3, 4, 5, 1]</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>第二步：标记</strong></p>
+<ul>
+<li>i&#x3D;0: nums[0] &#x3D; 3，标记索引 2 上的数：nums[2] &#x3D; -|5| &#x3D; -5 → [3, 4, -5, 1]</li>
+<li>i&#x3D;1: nums[1] &#x3D; 4，标记索引 3 上的数：nums[3] &#x3D; -|1| &#x3D; -1 → [3, 4, -5, -1]</li>
+<li>i&#x3D;2: nums[2] &#x3D; -5，取绝对值后是 5 &gt; n，忽略</li>
+<li>i&#x3D;3: nums[3] &#x3D; -1，取绝对值后是 1，标记索引 0 上的数：nums[0] &#x3D; -|3| &#x3D; -3 → [-3, 4, -5, -1]</li>
+</ul>
+<p><strong>第三步：扫描</strong></p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs subunit">[<span class="hljs-string">-3</span>, 4, <span class="hljs-string">-5</span>, <span class="hljs-string">-1</span>]<br>  ↑ 只有索引 1 上是正数<br></code></pre></td></tr></table></figure>
+<p>索引 1 上是正数（4 &gt; 0），说明数字 2 没有出现过。<br>答案是 1 + 1 &#x3D; 2。✅</p>
+<hr>
+<p><strong>你可能会问：置换法会不会更直观一些？</strong></p>
+<p>是的，置换法的思路更符合直觉——“把元素放回原位”。但有一个细节需要注意：<strong>交换的时候要用 while 循环</strong>，因为换过来的新数可能也需要继续归位。</p>
+<p>比如 <code>nums = [3, 4, -1, 1]</code>：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs inform7">i=0: nums<span class="hljs-comment">[0]</span>=3，应该在索引2 → 和nums<span class="hljs-comment">[2]</span>交换 → <span class="hljs-comment">[-1, 4, 3, 1]</span><br>     继续 while: nums<span class="hljs-comment">[0]</span>=-1 不在<span class="hljs-comment">[1,4]</span>，停止<br>i=1: nums<span class="hljs-comment">[1]</span>=4，应该在索引3 → 和nums<span class="hljs-comment">[3]</span>交换 → <span class="hljs-comment">[-1, 1, 3, 4]</span><br>     继续 while: nums<span class="hljs-comment">[1]</span>=1，应该在索引0 → 和nums<span class="hljs-comment">[0]</span>交换 → <span class="hljs-comment">[1, -1, 3, 4]</span><br>     继续 while: nums<span class="hljs-comment">[1]</span>=-1 不在<span class="hljs-comment">[1,4]</span>，停止<br>i=2: nums<span class="hljs-comment">[2]</span>=3，已经在正确位置<br>i=3: nums<span class="hljs-comment">[3]</span>=4，已经在正确位置<br><br>扫描发现索引1是-1 ≠ 2，所以答案是 2。<br></code></pre></td></tr></table></figure>
+
+<p>两种方法都可以，我们下面会分别给出代码。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><h3 id="方案一：置换法"><a href="#方案一：置换法" class="headerlink" title="方案一：置换法"></a>方案一：置换法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">firstMissingPositive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        <br>        <span class="hljs-comment">// 把每个在 [1, n] 范围内的数放到它正确的位置上</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// while 循环：换过来的新数可能也需要归位</span><br>            <span class="hljs-keyword">while</span> (nums[i] &gt; <span class="hljs-number">0</span> &amp;&amp; nums[i] &lt;= n &amp;&amp; nums[nums[i] - <span class="hljs-number">1</span>] != nums[i]) &#123;<br>                swap(nums, i, nums[i] - <span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 找到第一个位置不对的数</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (nums[i] != i + <span class="hljs-number">1</span>) &#123;<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 如果 1..n 都在正确位置，答案是 n+1</span><br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span>;<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">swap</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> nums[i];<br>        nums[i] = nums[j];<br>        nums[j] = tmp;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="方案二：正负标记法"><a href="#方案二：正负标记法" class="headerlink" title="方案二：正负标记法"></a>方案二：正负标记法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">firstMissingPositive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        <br>        <span class="hljs-comment">// 第一步：把非正数和大于 n 的数替换为 n+1</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (nums[i] &lt;= <span class="hljs-number">0</span> || nums[i] &gt; n) &#123;<br>                nums[i] = n + <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 第二步：用负数标记出现过的数字</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">num</span> <span class="hljs-operator">=</span> Math.abs(nums[i]);<br>            <span class="hljs-keyword">if</span> (num &lt;= n) &#123;<br>                <span class="hljs-comment">// 用负数标记索引 num-1</span><br>                <span class="hljs-keyword">if</span> (nums[num - <span class="hljs-number">1</span>] &gt; <span class="hljs-number">0</span>) &#123;<br>                    nums[num - <span class="hljs-number">1</span>] = -nums[num - <span class="hljs-number">1</span>];<br>                &#125;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 第三步：找到第一个正数的位置</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (nums[i] &gt; <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><h3 id="方案一：置换法-1"><a href="#方案一：置换法-1" class="headerlink" title="方案一：置换法"></a>方案一：置换法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">firstMissingPositive</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        n = <span class="hljs-built_in">len</span>(nums)<br>        <br>        <span class="hljs-comment"># 把每个在 [1, n] 范围内的数放到它正确的位置上</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">while</span> <span class="hljs-number">1</span> &lt;= nums[i] &lt;= n <span class="hljs-keyword">and</span> nums[nums[i] - <span class="hljs-number">1</span>] != nums[i]:<br>                <span class="hljs-comment"># 交换到正确位置</span><br>                correct_idx = nums[i] - <span class="hljs-number">1</span><br>                nums[i], nums[correct_idx] = nums[correct_idx], nums[i]<br>        <br>        <span class="hljs-comment"># 找到第一个位置不对的数</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">if</span> nums[i] != i + <span class="hljs-number">1</span>:<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span><br>        <br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="方案二：正负标记法-1"><a href="#方案二：正负标记法-1" class="headerlink" title="方案二：正负标记法"></a>方案二：正负标记法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">firstMissingPositive</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        n = <span class="hljs-built_in">len</span>(nums)<br>        <br>        <span class="hljs-comment"># 第一步：清理非正数和超出范围的数</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">if</span> nums[i] &lt;= <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> nums[i] &gt; n:<br>                nums[i] = n + <span class="hljs-number">1</span><br>        <br>        <span class="hljs-comment"># 第二步：用负数标记出现过的数字</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            num = <span class="hljs-built_in">abs</span>(nums[i])<br>            <span class="hljs-keyword">if</span> num &lt;= n:<br>                <span class="hljs-comment"># 把索引 num-1 上的数置为负数</span><br>                <span class="hljs-keyword">if</span> nums[num - <span class="hljs-number">1</span>] &gt; <span class="hljs-number">0</span>:<br>                    nums[num - <span class="hljs-number">1</span>] = -nums[num - <span class="hljs-number">1</span>]<br>        <br>        <span class="hljs-comment"># 第三步：找到第一个正数</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">if</span> nums[i] &gt; <span class="hljs-number">0</span>:<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span><br>        <br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>排序暴力法</td>
+<td>O(n log n)</td>
+<td>O(1)（原地排序）</td>
+<td>排序后遍历查找，最简单但超时</td>
+</tr>
+<tr>
+<td>哈希集合法</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>用哈希集存储正数，不满足空间要求</td>
+</tr>
+<tr>
+<td>原地置换法</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>每个元素最多被交换一次（准确说每个索引最多被访问两次）</td>
+</tr>
+<tr>
+<td>正负标记法</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>三遍线性扫描，不使用额外空间</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>补充说明：置换法中看似用了 while 循环，但每个元素最多被交换到正确位置一次，所以整体仍然是 O(n) 时间复杂度。</p>
+</blockquote>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>利用数组本身作为哈希表</strong>是一个极其重要的技巧。当我们被限制不能使用额外空间，却又需要”快速查找”的能力时，不妨看看数据本身是否提供了天然的索引结构。</p>
+<p>这道题给我们的启示是：</p>
+<ul>
+<li>首先分析<strong>答案的可能范围</strong>——很多时候看似无限的问题，在给定输入规模下是有边界的</li>
+<li>在范围确定的前提下，<strong>数组的下标就是天然的哈希键</strong>，值是天然的标记位</li>
+<li>原地修改数组时，要确保修改是可逆的或不会丢失关键信息（置换法通过交换保留了所有信息，标记法通过符号位保留了数值的绝对值）</li>
+</ul>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><p>当看到这些关键词时，可以优先考虑原地哈希的思路：</p>
+<ol>
+<li><strong>“缺失的第一个 XXX”</strong>——答案范围往往有界，可以用索引映射</li>
+<li><strong>“O(n) 时间，O(1) 额外空间”</strong>——极大概率需要原地哈希</li>
+<li><strong>“数组中的数字在 [1, n] 范围内”<strong>或</strong>“数组中只包含 1 到 n”</strong>——这是最直接的信号</li>
+</ol>
+<p>实际上，LeetCode 上还有好几道同类型题目：</p>
+<ul>
+<li><strong>442. 数组中重复的数据</strong>——同样用索引标记法找出现两次的数</li>
+<li><strong>448. 找到所有数组中消失的数字</strong>——同样是 [1, n] 范围，用索引找没出现的数</li>
+</ul>
+<p>这三道题共享同一个核心思想：<strong>当数组元素的值本身可以被映射到数组的索引范围时，就用索引作为哈希表。</strong></p>
+<blockquote>
+<p>记住这个”索引映射”三板斧：置换归位、正负标记、遍历检测。下次遇到同类问题，可以让思路沿着这条线先跑一遍。</p>
+</blockquote>
+<hr>
+<p><em>本文由「LeetCode 题解」系列发出，欢迎讨论交流。</em> 🚀</p>
+<hr>
+<blockquote>
+<p>本文由 <a target="_blank" rel="noopener" href="https://algomentor.cn/">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a target="_blank" rel="noopener" href="https://algomentor.cn/">https://algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Hot100%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">Hot100算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
+      
+        <a href="/tags/%E5%8E%9F%E5%9C%B0%E5%93%88%E5%B8%8C/" class="print-no-link">#原地哈希</a>
+      
+        <a href="/tags/%E7%B4%A2%E5%BC%95%E6%98%A0%E5%B0%84/" class="print-no-link">#索引映射</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>缺失的第一个正数</div>
+      <div>http://example.com/2026/07/13/Hot100题解/17-缺失的第一个正数/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/14-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/" title="合并区间">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">合并区间</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/18-%E7%9F%A9%E9%98%B5%E7%BD%AE%E9%9B%B6/" title="矩阵置零">
+                        <span class="hidden-mobile">矩阵置零</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

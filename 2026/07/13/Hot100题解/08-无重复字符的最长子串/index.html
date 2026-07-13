@@ -1,0 +1,1022 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="从暴力枚举出发，逐步优化到滑动窗口，深入理解&quot;如何用空间换时间&quot;来消除重复计算。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无重复字符的最长子串">
+<meta property="og:url" content="http://example.com/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/08-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="从暴力枚举出发，逐步优化到滑动窗口，深入理解&quot;如何用空间换时间&quot;来消除重复计算。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:59:31.308Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="字符串">
+<meta property="article:tag" content="滑动窗口">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>无重复字符的最长子串 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="无重复字符的最长子串"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">无重复字符的最长子串</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="无重复字符的最长子串"><a href="#无重复字符的最长子串" class="headerlink" title="无重复字符的最长子串"></a>无重复字符的最长子串</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>让我们从题目本身开始。给定一个字符串，我们要找出其中<strong>不含有重复字符的最长子串</strong>的长度。</p>
+<p>举个例子，<code>&quot;abcabcbb&quot;</code> 中最长的无重复子串是 <code>&quot;abc&quot;</code>，长度为 3。<code>&quot;bbbbb&quot;</code> 就是 <code>&quot;b&quot;</code>，长度 1。<code>&quot;pwwkew&quot;</code> 是 <code>&quot;wke&quot;</code> 或 <code>&quot;kew&quot;</code>，长度 3。</p>
+<p>听起来不难，不是吗？不妨先想一下，如果没有任何技巧，我们第一反应会怎么做？</p>
+<h3 id="第一反应：暴力枚举"><a href="#第一反应：暴力枚举" class="headerlink" title="第一反应：暴力枚举"></a>第一反应：暴力枚举</h3><p>最朴素的想法是：枚举所有可能的子串，对每个子串检查它是否包含重复字符，记录所有合法子串的最大长度。</p>
+<p>具体来说：</p>
+<ol>
+<li>用两层循环枚举所有起点 <code>i</code> 和终点 <code>j</code>（<code>i &lt;= j</code>），得到子串 <code>s[i..j]</code></li>
+<li>写一个辅助函数 <code>hasRepeat(s, i, j)</code>，用 Set 判断这个子串内是否有重复字符</li>
+<li>取所有无重复子串的最大长度</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">lengthOfLongestSubstring</span><span class="hljs-params">(String s)</span> &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> s.length();<br>    <span class="hljs-type">int</span> <span class="hljs-variable">maxLen</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i; j &lt; n; j++) &#123;<br>            <span class="hljs-keyword">if</span> (!hasRepeat(s, i, j)) &#123;<br>                maxLen = Math.max(maxLen, j - i + <span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> maxLen;<br>&#125;<br><br><span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasRepeat</span><span class="hljs-params">(String s, <span class="hljs-type">int</span> start, <span class="hljs-type">int</span> end)</span> &#123;<br>    Set&lt;Character&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> start; k &lt;= end; k++) &#123;<br>        <span class="hljs-keyword">if</span> (set.contains(s.charAt(k))) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        set.add(s.charAt(k));<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个解法很直观，但问题也很明显——<strong>效率太低了</strong>。<code>hasRepeat</code> 本身是 O(k) 的，乘以两层循环，总时间复杂度来到了 O(n^3)。对于长度为 n 的字符串，这个开销是无法接受的。</p>
+<p>即使我们对 <code>hasRepeat</code> 做一点优化——在枚举 j 的同时维护 Set，让检查变成 O(1) 均摊——整体依然是 O(n^2)。当 n 达到 10^5 级别时，O(n^2) 仍然不可接受。</p>
+<p><strong>那么，有没有办法把复杂度降到 O(n)？</strong></p>
+<h3 id="关键洞察：哪些信息是可以复用的？"><a href="#关键洞察：哪些信息是可以复用的？" class="headerlink" title="关键洞察：哪些信息是可以复用的？"></a>关键洞察：哪些信息是可以复用的？</h3><p>让我们换个角度思考。假设我们已经找到了一个以 <code>i</code> 开头的无重复子串，终点在 <code>j</code>。现在我们要把起点往右移一位，变成 <code>i+1</code>——难道需要重新从 <code>i+1</code> 开始遍历吗？</p>
+<p>不妨想一想，子串 <code>s[i..j]</code> 已经保证了无重复，当我们把 <code>i</code> 右移到 <code>i+1</code> 时，<code>s[i+1..j]</code> 这个子串<strong>天然也是无重复的</strong>！因为我们只是砍掉了最左边的一个字符，不会引入新的重复。</p>
+<p>也就是说，我们<strong>不需要</strong>每次移动左边界后都从零开始构建窗口。如果能”记住”当前窗口的状态，每次只需要处理右边界移动时引入的新字符，以及左边界移动时移除的旧字符，就能避免大量的重复计算。</p>
+<p>这引出了<strong>滑动窗口</strong>（Sliding Window）的思想。</p>
+<h3 id="滑动窗口-HashSet"><a href="#滑动窗口-HashSet" class="headerlink" title="滑动窗口 + HashSet"></a>滑动窗口 + HashSet</h3><p>我们可以用两个指针 <code>left</code> 和 <code>right</code> 维护一个窗口，再用一个 HashSet 记录窗口内有哪些字符：</p>
+<ol>
+<li>不断右移 <code>right</code>，将新字符 <code>s[right]</code> 加入窗口</li>
+<li>如果 <code>s[right]</code> 已经在 HashSet 中，说明窗口内有重复了——我们需要右移 <code>left</code>，并同步从 HashSet 中移除 <code>s[left]</code>，直到 <code>s[right]</code> 不再重复</li>
+<li>每次调整后，更新最大长度</li>
+</ol>
+<p>这里有一个关键点：<strong>为什么是移动 <code>left</code> 而不是跳过整个窗口？</strong></p>
+<p>假设我们有 <code>&quot;abca&quot;</code>，当 <code>right</code> 指向第二个 <code>&#39;a&#39;</code> 时，重复了。我们不能简单地认为”从下一个位置重新开始”——因为 <code>&quot;bca&quot;</code> 依然是一个合法的无重复子串。所以我们需要<strong>逐步收缩</strong>左边界，直到窗口内不再包含重复字符为止。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 伪代码</span><br>left = <span class="hljs-number">0</span><br>maxLen = <span class="hljs-number">0</span><br>set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>()<br><br><span class="hljs-keyword">for</span> right in [<span class="hljs-number">0.</span>.n-<span class="hljs-number">1</span>]:<br>    <span class="hljs-keyword">while</span> set.contains(s[right]):<br>        set.remove(s[left])<br>        left++<br>    set.add(s[right])<br>    maxLen = max(maxLen, right - left + <span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<p>这个版本的时间复杂度是 O(2n) &#x3D; O(n)——每个字符最多被 <code>left</code> 和 <code>right</code> 各访问一次。空间复杂度 O(k)，其中 k 是字符集大小（ASCII 最多 128，Unicode 场景下也不超过字符串长度）。</p>
+<p><strong>还能再优化吗？</strong></p>
+<h3 id="进一步优化：HashMap-记录字符位置"><a href="#进一步优化：HashMap-记录字符位置" class="headerlink" title="进一步优化：HashMap 记录字符位置"></a>进一步优化：HashMap 记录字符位置</h3><p>刚才的方法中，<code>while</code> 循环可能一次只移动 <code>left</code> 一位。在某些极端情况下，比如 <code>&quot;abccccdef&quot;</code>，当遇到重复的 <code>&#39;c&#39;</code> 时，我们需要一步一步地把 <code>left</code> 从第一个 <code>&#39;c&#39;</code> 挪到第二个 <code>&#39;c&#39;</code> 后面。这虽然不影响总体的 O(n) 复杂度，但每一步的 <code>while</code> 循环确实做了些重复劳动。</p>
+<p>不妨想：我们能不能<strong>一步到位</strong>——当发现字符重复时，直接把 <code>left</code> 跳到重复字符上一次出现位置的<strong>下一个位置</strong>？</p>
+<p>这就需要我们<strong>记住每个字符最近一次出现的下标</strong>。HashMap 刚好可以做到这一点，映射关系是：<code>字符 -&gt; 它最近一次出现的位置</code>。</p>
+<ul>
+<li>遍历字符串时，如果 <code>s[right]</code> 已经存在于 HashMap 中，说明遇到了重复</li>
+<li>此时，我们可以直接把 <code>left</code> 更新为 <code>max(left, map.get(s[right]) + 1)</code>——为什么要取 max？因为 HashMap 中存储的是<strong>历史所有位置</strong>，有些位置可能在当前 <code>left</code> 的左边，这些已经被窗口排除的旧位置不应该影响我们</li>
+<li>然后更新 <code>map</code> 中 <code>s[right]</code> 的位置为当前 <code>right</code></li>
+<li>更新最大长度</li>
+</ul>
+<p>这样一来，每个字符只需要处理一次，<code>left</code> 也不需要一步一步挪了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 伪代码</span><br>left = <span class="hljs-number">0</span><br>maxLen = <span class="hljs-number">0</span><br>map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>()      <span class="hljs-comment">// char -&gt; last index</span><br><br><span class="hljs-keyword">for</span> right in [<span class="hljs-number">0.</span>.n-<span class="hljs-number">1</span>]:<br>    <span class="hljs-keyword">if</span> map.containsKey(s[right]):<br>        <span class="hljs-comment">// 直接跳到重复字符的下一个位置</span><br>        left = max(left, map.get(s[right]) + <span class="hljs-number">1</span>)<br>    map.put(s[right], right)<br>    maxLen = max(maxLen, right - left + <span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
+
+<p>这就完成了从 O(n^3) –&gt; O(n^2) –&gt; O(2n) –&gt; O(n) 的优化路径。</p>
+<h3 id="用小例子跑一遍"><a href="#用小例子跑一遍" class="headerlink" title="用小例子跑一遍"></a>用小例子跑一遍</h3><p>让我们用手算一下 <code>&quot;abcabcbb&quot;</code>，直观感受流程：</p>
+<p>初始：<code>left=0</code>，<code>maxLen=0</code>，<code>map={}</code></p>
+<table>
+<thead>
+<tr>
+<th>right</th>
+<th>s[right]</th>
+<th>map 中已存在？</th>
+<th>left 更新后</th>
+<th>map 更新</th>
+<th>窗口</th>
+<th>长度</th>
+<th>maxLen</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>‘a’</td>
+<td>否</td>
+<td>0</td>
+<td><code>{a:0}</code></td>
+<td>a</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>‘b’</td>
+<td>否</td>
+<td>0</td>
+<td><code>{a:0, b:1}</code></td>
+<td>ab</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>‘c’</td>
+<td>否</td>
+<td>0</td>
+<td><code>{a:0, b:1, c:2}</code></td>
+<td>abc</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>3</td>
+<td>‘a’</td>
+<td>是，位置 0</td>
+<td><code>max(0, 0+1)=1</code></td>
+<td><code>{a:3, b:1, c:2}</code></td>
+<td>bca</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>‘b’</td>
+<td>是，位置 1</td>
+<td><code>max(1, 1+1)=2</code></td>
+<td><code>{a:3, b:4, c:2}</code></td>
+<td>cab</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>5</td>
+<td>‘c’</td>
+<td>是，位置 2</td>
+<td><code>max(2, 2+1)=3</code></td>
+<td><code>{a:3, b:4, c:5}</code></td>
+<td>abc</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>6</td>
+<td>‘b’</td>
+<td>是，位置 4</td>
+<td><code>max(3, 4+1)=5</code></td>
+<td><code>{a:3, b:6, c:5}</code></td>
+<td>b</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>7</td>
+<td>‘b’</td>
+<td>是，位置 6</td>
+<td><code>max(5, 6+1)=7</code></td>
+<td><code>{a:3, b:7, c:5}</code></td>
+<td>(空)</td>
+<td>0</td>
+<td>3</td>
+</tr>
+</tbody></table>
+<p>最终结果为 3，答案正确。</p>
+<p>关键步骤在第 6 步：<code>left</code> 没有跳到 <code>map.get(&#39;b&#39;) + 1 = 5</code> 吗？跳了，但此时 <code>left</code> 本身就是 3，所以 <code>max(3, 5) = 5</code> 将 <code>left</code> 更新为 5。窗口从 <code>&quot;abc&quot;</code> 收缩为只包含 <code>&quot;b&quot;</code>——这很合理，因为前一个 <code>&#39;b&#39;</code> 在位置 4，而位置 3 的 <code>&#39;a&#39;</code> 也必须被排除，才能使窗口内无重复。</p>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">lengthOfLongestSubstring</span><span class="hljs-params">(String s)</span> &#123;<br>        <span class="hljs-comment">// 用 HashMap 记录每个字符最近一次出现的位置</span><br>        Map&lt;Character, Integer&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        <span class="hljs-type">int</span> <span class="hljs-variable">maxLen</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; right &lt; s.length(); right++) &#123;<br>            <span class="hljs-type">char</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> s.charAt(right);<br>            <br>            <span class="hljs-comment">// 如果当前字符已经在窗口中存在，移动左指针到重复位置的下一个位置</span><br>            <span class="hljs-keyword">if</span> (map.containsKey(c)) &#123;<br>                <span class="hljs-comment">// 取 max 是为了防止 left 向左回退</span><br>                left = Math.max(left, map.get(c) + <span class="hljs-number">1</span>);<br>            &#125;<br>            <br>            <span class="hljs-comment">// 更新字符的最新位置</span><br>            map.put(c, right);<br>            <br>            <span class="hljs-comment">// 更新最大长度</span><br>            maxLen = Math.max(maxLen, right - left + <span class="hljs-number">1</span>);<br>        &#125;<br>        <br>        <span class="hljs-keyword">return</span> maxLen;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">lengthOfLongestSubstring</span>(<span class="hljs-params">self, s: <span class="hljs-built_in">str</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># 字典记录每个字符最近一次出现的位置</span><br>        char_index = &#123;&#125;<br>        max_len = <span class="hljs-number">0</span><br>        left = <span class="hljs-number">0</span><br>        <br>        <span class="hljs-keyword">for</span> right, c <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(s):<br>            <span class="hljs-comment"># 如果字符重复，左指针直接跳到重复位置的下一个位置</span><br>            <span class="hljs-keyword">if</span> c <span class="hljs-keyword">in</span> char_index:<br>                left = <span class="hljs-built_in">max</span>(left, char_index[c] + <span class="hljs-number">1</span>)<br>            <br>            <span class="hljs-comment"># 更新字符的最新位置</span><br>            char_index[c] = right<br>            <br>            <span class="hljs-comment"># 更新最大长度</span><br>            max_len = <span class="hljs-built_in">max</span>(max_len, right - left + <span class="hljs-number">1</span>)<br>        <br>        <span class="hljs-keyword">return</span> max_len<br></code></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力法</td>
+<td>O(n^3)</td>
+<td>O(min(n, m))</td>
+<td>枚举所有子串 + 每次用 Set 检查重复，m 为字符集大小</td>
+</tr>
+<tr>
+<td>暴力法（优化检查）</td>
+<td>O(n^2)</td>
+<td>O(min(n, m))</td>
+<td>枚举起点后递增终点，同步维护 Set 检查重复</td>
+</tr>
+<tr>
+<td>滑动窗口 + HashSet</td>
+<td>O(n)</td>
+<td>O(min(n, m))</td>
+<td>left&#x2F;right 各遍历一次，while 循环均摊 O(1)，m 为字符集大小</td>
+</tr>
+<tr>
+<td>滑动窗口 + HashMap</td>
+<td>O(n)</td>
+<td>O(min(n, m))</td>
+<td>left 一步到位，无需 while 循环，m 为字符集大小</td>
+</tr>
+</tbody></table>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p>滑动窗口是处理<strong>子串&#x2F;子数组</strong>问题最经典的工具之一。它的核心思想并不复杂：<strong>当右边界扩大时，如果当前窗口不再满足条件，我们不是从头开始，而是收缩左边界，直到条件重新满足</strong>。</p>
+<p>与二分法不同，滑动窗口不是靠”猜中间值”来缩小搜索范围，而是<strong>利用相邻状态之间的连续性</strong>：窗口 <code>[i+1, j]</code> 和窗口 <code>[i, j]</code> 只差了一个元素，这个增量关系让我们可以 O(1) 地复用前一状态的信息。</p>
+<p>HashMap 优化版本的巧妙之处在于，它把”逐步收缩”变成了”一步到位”——因为我们可以通过哈希表直接查询到冲突字符的历史位置，从而一次性将左边界跳到正确的地方。这是一个典型的<strong>空间换时间</strong>应用。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><p>如果题目涉及”子串””子数组””连续区间”等关键词，并且条件是关于”是否存在重复””是否满足某个约束”，可以优先考虑：</p>
+<ol>
+<li><strong>是否能用滑动窗口？</strong> 判断依据：当右边界扩大的时候，左边界是否需要移动来维持某种约束？如果约束是单调的（左边界右移只会使约束更宽松或更严格），滑动窗口基本适用。</li>
+<li><strong>窗口内需要维护什么信息？</strong> 频率计数、字符集合、还是位置索引？这取决于题目要求的是”是否存在”还是”具体位置”。</li>
+<li><strong>左边界如何移动？</strong> 是一次一步，还是可以跳跃？如果可以跳跃，往往需要额外的数据结构（如 HashMap 记录位置）来支持。</li>
+</ol>
+<p>类似的题目有很多，比如：</p>
+<ul>
+<li><strong>长度最小的子数组</strong>（LeetCode 209）：同样是滑动窗口，但条件变成了”和 &gt;&#x3D; target”</li>
+<li><strong>K 个不同整数的子数组</strong>（LeetCode 992）：需要维护窗口内不同元素的个数</li>
+<li><strong>最小覆盖子串</strong>（LeetCode 76）：滑动窗口的经典变体，需要用两个指针分别寻找可行解和优化解</li>
+</ul>
+<p>掌握滑动窗口的核心在于理解<strong>单调性</strong>——为什么左指针只需要向右移动，永远不会回头。想通了这一点，滑动窗口就不再是”背模板”，而是一个自然而然的思考工具了。</p>
+<hr>
+<blockquote>
+<p>本文由 <a target="_blank" rel="noopener" href="https://algomentor.cn/">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a target="_blank" rel="noopener" href="https://algomentor.cn/">https://algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Hot100%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">Hot100算法题解</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="print-no-link">#哈希表</a>
+      
+        <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="print-no-link">#字符串</a>
+      
+        <a href="/tags/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="print-no-link">#滑动窗口</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>无重复字符的最长子串</div>
+      <div>http://example.com/2026/07/13/Hot100题解/08-无重复字符的最长子串/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/03-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" title="最长连续序列">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">最长连续序列</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/Hot100%E9%A2%98%E8%A7%A3/06-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" title="三数之和">
+                        <span class="hidden-mobile">三数之和</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
