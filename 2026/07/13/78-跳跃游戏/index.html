@@ -1,0 +1,925 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="从暴力递归到贪心，逐步推演跳跃游戏的最优解法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跳跃游戏">
+<meta property="og:url" content="http://example.com/2026/07/13/78-%E8%B7%B3%E8%B7%83%E6%B8%B8%E6%88%8F/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="从暴力递归到贪心，逐步推演跳跃游戏的最优解法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-13T08:30:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:46:00.000Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="数组">
+<meta property="article:tag" content="贪心">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>跳跃游戏 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="跳跃游戏"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 16:30" pubdate>
+          2026年7月13日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">跳跃游戏</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="跳跃游戏"><a href="#跳跃游戏" class="headerlink" title="跳跃游戏"></a>跳跃游戏</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="从问题本身开始"><a href="#从问题本身开始" class="headerlink" title="从问题本身开始"></a>从问题本身开始</h3><p>给定一个非负整数数组 <code>nums</code>，我们一开始站在下标 <code>0</code> 的位置，每个位置上的数字代表我们<strong>最多</strong>能向前跳多远。问题是：我们能否跳到最后一个下标？</p>
+<p>让我们先理解一下”最多能跳多远”的含义。如果 <code>nums[i] = 3</code>，意味着从位置 <code>i</code> 出发，我们可以选择跳到 <code>i+1</code>、<code>i+2</code> 或 <code>i+3</code> 这三个位置中的任意一个。我们的目标是在一系列跳跃之后，到达或超过 <code>nums.length - 1</code>。</p>
+<p>看起来就是一个路径探索问题，对吧？</p>
+<h3 id="暴力尝试：把所有可能性都走一遍"><a href="#暴力尝试：把所有可能性都走一遍" class="headerlink" title="暴力尝试：把所有可能性都走一遍"></a>暴力尝试：把所有可能性都走一遍</h3><p>最直接的想法是：从起点出发，列举所有可能的跳跃步数，一条路一条路地尝试，只要能到达终点就返回 <code>true</code>。</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs maxima">canJump(nums, <span class="hljs-built_in">position</span>) &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">position</span> &gt;= nums.<span class="hljs-built_in">length</span> - <span class="hljs-number">1</span>) <span class="hljs-built_in">return</span> <span class="hljs-literal">true</span>;<br>    maxStep = nums[<span class="hljs-built_in">position</span>];<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">step</span> = <span class="hljs-number">1</span>; <span class="hljs-keyword">step</span> &lt;= maxStep; <span class="hljs-keyword">step</span>++) &#123;<br>        <span class="hljs-keyword">if</span> (canJump(nums, <span class="hljs-built_in">position</span> + <span class="hljs-keyword">step</span>)) <span class="hljs-built_in">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>    <span class="hljs-built_in">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这不就像 DFS 吗？从根节点出发，每个位置分支出若干条路径，只要有任意一条路径能走到终点就成功。</p>
+<p><strong>但等一下</strong>——这个算法的时间复杂度是多少？每个位置最多可以分支 <code>nums[i]</code> 条路径，最坏情况下（比如数组全为 1），复杂度是 $O(2^n)$ 级别的。当数组长度达到 $10^4$ 或 $10^5$ 时，这显然跑不动。</p>
+<p>有没有什么办法可以避免重复探索？</p>
+<h3 id="记忆化：记下已经走过的路"><a href="#记忆化：记下已经走过的路" class="headerlink" title="记忆化：记下已经走过的路"></a>记忆化：记下已经走过的路</h3><p>我们之所以会慢，是因为同一个位置可能被从不同的路径多次到达。比如从 <code>0→1→2</code> 和从 <code>0→2</code> 都到达了位置 <code>2</code>，但我们没有必要在位置 <code>2</code> 重复计算两次。</p>
+<p>我们可以用一个 <code>memo</code> 数组记录每个位置是否可达终点：</p>
+<ul>
+<li><code>memo[i] = 1</code> 表示从 <code>i</code> 出发可以到达终点</li>
+<li><code>memo[i] = -1</code> 表示从 <code>i</code> 出发无法到达终点</li>
+<li><code>memo[i] = 0</code> 表示还没计算过</li>
+</ul>
+<p>这样每个位置只会被计算一次，时间复杂度降为 $O(n \times \max(nums[i]))$。</p>
+<p><strong>但再想一想</strong>——我们需要记录每个位置的可达性吗？或者说，我们真的需要关心”具体从哪个位置跳”吗？</p>
+<h3 id="换个角度：关注”能到达的最远位置”"><a href="#换个角度：关注”能到达的最远位置”" class="headerlink" title="换个角度：关注”能到达的最远位置”"></a>换个角度：关注”能到达的最远位置”</h3><p>让我们换一种视角来思考这个问题。</p>
+<blockquote>
+<p>从起点开始，我们不断扩展自己的”可达范围”。只要这个范围覆盖到了终点，就说明可以抵达。</p>
+</blockquote>
+<p>什么意思呢？一开始我们在位置 <code>0</code>，能跳的最远距离是 <code>nums[0]</code>，所以目前能到达的最远下标是 <code>0 + nums[0]</code>。</p>
+<p>当我们走到位置 <code>1</code> 时，如果位置 <code>1</code> 本身是可达的（即 <code>1 &lt;= 最远可达距离</code>），那么从位置 <code>1</code> 我们又可以跳 <code>nums[1]</code> 步，最远可达距离就可以更新为 <code>max(当前最远距离, 1 + nums[1])</code>。</p>
+<p>这个过程可以一直持续下去——我们遍历数组，不断更新”能到达的最远位置”，只要发现最远位置 ≥ 最后下标，就返回 <code>true</code>。</p>
+<p>如果在某个位置 <code>i</code>，我们发现 <code>i</code> 已经超出了当前能到达的最远距离，说明这个位置是”不可达”的，后面的位置自然也不可达，直接返回 <code>false</code>。</p>
+<p><strong>让我们用一个例子走一遍</strong>：</p>
+<p><code>nums = [2, 3, 1, 1, 4]</code></p>
+<ul>
+<li>起点 <code>i=0</code>，最远距离 <code>maxReach = 0 + 2 = 2</code></li>
+<li><code>i=1</code>，<code>1 &lt;= 2</code> 可达，<code>maxReach = max(2, 1 + 3) = 4</code>，已经到达终点 <code>4</code>，返回 <code>true</code></li>
+</ul>
+<p><code>nums = [3, 2, 1, 0, 4]</code></p>
+<ul>
+<li>起点 <code>i=0</code>，最远距离 <code>maxReach = 0 + 3 = 3</code></li>
+<li><code>i=1</code>，<code>1 &lt;= 3</code> 可达，<code>maxReach = max(3, 1 + 2) = 3</code></li>
+<li><code>i=2</code>，<code>2 &lt;= 3</code> 可达，<code>maxReach = max(3, 2 + 1) = 3</code></li>
+<li><code>i=3</code>，<code>3 &lt;= 3</code> 可达，<code>maxReach = max(3, 3 + 0) = 3</code></li>
+<li><code>i=4</code>，<code>4 &gt; 3</code> 不可达，返回 <code>false</code></li>
+</ul>
+<p>完美吻合。</p>
+<h3 id="这个思路为什么是对的？"><a href="#这个思路为什么是对的？" class="headerlink" title="这个思路为什么是对的？"></a>这个思路为什么是对的？</h3><p>我们不需要知道具体的跳跃路径，只需要知道<strong>最远能到哪里</strong>。因为在遍历过程中，只要位置 <code>i</code> 是可达的，从 <code>i</code> 能跳到的所有位置 <code>[i+1, i+nums[i]]</code> 就都变成了可达的。我们只需要用 <code>maxReach</code> 来维护所有可达位置中的最大下标，而不需要逐一标记每个位置。</p>
+<p>这就是<strong>贪心</strong>的思想——每一步都只关心”最远能到哪里”，不做多余的计算。</p>
+<p>复杂度如何？只需要一次遍历，$O(n)$ 时间，$O(1)$ 额外空间。这才是这道题的最优解。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">canJump</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">maxReach</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;<br>            <span class="hljs-keyword">if</span> (i &gt; maxReach) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>            &#125;<br>            maxReach = Math.max(maxReach, i + nums[i]);<br>            <span class="hljs-keyword">if</span> (maxReach &gt;= nums.length - <span class="hljs-number">1</span>) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">canJump</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">bool</span>:<br>        max_reach = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">for</span> i, step <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(nums):<br>            <span class="hljs-keyword">if</span> i &gt; max_reach:<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span><br>            max_reach = <span class="hljs-built_in">max</span>(max_reach, i + step)<br>            <span class="hljs-keyword">if</span> max_reach &gt;= <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力递归</td>
+<td>$O(2^n)$</td>
+<td>$O(n)$</td>
+<td>递归栈深度为 n，每个位置分支出 nums[i] 条路径</td>
+</tr>
+<tr>
+<td>记忆化递归</td>
+<td>$O(n \times \max(nums[i]))$</td>
+<td>$O(n)$</td>
+<td>每个位置最多计算一次，但每次仍需循环尝试所有步数</td>
+</tr>
+<tr>
+<td>贪心</td>
+<td>$O(n)$</td>
+<td>$O(1)$</td>
+<td>一次遍历，只维护最远可达位置，无额外空间</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>贪心不是”拍脑袋”的策略</strong>——很多时候，贪心解法来自于对问题的重新定义。我们从”找一条路径”变成了”追踪最远可达边界”，问题立刻简化了。</p>
+<p>一个重要的洞察是：当我们不需要路径本身，只需要判断”是否可达”时，往往可以放弃具体的路径探索，转而去维护一个范围或边界。这有点像”跳房子”游戏——我们不需要记住每次踩的是哪块砖，只需要知道自己的最远落点在哪里。</p>
+<h3 id="下次遇到类似问题，优先观察什么？"><a href="#下次遇到类似问题，优先观察什么？" class="headerlink" title="下次遇到类似问题，优先观察什么？"></a>下次遇到类似问题，优先观察什么？</h3><ol>
+<li><strong>问自己：我真的需要知道路径细节吗？</strong> 如果只需要判断可行性（是否可达、是否存在解），往往有比搜索更高效的方法。</li>
+<li><strong>能不能维护一个边界？</strong> 比如”最远能到达哪里”、”当前能覆盖的范围”——这类问题常常可以用贪心或双指针处理。</li>
+<li><strong>遍历方向有讲究吗？</strong> 这道题从左到右自然，但有些类似问题从右到左贪心更直观（比如”跳跃游戏 II”），多想一想哪个方向的信息更容易利用。</li>
+</ol>
+<p>下次你遇到一个数组上的”能否到达”或”能否覆盖”的问题时，不妨先问问自己：<strong>我们能维护一个什么边界，不断地把它往前推？</strong></p>
+<hr>
+<blockquote>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
+      
+        <a href="/tags/%E8%B4%AA%E5%BF%83/" class="print-no-link">#贪心</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>跳跃游戏</div>
+      <div>http://example.com/2026/07/13/78-跳跃游戏/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/32-%E9%9A%8F%E6%9C%BA%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/" title="随机链表的复制">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">随机链表的复制</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/45-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8F%B3%E8%A7%86%E5%9B%BE/" title="二叉树的右视图">
+                        <span class="hidden-mobile">二叉树的右视图</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

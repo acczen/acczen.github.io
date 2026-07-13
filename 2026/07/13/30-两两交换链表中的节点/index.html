@@ -1,0 +1,969 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="从&quot;交换值&quot;的取巧解法出发，通过自问自答逐步推导到真正的节点交换，再对比递归与迭代两种实现方式的异同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="两两交换链表中的节点">
+<meta property="og:url" content="http://example.com/2026/07/13/30-%E4%B8%A4%E4%B8%A4%E4%BA%A4%E6%8D%A2%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="从&quot;交换值&quot;的取巧解法出发，通过自问自答逐步推导到真正的节点交换，再对比递归与迭代两种实现方式的异同">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:45:58.899Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="迭代">
+<meta property="article:tag" content="递归">
+<meta property="article:tag" content="链表">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>两两交换链表中的节点 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="两两交换链表中的节点"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">两两交换链表中的节点</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="两两交换链表中的节点"><a href="#两两交换链表中的节点" class="headerlink" title="两两交换链表中的节点"></a>两两交换链表中的节点</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一反应：能不能只交换值？"><a href="#第一反应：能不能只交换值？" class="headerlink" title="第一反应：能不能只交换值？"></a>第一反应：能不能只交换值？</h3><p>拿到这道题，我们的第一反应往往很直接——给定一个链表 <code>1 → 2 → 3 → 4</code>，要变成 <code>2 → 1 → 4 → 3</code>，不就是把第一个节点的值和第二个节点的值互换，再把第三个节点的值和第四个节点的值互换吗？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">ListNode</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> head;<br><span class="hljs-keyword">while</span> (cur != <span class="hljs-literal">null</span> &amp;&amp; cur.next != <span class="hljs-literal">null</span>) &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> cur.val;<br>    cur.val = cur.next.val;<br>    cur.next.val = tmp;<br>    cur = cur.next.next;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这段代码在 LeetCode 上确实能通过，而且效率也不差。</p>
+<p>但让我们停下来想想：题目真的只是想让我们交换值吗？</p>
+<p>如果只是交换值，那链表的结构完全没有改变，指针关系原封不动。这就像把一个房间里两个人的名牌互换了一下，人本身没有移动位置。在大多数面试场景中，这道题的意图是考察<strong>对链表指针的操作能力</strong>——我们需要实实在在地重新连接节点，而不是偷懒只交换值。</p>
+<p>所以，让我们抛弃这个”取巧”的思路，真正去操作指针。</p>
+<h3 id="重新审视问题：我们需要改变什么？"><a href="#重新审视问题：我们需要改变什么？" class="headerlink" title="重新审视问题：我们需要改变什么？"></a>重新审视问题：我们需要改变什么？</h3><p>给定链表 <code>1 → 2 → 3 → 4 → null</code>，期望输出 <code>2 → 1 → 4 → 3 → null</code>。</p>
+<p>我们来观察一下变化：</p>
+<ul>
+<li>节点 <code>2</code> 变成了新的头节点</li>
+<li>节点 <code>1</code> 的 <code>next</code> 指向了节点 <code>3</code>（原来指向 <code>2</code>）</li>
+<li>节点 <code>2</code> 的 <code>next</code> 指向了节点 <code>1</code>（原来指向 <code>3</code>）</li>
+<li>节点 <code>4</code> 的 <code>next</code> 指向了 <code>null</code>（原来指向 <code>null</code>）</li>
+<li>节点 <code>3</code> 的 <code>next</code> 指向了节点 <code>4</code>（原来指向 <code>4</code>）</li>
+</ul>
+<p>等等，看起来每两个节点为一组，组内的两个节点交换位置，组与组之间还需要正确连接。</p>
+<p>这里的关键问题是：<strong>当我们交换完第一对节点后，怎么找到下一对节点继续操作？</strong></p>
+<h3 id="递归视角：让函数自己帮我们"><a href="#递归视角：让函数自己帮我们" class="headerlink" title="递归视角：让函数自己帮我们"></a>递归视角：让函数自己帮我们</h3><p>不妨想一下，链表本身的定义就是递归的：一个链表可以看作”一个节点 + 一个更短的链表”。这种结构天然适合用递归来处理。</p>
+<p>让我们这样想：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">swapPairs</span>(<span class="hljs-number">1</span> → <span class="hljs-number">2</span> → <span class="hljs-number">3</span> → <span class="hljs-number">4</span> → null)<br></code></pre></td></tr></table></figure>
+
+<p>对于头节点 <code>1</code>，我们知道它要和 <code>2</code> 交换。交换之后，<code>2</code> 成为新的头节点，<code>1</code> 成为第二个节点。</p>
+<p>那 <code>1</code> 应该指向谁呢？它应该指向 <code>swapPairs(3 → 4 → null)</code> 的结果——也就是后面那部分链表两两交换之后的头节点。</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">swapPairs(1 → 2 → 3 → 4 → null)<br><span class="hljs-section">= 2 → 1 → swapPairs(3 → 4 → null)</span><br><span class="hljs-section">= 2 → 1 → 4 → 3 → null</span><br></code></pre></td></tr></table></figure>
+
+<p>你看，这个递归定义非常自然：</p>
+<ol>
+<li><strong>先处理头两个节点的交换</strong></li>
+<li><strong>剩余部分交给递归函数处理</strong></li>
+<li><strong>将两部分连接起来</strong></li>
+</ol>
+<p>递归的终止条件也很清晰：如果链表为空，或者只有一个节点（没有配对的节点），直接返回原链表。</p>
+<p>让我们用伪代码整理一下这个思路：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">swapPairs</span>(<span class="hljs-title">head</span>):</span><br>   <span class="hljs-comment"> // 终止条件</span><br>    <span class="hljs-keyword">if</span> head == <span class="hljs-literal">null</span> 或 head.next == <span class="hljs-literal">null</span>:<br>        <span class="hljs-literal">return</span> head<br>    <br>    <span class="hljs-keyword">first</span> = head<br>    <span class="hljs-keyword">second</span> = head.next<br>    <br>   <span class="hljs-comment"> // 递归处理后面对</span><br>    rest = swapPairs(<span class="hljs-keyword">second</span>.next)<br>    <br>   <span class="hljs-comment"> // 交换这对节点</span><br>    <span class="hljs-keyword">second</span>.next = <span class="hljs-keyword">first</span><br>    <span class="hljs-keyword">first</span>.next = rest<br>    <br>   <span class="hljs-comment"> // 返回新的头节点</span><br>    <span class="hljs-literal">return</span> <span class="hljs-keyword">second</span><br></code></pre></td></tr></table></figure>
+
+<p>这个代码非常简洁。但让我们想一想，递归的代价是什么？对于长度为 <code>n</code> 的链表，递归深度是 <code>n/2</code>，当链表非常长（比如上万节点）时，递归可能导致栈溢出。</p>
+<p>有没有不依赖递归的方式？</p>
+<h3 id="迭代视角：一步一步走"><a href="#迭代视角：一步一步走" class="headerlink" title="迭代视角：一步一步走"></a>迭代视角：一步一步走</h3><p>递归的本质是”先处理局部，再处理整体”。换个角度，我们也可以用<strong>迭代</strong>的方式，从头到尾遍历链表，每次处理两个节点。</p>
+<p>这里有一个常见的技巧：<strong>虚拟头节点（dummy head）</strong>。</p>
+<p>为什么要用虚拟头节点？因为头节点没有前驱节点，在交换前两个节点时，我们需要更新”前一个节点”的 <code>next</code> 指针。如果我们在真正的头节点之前加一个虚拟节点，那么所有节点的操作就统一了，不用单独处理头节点的特殊情况。</p>
+<p>让我们用 <code>dummy</code> 表示虚拟头节点，初始状态如下：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">dummy</span> → <span class="hljs-number">1</span> → <span class="hljs-number">2</span> → <span class="hljs-number">3</span> → <span class="hljs-number">4</span> → null<br></code></pre></td></tr></table></figure>
+
+<p>我们还需要一个指针 <code>prev</code>，它始终指向当前要处理的这对节点的前一个节点。</p>
+<p>一开始，<code>prev = dummy</code>。</p>
+<p>接下来是交换的核心操作。我们需要三个节点：</p>
+<ul>
+<li><code>first = prev.next</code>（这对中的第一个节点）</li>
+<li><code>second = prev.next.next</code>（这对中的第二个节点）</li>
+<li><code>nextPair = second.next</code>（下一对节点的起始）</li>
+</ul>
+<p>目标是把 <code>prev → first → second → nextPair</code> 变成 <code>prev → second → first → nextPair</code>。</p>
+<p>具体怎么做呢？让我们一步步来：</p>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs q"><span class="hljs-comment">// 第1步：让 prev 指向 second</span><br><span class="hljs-built_in">prev</span>.<span class="hljs-built_in">next</span> = second<br><br><span class="hljs-comment">// 第2步：让 first 指向下一对（连接后面的部分）</span><br><span class="hljs-built_in">first</span>.<span class="hljs-built_in">next</span> = second.<span class="hljs-built_in">next</span><br><br><span class="hljs-comment">// 第3步：让 second 指向 first</span><br>second.<span class="hljs-built_in">next</span> = <span class="hljs-built_in">first</span><br></code></pre></td></tr></table></figure>
+
+<p>完成这一步后，链表变成了：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">dummy</span> → <span class="hljs-number">2</span> → <span class="hljs-number">1</span> → <span class="hljs-number">3</span> → <span class="hljs-number">4</span> → null<br></code></pre></td></tr></table></figure>
+
+<p>然后我们要继续处理下一对。<code>prev</code> 应该移动到什么位置？下一对是 <code>3 → 4</code>，它们的前一个节点是 <code>1</code>（也就是交换后的 <code>first</code>）。所以：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">prev</span> <span class="hljs-operator">=</span> first<br></code></pre></td></tr></table></figure>
+
+<p>持续这个过程，直到没有更多节点可以交换。</p>
+<p>等等，我们还需要考虑一个边界情况：如果链表节点数是奇数，最后一个节点不需要交换，保持原样即可。</p>
+<p>让我们看看迭代的完整过程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">ListNode</span> <span class="hljs-variable">dummy</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ListNode</span>(<span class="hljs-number">0</span>);<br>dummy.next = head;<br><span class="hljs-type">ListNode</span> <span class="hljs-variable">prev</span> <span class="hljs-operator">=</span> dummy;<br><br><span class="hljs-keyword">while</span> (head != <span class="hljs-literal">null</span> &amp;&amp; head.next != <span class="hljs-literal">null</span>) &#123;<br>    <span class="hljs-type">ListNode</span> <span class="hljs-variable">first</span> <span class="hljs-operator">=</span> head;<br>    <span class="hljs-type">ListNode</span> <span class="hljs-variable">second</span> <span class="hljs-operator">=</span> head.next;<br>    <br>    <span class="hljs-comment">// 交换</span><br>    prev.next = second;<br>    first.next = second.next;<br>    second.next = first;<br>    <br>    <span class="hljs-comment">// 移动指针</span><br>    prev = first;<br>    head = first.next; <span class="hljs-comment">// 继续处理下一对</span><br>&#125;<br><br><span class="hljs-keyword">return</span> dummy.next;<br></code></pre></td></tr></table></figure>
+
+<h3 id="递归-vs-迭代：该如何选择？"><a href="#递归-vs-迭代：该如何选择？" class="headerlink" title="递归 vs 迭代：该如何选择？"></a>递归 vs 迭代：该如何选择？</h3><p>到这里我们有了两种解法。让我们对比一下：</p>
+<p><strong>递归</strong>：</p>
+<ul>
+<li>代码极其简洁优雅，几乎是”翻译”问题的自然定义</li>
+<li>递归深度等于节点数的一半，长链表可能栈溢出</li>
+<li>适合对代码可读性要求高的场景</li>
+</ul>
+<p><strong>迭代</strong>：</p>
+<ul>
+<li>代码稍长，但逻辑同样清晰</li>
+<li>只使用常数级额外空间，没有栈溢出风险</li>
+<li>适合生产环境或长链表场景</li>
+</ul>
+<p>两种方法的时间复杂度都是 O(n)，都需要遍历每个节点一次。</p>
+<p>在日常开发中，迭代通常更稳妥；在算法竞赛或面试中，递归的简洁性往往是加分项。两种都掌握，视情况选择就好。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><h3 id="递归解法"><a href="#递归解法" class="headerlink" title="递归解法"></a>递归解法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for singly-linked list.</span><br><span class="hljs-comment"> * public class ListNode &#123;</span><br><span class="hljs-comment"> *     int val;</span><br><span class="hljs-comment"> *     ListNode next;</span><br><span class="hljs-comment"> *     ListNode() &#123;&#125;</span><br><span class="hljs-comment"> *     ListNode(int val) &#123; this.val = val; &#125;</span><br><span class="hljs-comment"> *     ListNode(int val, ListNode next) &#123; this.val = val; this.next = next; &#125;</span><br><span class="hljs-comment"> * &#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> ListNode <span class="hljs-title function_">swapPairs</span><span class="hljs-params">(ListNode head)</span> &#123;<br>        <span class="hljs-comment">// 终止条件：空链表或只有一个节点</span><br>        <span class="hljs-keyword">if</span> (head == <span class="hljs-literal">null</span> || head.next == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> head;<br>        &#125;<br>        <br>        <span class="hljs-type">ListNode</span> <span class="hljs-variable">first</span> <span class="hljs-operator">=</span> head;<br>        <span class="hljs-type">ListNode</span> <span class="hljs-variable">second</span> <span class="hljs-operator">=</span> head.next;<br>        <br>        <span class="hljs-comment">// 递归处理后面的节点对</span><br>        <span class="hljs-type">ListNode</span> <span class="hljs-variable">rest</span> <span class="hljs-operator">=</span> swapPairs(second.next);<br>        <br>        <span class="hljs-comment">// 交换当前这对节点</span><br>        second.next = first;<br>        first.next = rest;<br>        <br>        <span class="hljs-comment">// 返回新的头节点</span><br>        <span class="hljs-keyword">return</span> second;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="迭代解法"><a href="#迭代解法" class="headerlink" title="迭代解法"></a>迭代解法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Definition for singly-linked list.</span><br><span class="hljs-comment"> * public class ListNode &#123;</span><br><span class="hljs-comment"> *     int val;</span><br><span class="hljs-comment"> *     ListNode next;</span><br><span class="hljs-comment"> *     ListNode() &#123;&#125;</span><br><span class="hljs-comment"> *     ListNode(int val) &#123; this.val = val; &#125;</span><br><span class="hljs-comment"> *     ListNode(int val, ListNode next) &#123; this.val = val; this.next = next; &#125;</span><br><span class="hljs-comment"> * &#125;</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> ListNode <span class="hljs-title function_">swapPairs</span><span class="hljs-params">(ListNode head)</span> &#123;<br>        <span class="hljs-comment">// 虚拟头节点，简化边界处理</span><br>        <span class="hljs-type">ListNode</span> <span class="hljs-variable">dummy</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ListNode</span>(<span class="hljs-number">0</span>);<br>        dummy.next = head;<br>        <br>        <span class="hljs-type">ListNode</span> <span class="hljs-variable">prev</span> <span class="hljs-operator">=</span> dummy;<br>        <br>        <span class="hljs-keyword">while</span> (head != <span class="hljs-literal">null</span> &amp;&amp; head.next != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-type">ListNode</span> <span class="hljs-variable">first</span> <span class="hljs-operator">=</span> head;<br>            <span class="hljs-type">ListNode</span> <span class="hljs-variable">second</span> <span class="hljs-operator">=</span> head.next;<br>            <br>            <span class="hljs-comment">// 交换两个节点</span><br>            prev.next = second;       <span class="hljs-comment">// 前驱指向 second</span><br>            first.next = second.next; <span class="hljs-comment">// first 指向下一对</span><br>            second.next = first;      <span class="hljs-comment">// second 指向 first</span><br>            <br>            <span class="hljs-comment">// 移动指针，准备处理下一对</span><br>            prev = first;<br>            head = first.next;<br>        &#125;<br>        <br>        <span class="hljs-keyword">return</span> dummy.next;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><h3 id="递归解法-1"><a href="#递归解法-1" class="headerlink" title="递归解法"></a>递归解法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Definition for singly-linked list.</span><br><span class="hljs-comment"># class ListNode:</span><br><span class="hljs-comment">#     def __init__(self, val=0, next=None):</span><br><span class="hljs-comment">#         self.val = val</span><br><span class="hljs-comment">#         self.next = next</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">swapPairs</span>(<span class="hljs-params">self, head: <span class="hljs-type">Optional</span>[ListNode]</span>) -&gt; <span class="hljs-type">Optional</span>[ListNode]:<br>        <span class="hljs-comment"># 终止条件：空链表或只有一个节点</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> head <span class="hljs-keyword">or</span> <span class="hljs-keyword">not</span> head.<span class="hljs-built_in">next</span>:<br>            <span class="hljs-keyword">return</span> head<br>        <br>        first = head<br>        second = head.<span class="hljs-built_in">next</span><br>        <br>        <span class="hljs-comment"># 递归处理后面的节点对</span><br>        rest = <span class="hljs-variable language_">self</span>.swapPairs(second.<span class="hljs-built_in">next</span>)<br>        <br>        <span class="hljs-comment"># 交换当前这对节点</span><br>        second.<span class="hljs-built_in">next</span> = first<br>        first.<span class="hljs-built_in">next</span> = rest<br>        <br>        <span class="hljs-comment"># 返回新的头节点</span><br>        <span class="hljs-keyword">return</span> second<br></code></pre></td></tr></table></figure>
+
+<h3 id="迭代解法-1"><a href="#迭代解法-1" class="headerlink" title="迭代解法"></a>迭代解法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Definition for singly-linked list.</span><br><span class="hljs-comment"># class ListNode:</span><br><span class="hljs-comment">#     def __init__(self, val=0, next=None):</span><br><span class="hljs-comment">#         self.val = val</span><br><span class="hljs-comment">#         self.next = next</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">swapPairs</span>(<span class="hljs-params">self, head: <span class="hljs-type">Optional</span>[ListNode]</span>) -&gt; <span class="hljs-type">Optional</span>[ListNode]:<br>        <span class="hljs-comment"># 虚拟头节点，简化边界处理</span><br>        dummy = ListNode(<span class="hljs-number">0</span>)<br>        dummy.<span class="hljs-built_in">next</span> = head<br>        <br>        prev = dummy<br>        <br>        <span class="hljs-keyword">while</span> head <span class="hljs-keyword">and</span> head.<span class="hljs-built_in">next</span>:<br>            first = head<br>            second = head.<span class="hljs-built_in">next</span><br>            <br>            <span class="hljs-comment"># 交换两个节点</span><br>            prev.<span class="hljs-built_in">next</span> = second          <span class="hljs-comment"># 前驱指向 second</span><br>            first.<span class="hljs-built_in">next</span> = second.<span class="hljs-built_in">next</span>    <span class="hljs-comment"># first 指向下一对</span><br>            second.<span class="hljs-built_in">next</span> = first         <span class="hljs-comment"># second 指向 first</span><br>            <br>            <span class="hljs-comment"># 移动指针，准备处理下一对</span><br>            prev = first<br>            head = first.<span class="hljs-built_in">next</span><br>        <br>        <span class="hljs-keyword">return</span> dummy.<span class="hljs-built_in">next</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>递归</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>递归栈深度为 n&#x2F;2，n 为链表节点数</td>
+</tr>
+<tr>
+<td>迭代</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>只使用了若干个指针变量，常数级额外空间</td>
+</tr>
+</tbody></table>
+<p>两种方法都遍历了链表中的每个节点<strong>一次</strong>，时间复杂度都是 O(n)。区别在于空间：递归需要栈空间来保存每一层的调用状态，而迭代只用了几个临时指针。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>1. 链表题的通用技巧：虚拟头节点</strong></p>
+<p>在需要修改头节点的场景中，虚拟头节点（dummy node）是一个非常实用的技巧。它让我们不必单独处理头节点的情况，所有节点都可以用统一的逻辑来操作。</p>
+<p><strong>2. 多指针协同操作</strong></p>
+<p>链表的增删改查往往需要多个指针协同工作。在这道题中，我们用了 <code>prev</code>、<code>first</code>、<code>second</code> 三个指针来精准控制每一次重连。每一个 <code>next</code> 指向的修改都必须慎重——顺序错了，链表就断了。</p>
+<p><strong>3. 递归思维</strong></p>
+<p>这道题的递归解法非常”自然地”反映了问题的结构。下次遇到”对序列中的元素按某种规则分组处理”的问题时，不妨先想想递归是否能给出最简洁的表达。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ul>
+<li><strong>是否可以分组处理？</strong> 像”两两交换”、”反转每 K 个一组”这类问题，都是对链表进行分组操作。先确定分组规则，再处理组内逻辑和组间连接。</li>
+<li><strong>头节点是否会变化？</strong> 如果头节点会变化，考虑使用虚拟头节点来简化代码。</li>
+<li><strong>递归还是迭代？</strong> 先想清楚递归能否简洁地描述问题，再评估递归深度是否在可接受范围内。</li>
+<li><strong>画图！</strong> 链表指针操作最忌讳”空想”。在纸上画出每一步的指针变化，再翻译成代码，成功率会高很多。</li>
+</ul>
+<hr>
+<blockquote>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%93%BE%E8%A1%A8/" class="print-no-link">#链表</a>
+      
+        <a href="/tags/%E8%BF%AD%E4%BB%A3/" class="print-no-link">#迭代</a>
+      
+        <a href="/tags/%E9%80%92%E5%BD%92/" class="print-no-link">#递归</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>两两交换链表中的节点</div>
+      <div>http://example.com/2026/07/13/30-两两交换链表中的节点/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/24-%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/" title="回文链表">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">回文链表</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/29-%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E7%9A%84%E5%80%92%E6%95%B0%E7%AC%AC%20N%20%E4%B8%AA%E7%BB%93%E7%82%B9/" title="删除链表的倒数第 N 个结点">
+                        <span class="hidden-mobile">删除链表的倒数第 N 个结点</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

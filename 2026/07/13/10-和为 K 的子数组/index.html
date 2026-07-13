@@ -19,25 +19,23 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="利用前缀和与哈希表，将子数组求和问题转化为「两数之差」的查找问题，在 O(n) 时间内统计出所有和为 K 的连续子数组。">
+    <meta name="description" content="用&quot;前缀和 + 哈希表&quot;将 O(n²) 暴力枚举优化到 O(n)，核心在于将&quot;连续子数组的和&quot;转化为&quot;两个前缀和的差&quot;，再利用哈希表快速查找目标差值出现的次数。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 560. 和为 K 的子数组（subarray-sum-equals-k）">
+<meta property="og:title" content="和为 K 的子数组">
 <meta property="og:url" content="http://example.com/2026/07/13/10-%E5%92%8C%E4%B8%BA%20K%20%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="利用前缀和与哈希表，将子数组求和问题转化为「两数之差」的查找问题，在 O(n) 时间内统计出所有和为 K 的连续子数组。">
+<meta property="og:description" content="用&quot;前缀和 + 哈希表&quot;将 O(n²) 暴力枚举优化到 O(n)，核心在于将&quot;连续子数组的和&quot;转化为&quot;两个前缀和的差&quot;，再利用哈希表快速查找目标差值出现的次数。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:56:46.332Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:33.772Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="前缀和">
 <meta property="article:tag" content="哈希表">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>LeetCode 560. 和为 K 的子数组（subarray-sum-equals-k） - CodingOrange</title>
+  <title>和为 K 的子数组 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +304,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 560. 和为 K 的子数组（subarray-sum-equals-k）"></span>
+            <span id="subtitle" data-typed-text="和为 K 的子数组"></span>
           
         </div>
 
@@ -329,7 +327,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          2.7k 字
         
       </span>
     
@@ -340,7 +338,7 @@
         
         
         
-          25 分钟
+          23 分钟
         
       </span>
     
@@ -379,104 +377,137 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 560. 和为 K 的子数组（subarray-sum-equals-k）</h1>
+            <h1 id="seo-header">和为 K 的子数组</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/subarray-sum-equals-k/">LeetCode 560. subarray-sum-equals-k</a></p>
-</blockquote>
-<p>给你一个整数数组 <code>nums</code> 和一个整数 <code>k</code>，请你统计并返回该数组中和为 <code>k</code> 的连续子数组的个数。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs fix"><span class="hljs-attr">输入：nums </span>=<span class="hljs-string"> [1,1,1], k = 2</span><br><span class="hljs-string">输出：2</span><br></code></pre></td></tr></table></figure>
-
-<p><strong>示例 2：</strong></p>
-<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs fix"><span class="hljs-attr">输入：nums </span>=<span class="hljs-string"> [1,2,3], k = 3</span><br><span class="hljs-string">输出：2</span><br></code></pre></td></tr></table></figure>
-
-<p><strong>提示：</strong></p>
-<ul>
-<li>$1 \le \text{nums.length} \le 2 \times 10^4$</li>
-<li>$-1000 \le \text{nums}[i] \le 1000$</li>
-<li>$-10^7 \le k \le 10^7$</li>
-</ul>
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们最容易想到的是什么？</p>
-<p>没错——枚举所有子数组，把每个子数组的和算出来，看看有几个等于 $k$。双重循环就能搞定：</p>
+                <h1 id="和为-K-的子数组"><a href="#和为-K-的子数组" class="headerlink" title="和为 K 的子数组"></a>和为 K 的子数组</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一反应：暴力枚举"><a href="#第一反应：暴力枚举" class="headerlink" title="第一反应：暴力枚举"></a>第一反应：暴力枚举</h3><p>拿到这道题，如果没有任何技巧，我们第一反应会怎么做？</p>
+<p>“找出所有连续子数组，分别求和，然后数一数有多少个和为 k。”</p>
+<p>这个思路非常直接。我们可以写两层循环，外层枚举子数组的起点 <code>i</code>，内层枚举终点 <code>j</code>，同时累加 <code>i</code> 到 <code>j</code> 的和。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">sum</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i; j &lt; nums.length; j++) &#123;<br>        sum += nums[j];<br>        <span class="hljs-keyword">if</span> (sum == k) count++;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>这个解法的时间复杂度是 $O(n^2)$。在 $n$ 高达 $2 \times 10^4$ 的情况下，$O(n^2)$ 大约是 $4 \times 10^8$ 次操作，一定会超时。</p>
-<p><strong>瓶颈在哪里？</strong> 对于每个起点 $i$，我们都要重新扫描一遍后面的元素来累加求和。这些累加过程中有大量的重复计算。</p>
-<p>那有没有办法”记住”之前算过的信息，避免重复累加？</p>
-<p>想象一下：如果我们知道从数组开头到某个位置 $i$ 的累积和（记作 $\text{preSum}[i]$），那么任意子数组 $[l, r]$ 的和就可以表示为：</p>
-<p>$$\text{sum}(l, r) &#x3D; \text{preSum}[r] - \text{preSum}[l - 1]$$</p>
-<p>也就是说，<strong>子数组求和问题可以转化为两个前缀和之差</strong>。</p>
-<p>现在问题变成了：我们要找有多少对 $(l, r)$ 满足 $\text{preSum}[r] - \text{preSum}[l-1] &#x3D; k$。</p>
-<p>移项一下：$\text{preSum}[l-1] &#x3D; \text{preSum}[r] - k$。</p>
-<p>这意味着什么？当我们遍历到位置 $r$ 时，前缀和是 $\text{preSum}[r]$。我们只需要知道<strong>在位置 $r$ 之前，有多少个前缀和等于 $\text{preSum}[r] - k$</strong>。</p>
-<p>这就像「两数之和」那道题——只不过我们把”两数之和等于 target”变成了”两前缀和之差等于 k”。而「两数之和」我们用哈希表在 $O(1)$ 时间内就能查询某个值出现的次数。</p>
-<p>到这里，思路就清晰了：<strong>一边遍历一边用哈希表记录每个前缀和出现的次数，对于当前位置，查一下之前有多少个前缀和等于 $\text{currentPreSum} - k$，累加到答案中。</strong></p>
-<h2 id="解法：前缀和-哈希表"><a href="#解法：前缀和-哈希表" class="headerlink" title="解法：前缀和 + 哈希表"></a>解法：前缀和 + 哈希表</h2><p>我们遍历数组，维护一个变量 <code>preSum</code> 表示从数组开头到当前位置的累积和。同时用一个哈希表 <code>map</code> 记录每个前缀和值出现的次数。</p>
-<p>具体步骤：</p>
-<ol>
-<li>初始化 <code>map</code>，放入 <code>{0: 1}</code>——表示前缀和为 0 出现了 1 次。这为什么重要？考虑子数组从索引 0 开始的情况：如果 <code>preSum == k</code>，说明从开头到当前位置的整段子数组和为 $k$，此时 $preSum - k &#x3D; 0$，<code>map</code> 中必须有一个 <code>0</code> 才能统计到这种情况。</li>
-<li>遍历数组，更新 <code>preSum += nums[i]</code>。</li>
-<li>检查 <code>map</code> 中是否存在 <code>preSum - k</code>，如果存在，把对应的出现次数加到答案里。</li>
-<li>把当前的 <code>preSum</code> 记录到 <code>map</code> 中（次数 +1）。</li>
-<li>遍历结束后，答案即为所求。</li>
+<p><strong>这个解法的问题在哪里？</strong></p>
+<p>时间复杂度是 O(n²)——对于 n &#x3D; 10⁵ 的规模，大约需要 10¹⁰ 次操作，显然会超时。</p>
+<p>空间复杂度是 O(1)，时间却是硬伤。</p>
+<h3 id="停下来想一想：有没有办法减少重复计算？"><a href="#停下来想一想：有没有办法减少重复计算？" class="headerlink" title="停下来想一想：有没有办法减少重复计算？"></a>停下来想一想：有没有办法减少重复计算？</h3><p>我们观察一下暴力法的计算过程：对于同一个终点 <code>j</code>，我们需要从每个起点 <code>i</code> 重新累加到 <code>j</code>。这里面其实有很多重复劳动。</p>
+<p>不妨想一下——如果我们能快速算出任意一个连续子数组 <code>nums[i..j]</code> 的和，是不是就能省掉内层的累加？</p>
+<h3 id="引入前缀和"><a href="#引入前缀和" class="headerlink" title="引入前缀和"></a>引入前缀和</h3><p>连续子数组的和，可以借助<strong>前缀和</strong>来快速求得。</p>
+<p>定义 <code>prefix[i]</code> 为 <code>nums[0]</code> 到 <code>nums[i-1]</code> 的和（即前 i 个元素的和），那么：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">nums<span class="hljs-comment">[i]</span> + nums<span class="hljs-comment">[i+1]</span> + ... + nums<span class="hljs-comment">[j]</span> = prefix<span class="hljs-comment">[j+1]</span> - prefix<span class="hljs-comment">[i]</span><br></code></pre></td></tr></table></figure>
+
+<p>有了前缀和，我们只需要 O(1) 时间就能得到一个子数组的和。</p>
+<p>但等等——我们仍然需要枚举所有 <code>(i, j)</code> 对来判断 <code>prefix[j+1] - prefix[i] == k</code>，这依然是 O(n²)。</p>
+<h3 id="再进一步：把等式换一个角度"><a href="#再进一步：把等式换一个角度" class="headerlink" title="再进一步：把等式换一个角度"></a>再进一步：把等式换一个角度</h3><p>我们重新审视这个条件：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">prefix<span class="hljs-comment">[j+1]</span> - prefix<span class="hljs-comment">[i]</span> == k<br></code></pre></td></tr></table></figure>
+
+<p>等价于：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">prefix<span class="hljs-comment">[i]</span> == prefix<span class="hljs-comment">[j+1]</span> - k<br></code></pre></td></tr></table></figure>
+
+<p>这个改写非常关键。</p>
+<p>它告诉我们：<strong>当我们遍历到位置 j 时（终点），我们不是在找起点 i，而是在找之前出现过多少次值为 <code>prefix[j+1] - k</code> 的前缀和。</strong></p>
+<p>换句话说，我们只需要一边遍历、一边用哈希表记录每个前缀和出现的次数，然后对于当前位置，查一下 <code>当前前缀和 - k</code> 之前出现过几次，累加即可。</p>
+<h3 id="最终的核心思想"><a href="#最终的核心思想" class="headerlink" title="最终的核心思想"></a>最终的核心思想</h3><ol>
+<li>维护一个哈希表 <code>map</code>，<code>key</code> 是前缀和，<code>value</code> 是该前缀和出现的次数。</li>
+<li>初始化 <code>map[0] = 1</code>，表示前缀和为 0 出现过一次（一个元素都不取的情况），这是因为子数组可以从第一个元素开始，此时 <code>prefix[j+1] - k = 0</code>。</li>
+<li>遍历数组，计算当前前缀和 <code>curSum</code>。</li>
+<li>检查 <code>curSum - k</code> 在哈希表中出现的次数，累加到答案中。</li>
+<li>将 <code>curSum</code> 的出现次数加一。</li>
 </ol>
-<p>为什么用哈希表而不是其他结构？我们需要<strong>快速查询某个值出现的次数</strong>，哈希表提供 $O(1)$ 的查找和更新，完美匹配这个需求。前缀和的值可能为负且范围很大（$-2 \times 10^9$ 到 $2 \times 10^9$），用数组存不下，所以哈希表是自然之选。</p>
-<p>与暴力解法的对比：</p>
+<p>这样，我们只遍历了一次数组，时间复杂度 O(n)，空间复杂度 O(n)。</p>
+<hr>
+<p>让我们用一个小例子走一遍：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">nums</span> = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], k = <span class="hljs-number">3</span><br></code></pre></td></tr></table></figure>
+
 <table>
 <thead>
 <tr>
-<th>方案</th>
-<th>时间复杂度</th>
-<th>空间复杂度</th>
-<th>核心思想</th>
+<th>位置</th>
+<th>元素</th>
+<th>当前前缀和</th>
+<th>curSum - k</th>
+<th>map 中已有次数</th>
+<th>累加</th>
+<th>map</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>暴力枚举</td>
-<td>$O(n^2)$</td>
-<td>$O(1)$</td>
-<td>枚举所有子数组并求和</td>
+<td>初始</td>
+<td>-</td>
+<td>0</td>
+<td>-</td>
+<td>-</td>
+<td>0</td>
+<td>{0:1}</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>-2</td>
+<td>0</td>
+<td>0</td>
+<td>{0:1, 1:1}</td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>{0:1, 1:1, 3:1}</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>6</td>
+<td>3</td>
+<td>1</td>
+<td>2</td>
+<td>{0:1, 1:1, 3:1, 6:1}</td>
+</tr>
+</tbody></table>
+<p>最终结果为 2，对应的子数组是 <code>[1,2]</code> 和 <code>[3]</code>。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">subarraySum</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> k)</span> &#123;<br>        <span class="hljs-comment">// key: 前缀和, value: 该前缀和出现的次数</span><br>        Map&lt;Integer, Integer&gt; prefixSumMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        <span class="hljs-comment">// 初始化：前缀和为 0 出现了 1 次</span><br>        prefixSumMap.put(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>);<br>        <br>        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">curSum</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>            curSum += num;                      <span class="hljs-comment">// 当前前缀和</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">target</span> <span class="hljs-operator">=</span> curSum - k;            <span class="hljs-comment">// 要找的前缀和</span><br>            count += prefixSumMap.getOrDefault(target, <span class="hljs-number">0</span>); <span class="hljs-comment">// 累加答案</span><br>            prefixSumMap.put(curSum, prefixSumMap.getOrDefault(curSum, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>);<br>        &#125;<br>        <br>        <span class="hljs-keyword">return</span> count;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">subarraySum</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], k: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># key: 前缀和, value: 出现次数</span><br>        prefix_sum_map = &#123;<span class="hljs-number">0</span>: <span class="hljs-number">1</span>&#125;  <span class="hljs-comment"># 前缀和为 0 出现 1 次</span><br>        <br>        count = <span class="hljs-number">0</span><br>        cur_sum = <span class="hljs-number">0</span><br>        <br>        <span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> nums:<br>            cur_sum += num<br>            <span class="hljs-comment"># 如果之前存在前缀和为 cur_sum - k，说明存在和为 k 的子数组</span><br>            <span class="hljs-keyword">if</span> cur_sum - k <span class="hljs-keyword">in</span> prefix_sum_map:<br>                count += prefix_sum_map[cur_sum - k]<br>            <span class="hljs-comment"># 将当前前缀和加入哈希表</span><br>            prefix_sum_map[cur_sum] = prefix_sum_map.get(cur_sum, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span><br>        <br>        <span class="hljs-keyword">return</span> count<br></code></pre></td></tr></table></figure>
+
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力法</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+<td>两层循环枚举所有子数组，内层累加求和</td>
 </tr>
 <tr>
 <td>前缀和 + 哈希表</td>
-<td>$O(n)$</td>
-<td>$O(n)$</td>
-<td>将子数组和转为前缀和之差，用哈希表 $O(1)$ 查询</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>遍历一次，哈希表最多存储 n+1 个前缀和</td>
 </tr>
 </tbody></table>
-<p>我们用 $O(n)$ 的额外空间换来了从 $O(n^2)$ 到 $O(n)$ 的时间优化，在 $n &#x3D; 20000$ 时，这是从”跑不完”到”毫秒级”的质变。</p>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>分析</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>时间复杂度</td>
-<td>$O(n)$ —— 只需遍历数组一次，每次哈希表操作均为 $O(1)$</td>
-</tr>
-<tr>
-<td>空间复杂度</td>
-<td>$O(n)$ —— 最坏情况下每个位置的前缀和都不同，哈希表存储 $n$ 个键值对</td>
-</tr>
-</tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">subarraySum</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> k)</span> &#123;<br>        <span class="hljs-comment">// 哈希表：key = 前缀和, value = 该前缀和出现的次数</span><br>        Map&lt;Integer, Integer&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        <span class="hljs-comment">// 初始化：前缀和为 0 出现 1 次（处理子数组从索引 0 开始的情况）</span><br>        map.put(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>);<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">preSum</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;  <span class="hljs-comment">// 当前前缀和</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;   <span class="hljs-comment">// 答案</span><br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>            preSum += num;<br><br>            <span class="hljs-comment">// 如果之前有前缀和等于 preSum - k，说明中间这段子数组和为 k</span><br>            <span class="hljs-keyword">if</span> (map.containsKey(preSum - k)) &#123;<br>                count += map.get(preSum - k);<br>            &#125;<br><br>            <span class="hljs-comment">// 记录当前前缀和</span><br>            map.put(preSum, map.getOrDefault(preSum, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>);<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> count;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">subarraySum</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], k: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># 哈希表：key = 前缀和, value = 该前缀和出现的次数</span><br>        pre_sum_count = &#123;<span class="hljs-number">0</span>: <span class="hljs-number">1</span>&#125;  <span class="hljs-comment"># 初始化：前缀和为 0 出现 1 次</span><br><br>        pre_sum = <span class="hljs-number">0</span>  <span class="hljs-comment"># 当前前缀和</span><br>        count = <span class="hljs-number">0</span>    <span class="hljs-comment"># 答案</span><br><br>        <span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> nums:<br>            pre_sum += num<br><br>            <span class="hljs-comment"># 如果之前有前缀和等于 pre_sum - k，说明中间这段子数组和为 k</span><br>            <span class="hljs-keyword">if</span> pre_sum - k <span class="hljs-keyword">in</span> pre_sum_count:<br>                count += pre_sum_count[pre_sum - k]<br><br>            <span class="hljs-comment"># 记录当前前缀和</span><br>            pre_sum_count[pre_sum] = pre_sum_count.get(pre_sum, <span class="hljs-number">0</span>) + <span class="hljs-number">1</span><br><br>        <span class="hljs-keyword">return</span> count<br></code></pre></td></tr></table></figure>
-
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p>这道题的核心技巧是将<strong>子数组求和</strong>转化为<strong>前缀和之差</strong>，再借助哈希表把「两数之差」问题降为 $O(n)$。这是一类非常经典的模板——凡是涉及”连续子数组满足某种和条件”的题，前缀和 + 哈希表往往是第一个值得尝试的方向。</p>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>将”连续子数组的和”转化为”两个前缀和的差”</strong>，是一种极其经典的优化思路。当我们需要快速判断一个连续区间的性质时，前缀和往往是第一把钥匙。而加上哈希表之后，我们又把”找差等于 k 的对”转化成了”找值为某个固定值的元素出现次数”，这本质上是用空间换时间——用 O(n) 的额外空间，把 O(n²) 的枚举降到了 O(n)。</p>
+<p>另一个值得注意的点是初始化 <code>prefixSumMap[0] = 1</code>。这个细节很容易被忽略，但恰恰是它保证了从第一个元素开始的子数组也能被正确计数。<strong>边界条件的处理，往往藏在最简单的直觉背后。</strong></p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ul>
+<li><strong>“连续子数组”+”和为某个值”</strong>：立刻想到前缀和。这是最强烈的信号。</li>
+<li><strong>“子数组”+”计数”</strong>：当问题要求的是”有多少个”而不是”最长&#x2F;最短”时，哈希表统计出现次数往往是关键。</li>
+<li><strong>“连续子数组”+”可正可负”</strong>：这就排除了滑动窗口（双指针）的解法，因为滑动窗口依赖单调性。此时前缀和 + 哈希表是首选。</li>
+</ul>
+<p>这道题是前缀和系列的基础题。掌握它之后，不妨继续挑战 <strong>“和可被 K 整除的子数组”（974）</strong> 和 <strong>“连续的子数组和”（523）</strong>——它们的思路一脉相承，都是前缀和 + 哈希表的不同变体。</p>
+<hr>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
 </blockquote>
-<p>优先观察能不能把「子数组的和 &#x2F; 异或 &#x2F; 乘积」转化为「两个前缀值的关系式」，然后问自己：这个关系式能不能用一个哈希表在遍历过程中 $O(1)$ 查询？如果可以，$O(n)$ 解法就呼之欲出了。</p>
 
                 
               </div>
@@ -495,8 +526,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -510,11 +555,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
         <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="print-no-link">#哈希表</a>
-      
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
       
         <a href="/tags/%E5%89%8D%E7%BC%80%E5%92%8C/" class="print-no-link">#前缀和</a>
       
@@ -528,7 +569,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 560. 和为 K 的子数组（subarray-sum-equals-k）</div>
+      <div>和为 K 的子数组</div>
       <div>http://example.com/2026/07/13/10-和为 K 的子数组/</div>
     </div>
     <div class="license-meta">
@@ -573,9 +614,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/13/07-%E6%8E%A5%E9%9B%A8%E6%B0%B4/" title="LeetCode 42. 接雨水（trapping-rain-water）">
+                      <a href="/2026/07/13/18-%E7%9F%A9%E9%98%B5%E7%BD%AE%E9%9B%B6/" title="矩阵置零">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LeetCode 42. 接雨水（trapping-rain-water）</span>
+                        <span class="hidden-mobile">矩阵置零</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -583,8 +624,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/13/05-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/" title="LeetCode 11. 盛最多水的容器（container-with-most-water）">
-                        <span class="hidden-mobile">LeetCode 11. 盛最多水的容器（container-with-most-water）</span>
+                      <a href="/2026/07/13/19-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/" title="螺旋矩阵">
+                        <span class="hidden-mobile">螺旋矩阵</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

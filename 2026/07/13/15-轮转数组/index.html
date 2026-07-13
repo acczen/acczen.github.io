@@ -19,26 +19,23 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="给定一个整数数组，将数组中的元素向右轮转 k 个位置，要求使用 O(1) 额外空间原地完成。">
+    <meta name="description" content="给定一个整数数组，将数组中的元素向右轮转 k 个位置，要求空间复杂度为 O(1)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 189. 轮转数组（rotate-array）">
+<meta property="og:title" content="轮转数组">
 <meta property="og:url" content="http://example.com/2026/07/13/15-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="给定一个整数数组，将数组中的元素向右轮转 k 个位置，要求使用 O(1) 额外空间原地完成。">
+<meta property="og:description" content="给定一个整数数组，将数组中的元素向右轮转 k 个位置，要求空间复杂度为 O(1)">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:56:49.876Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:34.054Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="双指针">
-<meta property="article:tag" content="数学">
 <meta property="article:tag" content="数组">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>LeetCode 189. 轮转数组（rotate-array） - CodingOrange</title>
+  <title>轮转数组 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -307,7 +304,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 189. 轮转数组（rotate-array）"></span>
+            <span id="subtitle" data-typed-text="轮转数组"></span>
           
         </div>
 
@@ -330,7 +327,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.1k 字
+          2.9k 字
         
       </span>
     
@@ -341,7 +338,7 @@
         
         
         
-          26 分钟
+          24 分钟
         
       </span>
     
@@ -380,132 +377,98 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 189. 轮转数组（rotate-array）</h1>
+            <h1 id="seo-header">轮转数组</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/rotate-array/">LeetCode 189. rotate-array</a></p>
-</blockquote>
-<p>给定一个整数数组 <code>nums</code>，将数组中的元素向右轮转 <code>k</code> 个位置，其中 <code>k</code> 是非负数。</p>
+                <h1 id="轮转数组"><a href="#轮转数组" class="headerlink" title="轮转数组"></a>轮转数组</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>给定一个整数数组 <code>nums</code>，将数组中的元素向右轮转 <code>k</code> 个位置，其中 <code>k</code> 是非负数。</p>
 <p><strong>示例 1：</strong></p>
-<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">输入</span><span class="hljs-punctuation">:</span> <span class="hljs-string">nums = [1,2,3,4,5,6,7], k = 3</span><br><span class="hljs-attribute">输出</span><span class="hljs-punctuation">:</span> <span class="hljs-string">[5,6,7,1,2,3,4]</span><br><span class="hljs-attribute">解释</span><span class="hljs-punctuation">:</span><br><span class="hljs-attribute">向右轮转 1 步</span><span class="hljs-punctuation">:</span> <span class="hljs-string">[7,1,2,3,4,5,6]</span><br><span class="hljs-attribute">向右轮转 2 步</span><span class="hljs-punctuation">:</span> <span class="hljs-string">[6,7,1,2,3,4,5]</span><br><span class="hljs-attribute">向右轮转 3 步</span><span class="hljs-punctuation">:</span> <span class="hljs-string">[5,6,7,1,2,3,4]</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入：nums = <span class="hljs-string">[1,2,3,4,5,6,7]</span>, k = <span class="hljs-number">3</span><br>输出：<span class="hljs-string">[5,6,7,1,2,3,4]</span><br>解释：<br>向右轮转 <span class="hljs-number">1</span> 步：<span class="hljs-string">[7,1,2,3,4,5,6]</span><br>向右轮转 <span class="hljs-number">2</span> 步：<span class="hljs-string">[6,7,1,2,3,4,5]</span><br>向右轮转 <span class="hljs-number">3</span> 步：<span class="hljs-string">[5,6,7,1,2,3,4]</span><br></code></pre></td></tr></table></figure>
 
-<p><strong>示例 2：</strong></p>
-<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs subunit">输入：nums = [<span class="hljs-string">-1</span>,<span class="hljs-string">-100</span>,3,99], k = 2<br>输出：[3,99,<span class="hljs-string">-1</span>,<span class="hljs-string">-100</span>]<br>解释:<br>向右轮转 1 步: [99,<span class="hljs-string">-1</span>,<span class="hljs-string">-100</span>,3]<br>向右轮转 2 步: [3,99,<span class="hljs-string">-1</span>,<span class="hljs-string">-100</span>]<br></code></pre></td></tr></table></figure>
+<hr>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>让我们从最直觉的方法开始，一步步推到最优解。</p>
+<h3 id="第一反应：暴力模拟"><a href="#第一反应：暴力模拟" class="headerlink" title="第一反应：暴力模拟"></a>第一反应：暴力模拟</h3><p>如果没有任何技巧，我们第一反应会怎么做？</p>
+<p>“轮转 k 次嘛，那就一次一次来——每次把最后一个元素保存下来，然后把前面的所有元素往后挪一个位置，最后把保存的元素放到最前面。”</p>
+<p>听起来很直接，对吧？来算一下代价：每次轮转需要遍历整个数组（O(n)），一共要轮转 k 次，所以整体是 O(n × k)。如果 <code>n</code> 和 <code>k</code> 都很大，比如 <code>n = 10^5</code>、<code>k = 10^5</code>，那就要执行 10^10 次操作——在现代计算机上也是不可接受的。</p>
+<p>有没有办法避免这种重复劳动？</p>
+<h3 id="第一步优化：用额外空间换时间"><a href="#第一步优化：用额外空间换时间" class="headerlink" title="第一步优化：用额外空间换时间"></a>第一步优化：用额外空间换时间</h3><p>“如果允许我们用额外的数组，是不是可以一步到位？”</p>
+<p>不妨想一下：每个元素最终会去到哪里？如果数组长度是 <code>n</code>，向右轮转 <code>k</code> 位，那么原来在位置 <code>i</code> 的元素应该去位置 <code>(i + k) % n</code>。这个映射关系很简单，我们只需要创建一个新数组，遍历一遍原数组，把每个元素放到它该去的位置就行了。</p>
+<p>这样时间复杂度降到了 O(n)，但空间复杂度是 O(n)——我们多占用了和原数组一样大的空间。</p>
+<p>题目要求我们能否做到 <strong>原地</strong> 修改？也就是空间复杂度 O(1)。这需要我们换个思路。</p>
+<h3 id="再思考：能否原地完成？"><a href="#再思考：能否原地完成？" class="headerlink" title="再思考：能否原地完成？"></a>再思考：能否原地完成？</h3><p>“不用额外数组，我们能直接交换元素的位置吗？”</p>
+<p>一个自然的想法是：我们从位置 0 开始，把 <code>nums[0]</code> 放到它该去的位置 <code>(0 + k) % n</code>，然后原来那个位置的元素被挤出来了，我们拿着它继续去它该去的位置……这样会形成一个环。走完一个环之后，再从下一个位置开始。</p>
+<p>这个过程叫 <strong>环状替换</strong>（cyclic replacement）。遍历所有元素，每个元素恰好被移动一次，时间 O(n)，空间 O(1)。</p>
+<p>不过这个思路有一个细节需要处理：什么时候一个环结束？什么时候所有环都走完了？我们用一个计数器来跟踪已移动的元素个数，当移动了 <code>n</code> 个元素时就完成了。具体实现中，我们会多次启动替换——如果起点恰好在一个已经走过的环上，就跳过。</p>
+<h3 id="最优解：反转的魔法"><a href="#最优解：反转的魔法" class="headerlink" title="最优解：反转的魔法"></a>最优解：反转的魔法</h3><p>“有没有更优雅的方式？既不需要计数，也不需要处理环的边界？”</p>
+<p>有的。让我们观察一下轮转前后的变化规律。</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">原数组：   <span class="hljs-string">[1, 2, 3, 4, 5, 6, 7]</span><br>轮转后：   <span class="hljs-string">[5, 6, 7, 1, 2, 3, 4]</span><br></code></pre></td></tr></table></figure>
 
-<p><strong>提示：</strong></p>
-<ul>
-<li>$1 \le nums.length \le 10^5$</li>
-<li>$-2^{31} \le nums[i] \le 2^{31} - 1$</li>
-<li>$0 \le k \le 10^5$</li>
-</ul>
-<p><strong>进阶：</strong></p>
-<ul>
-<li>尽可能想出三种及以上的解决方案。</li>
-<li>你可以使用空间复杂度为 $O(1)$ 的<strong>原地</strong>算法解决这个问题吗？</li>
-</ul>
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们不妨先问自己一个问题：<strong>“右移 k 步”到底意味着什么？能把这个问题换个角度看吗？</strong></p>
-<p>我们先从最直观的做法开始。</p>
-<h3 id="暴力模拟"><a href="#暴力模拟" class="headerlink" title="暴力模拟"></a>暴力模拟</h3><p>第一反应大概是：模拟题目的描述，每次把整个数组右移 1 位，共做 k 次。每次”右移 1 位”就是保存最后一个元素，然后把前面所有元素依次后移一格，最后把保存的元素放到开头。</p>
-<p>这个做法的时间是 $O(n \times k)$，在 $n$ 和 $k$ 都达到 $10^5$ 级别时会超时。瓶颈在哪？</p>
-<blockquote>
-<p>瓶颈在于：我们一次只移动一位，做了太多冗余的搬运工作。有没有办法让每个元素<strong>一次性</strong>到达它该去的位置？</p>
-</blockquote>
-<h3 id="借助额外空间"><a href="#借助额外空间" class="headerlink" title="借助额外空间"></a>借助额外空间</h3><p>如果我们不在乎空间，思路就非常简单：创建一个新数组，把 <code>nums[i]</code> 直接放到新数组的 <code>(i + k) % n</code> 位置上，最后拷贝回来。时间 $O(n)$，空间 $O(n)$。</p>
-<p>但进阶要求我们尝试 $O(1)$ 空间的原地算法。那问题来了——</p>
-<blockquote>
-<p>如果不让你借”外援”（额外数组），你能在数组内部直接完成这个”乾坤大挪移”吗？</p>
-</blockquote>
-<h3 id="一个关键的观察"><a href="#一个关键的观察" class="headerlink" title="一个关键的观察"></a>一个关键的观察</h3><p>让我们盯着示例的输入输出多看几眼：</p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入: <span class="hljs-string">[1, 2, 3, 4, 5, 6, 7]</span>, k = <span class="hljs-number">3</span><br>输出: <span class="hljs-string">[5, 6, 7, 1, 2, 3, 4]</span><br></code></pre></td></tr></table></figure>
+<p>仔细看：轮转后的数组可以看作 <strong>最后 k 个元素被放到了前面，前 n−k 个元素被移到了后面</strong>，而且两部分的内部相对顺序不变。</p>
+<p>如果我们先把整个数组反转：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">原数组：           <span class="hljs-string">[1, 2, 3, 4, 5, 6, 7]</span><br>反转整个数组：     <span class="hljs-string">[7, 6, 5, 4, 3, 2, 1]</span><br></code></pre></td></tr></table></figure>
 
-<p>你能发现什么规律？试试把数组分成两部分看：<code>[1,2,3,4]</code> 和 <code>[5,6,7]</code>。输出变成了 <code>[5,6,7]</code> + <code>[1,2,3,4]</code>——后 $k$ 个元素被提到了前面，前 $n-k$ 个元素被推到了后面。</p>
-<p>这就引出了一个非常优雅的思路：<strong>反转</strong>。</p>
-<p>反转一个数组，就是把顺序完全颠倒。那反转恰好能把”从哪切开”这件事办了吗？我们来看看：</p>
-<ul>
-<li>整体反转：[7, 6, 5, 4, 3, 2, 1]</li>
-<li>此时前 $k$ 个是 [7, 6, 5]，后 $n-k$ 个是 [4, 3, 2, 1]</li>
-<li>我们想要前 $k$ 个变成 [5, 6, 7]（正序），后 $n-k$ 个变成 [1, 2, 3, 4]（正序）</li>
-<li>分别反转前 $k$ 个和后 $n-k$ 个就行了！</li>
-</ul>
-<p>用一个直观的图示：</p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">原始:      <span class="hljs-string">[1, 2, 3, 4, 5, 6, 7]</span><br>           |---- n-k ---| |-- k --|<br><br>整体反转:   <span class="hljs-string">[7, 6, 5, 4, 3, 2, 1]</span><br><br>反转前 k 个: <span class="hljs-string">[5, 6, 7, 4, 3, 2, 1]</span><br><br>反转后 n-k:  <span class="hljs-string">[5, 6, 7, 1, 2, 3, 4]</span>  ✓<br></code></pre></td></tr></table></figure>
+<p>现在，前 k 个元素是 <code>[7, 6, 5]</code>，后 n−k 个元素是 <code>[4, 3, 2, 1]</code>。仔细看——这两个部分的内部顺序是 <strong>反的</strong>。轮转后的前 k 个应该是 <code>[5, 6, 7]</code>，是递增的，而我们是 <code>[7, 6, 5]</code>，是递减的。所以，我们只需要把前 k 个反转回来，再把后 n−k 个反转回来：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">反转前 k 个：      <span class="hljs-string">[5, 6, 7, 4, 3, 2, 1]</span><br>反转后 n−k 个：    <span class="hljs-string">[5, 6, 7, 1, 2, 3, 4]</span><br></code></pre></td></tr></table></figure>
 
-<p>这就是著名的<strong>三次反转法</strong>。它的美在于：不需要任何额外空间，每个元素恰好被访问常数次，总时间 $O(n)$。</p>
-<h3 id="细节补充：k-可能大于-n"><a href="#细节补充：k-可能大于-n" class="headerlink" title="细节补充：k 可能大于 n"></a>细节补充：k 可能大于 n</h3><p>还有一个小细节容易被忽略：如果 $k$ 大于数组长度 $n$ 怎么办？</p>
-<p>想一想，一个长度为 $n$ 的数组轮转 $n$ 步后等于没动。所以实际上我们只需要轮转 $k \bmod n$ 步。预处理 $k &#x3D; k\ %\ n$，如果 $k &#x3D; 0$ 直接返回即可。</p>
-<h2 id="解法：三次反转"><a href="#解法：三次反转" class="headerlink" title="解法：三次反转"></a>解法：三次反转</h2><h3 id="为什么选择这个解法？"><a href="#为什么选择这个解法？" class="headerlink" title="为什么选择这个解法？"></a>为什么选择这个解法？</h3><table>
+<p>完成！这就是 <strong>三次反转法</strong>。</p>
+<p>为什么它能工作？因为反转操作可以同时实现”把尾部元素移到头部”和”保持内部顺序”两个目标——第一次反转打破原有顺序，后两次反转恢复两部分的内部顺序。这个技巧非常巧妙，值得记住。</p>
+<p>当然，在实际代码中，<code>k</code> 可能大于 <code>n</code>，所以我们需要先取模：<code>k = k % n</code>，因为轮转 n 次等于没轮转。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">rotate</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> k)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        k = k % n; <span class="hljs-comment">// 如果 k 大于 n，取模简化</span><br>        <br>        <span class="hljs-comment">// 1. 反转整个数组</span><br>        reverse(nums, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 2. 反转前 k 个元素</span><br>        reverse(nums, <span class="hljs-number">0</span>, k - <span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 3. 反转后 n - k 个元素</span><br>        reverse(nums, k, n - <span class="hljs-number">1</span>);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reverse</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> left, <span class="hljs-type">int</span> right)</span> &#123;<br>        <span class="hljs-keyword">while</span> (left &lt; right) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> nums[left];<br>            nums[left] = nums[right];<br>            nums[right] = temp;<br>            left++;<br>            right--;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">rotate</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], k: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-literal">None</span>:<br>        n = <span class="hljs-built_in">len</span>(nums)<br>        k %= n  <span class="hljs-comment"># 处理 k &gt; n 的情况</span><br>        <br>        <span class="hljs-comment"># 反转整个数组</span><br>        <span class="hljs-variable language_">self</span>._reverse(nums, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>)<br>        <span class="hljs-comment"># 反转前 k 个</span><br>        <span class="hljs-variable language_">self</span>._reverse(nums, <span class="hljs-number">0</span>, k - <span class="hljs-number">1</span>)<br>        <span class="hljs-comment"># 反转后 n - k 个</span><br>        <span class="hljs-variable language_">self</span>._reverse(nums, k, n - <span class="hljs-number">1</span>)<br>    <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_reverse</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], left: <span class="hljs-built_in">int</span>, right: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-keyword">while</span> left &lt; right:<br>            nums[left], nums[right] = nums[right], nums[left]<br>            left += <span class="hljs-number">1</span><br>            right -= <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
 <thead>
 <tr>
-<th>方案</th>
-<th>时间</th>
-<th>空间</th>
-<th>原地？</th>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>暴力模拟</td>
-<td>$O(n \times k)$</td>
-<td>$O(1)$</td>
-<td>是</td>
+<td>O(n × k)</td>
+<td>O(1)</td>
+<td>每次轮转遍历整个数组，轮转 k 次</td>
 </tr>
 <tr>
 <td>额外数组</td>
-<td>$O(n)$</td>
-<td>$O(n)$</td>
-<td>否</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>用新数组记录每个元素的最终位置</td>
 </tr>
 <tr>
-<td>环形替换</td>
-<td>$O(n)$</td>
-<td>$O(1)$</td>
-<td>是</td>
+<td>环状替换</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>沿环移动，每个元素恰好移动一次</td>
 </tr>
 <tr>
-<td><strong>三次反转</strong></td>
-<td><strong>$O(n)$</strong></td>
-<td><strong>$O(1)$</strong></td>
-<td><strong>是</strong></td>
+<td>三次反转</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>三次反转，每次遍历半个数组，总操作约 <code>n</code> 次</td>
 </tr>
 </tbody></table>
-<p>环形替换（Cyclic Replacement）也是 $O(n)$ &#x2F; $O(1)$ 的正解，但理解和实现都更复杂，需要处理”循环回到起点”的情况。三次反转法代码短、思路直观、不易出错，是面试中推荐的首选解法。</p>
-<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
-<li><strong>预处理</strong> $k &#x3D; k \ % \ n$，若 $k &#x3D; 0$ 直接返回。</li>
-<li><strong>反转整个数组</strong>：<code>[0, n-1]</code></li>
-<li><strong>反转前 $k$ 个元素</strong>：<code>[0, k-1]</code></li>
-<li><strong>反转后 $n-k$ 个元素</strong>：<code>[k, n-1]</code></li>
-</ol>
-<p>反转函数用经典的双指针即可：一头一尾交换，向中间靠拢。</p>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>分析</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>时间复杂度</td>
-<td>$O(n)$ — 每次反转恰好遍历区间内所有元素一次，三次反转总共访问约 $n + k + (n-k) &#x3D; 2n$ 次元素，常数级别忽略，整体线性。</td>
-</tr>
-<tr>
-<td>空间复杂度</td>
-<td>$O(1)$ — 反转函数只用了几个临时变量来做交换，没有任何与 $n$ 相关的额外空间分配。</td>
-</tr>
-</tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.Arrays;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 将数组 nums 向右轮转 k 步，原地修改。</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">rotate</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> k)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        <span class="hljs-comment">// 处理 k 大于 n 的情况</span><br>        k = k % n;<br>        <span class="hljs-keyword">if</span> (k == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span>; <span class="hljs-comment">// 轮转 n 的整数倍等于不变</span><br>        &#125;<br><br>        <span class="hljs-comment">// 三次反转</span><br>        reverse(nums, <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>);       <span class="hljs-comment">// 整体反转</span><br>        reverse(nums, <span class="hljs-number">0</span>, k - <span class="hljs-number">1</span>);       <span class="hljs-comment">// 反转前 k 个</span><br>        reverse(nums, k, n - <span class="hljs-number">1</span>);       <span class="hljs-comment">// 反转后 n-k 个</span><br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 反转数组 nums 中 [left, right] 闭区间内的元素。</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">reverse</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> left, <span class="hljs-type">int</span> right)</span> &#123;<br>        <span class="hljs-keyword">while</span> (left &lt; right) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> nums[left];<br>            nums[left] = nums[right];<br>            nums[right] = tmp;<br>            left++;<br>            right--;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">rotate</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], k: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        将数组 nums 向右轮转 k 步，原地修改。</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        n = <span class="hljs-built_in">len</span>(nums)<br>        k = k % n<br>        <span class="hljs-keyword">if</span> k == <span class="hljs-number">0</span>:<br>            <span class="hljs-keyword">return</span><br><br>        <span class="hljs-comment"># 辅助函数：反转闭区间 [left, right]</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">reverse</span>(<span class="hljs-params">left: <span class="hljs-built_in">int</span>, right: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-literal">None</span>:<br>            <span class="hljs-keyword">while</span> left &lt; right:<br>                nums[left], nums[right] = nums[right], nums[left]<br>                left += <span class="hljs-number">1</span><br>                right -= <span class="hljs-number">1</span><br><br>        <span class="hljs-comment"># 三次反转</span><br>        reverse(<span class="hljs-number">0</span>, n - <span class="hljs-number">1</span>)       <span class="hljs-comment"># 整体反转</span><br>        reverse(<span class="hljs-number">0</span>, k - <span class="hljs-number">1</span>)       <span class="hljs-comment"># 反转前 k 个</span><br>        reverse(k, n - <span class="hljs-number">1</span>)       <span class="hljs-comment"># 反转后 n-k 个</span><br></code></pre></td></tr></table></figure>
-
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p>轮转问题本质上是在做”分段重组”，而<strong>反转</strong>操作恰好能在 $O(1)$ 空间内完成任意位置的分段重排——“整体翻过来，再分别翻回去”这个技巧非常通用，比如反转字符串中的单词、轮转链表等场景都有类似的思想。</p>
+<p>三种 O(n) 解法中，<strong>三次反转法</strong> 因为代码最简洁、思路最直观，通常是面试中的首选。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>反转操作是一个强大的工具</strong>。有时候，看似复杂的轮转问题，可以通过”整体反转 + 局部反转”来优雅解决。背后的直觉是：轮转本质上是在一个环形结构上做平移，而反转是一种可以”重置部分顺序”的操作。当我们把两种操作组合起来时，就能达到平移的效果。</p>
+<p>另外，<strong>取模简化</strong>（<code>k %= n</code>）也是一个常用技巧——处理循环移位问题时，先通过取模把大步长缩小到数组范围以内，可以避免很多边界处理的麻烦。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ul>
+<li><strong>是不是环状结构上的平移？</strong> 如果是数组轮转、字符串循环移位这类问题，优先想想反转法。</li>
+<li><strong>两段内部有序、整体需要平移的结构</strong>，往往是反转法的适用场景。</li>
+<li><strong>能不能原地做？</strong> 如果要求 O(1) 额外空间，先排查物理结构上是否有对称性可以利用。</li>
+</ul>
+<p>记住，算法题的最优解往往不是凭空想出来的，而是从暴力解出发，一步步问自己”哪里浪费了？能不能合并？有没有对称性？”，最终自然推导出来的。</p>
+<hr>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
 </blockquote>
-<p>遇到需要把数组”切开再拼接”的问题时，优先考虑：<strong>反转操作能不能作为”不借助额外空间重组数组”的原子操作？</strong> 具体来说，画一下”整体反转 + 分段反转”对数组结构的影响，看看能否把你的目标排列拆成这三步。</p>
 
                 
               </div>
@@ -524,8 +487,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -539,15 +516,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
         <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
       
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
-      
         <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" class="print-no-link">#双指针</a>
-      
-        <a href="/tags/%E6%95%B0%E5%AD%A6/" class="print-no-link">#数学</a>
       
     </div>
   
@@ -559,7 +530,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 189. 轮转数组（rotate-array）</div>
+      <div>轮转数组</div>
       <div>http://example.com/2026/07/13/15-轮转数组/</div>
     </div>
     <div class="license-meta">
@@ -604,9 +575,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/13/13-%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/" title="LeetCode 53. 最大子数组和（maximum-subarray）">
+                      <a href="/2026/07/13/14-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/" title="合并区间">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LeetCode 53. 最大子数组和（maximum-subarray）</span>
+                        <span class="hidden-mobile">合并区间</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -614,8 +585,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/13/14-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/" title="LeetCode 56. 合并区间（merge-intervals）">
-                        <span class="hidden-mobile">LeetCode 56. 合并区间（merge-intervals）</span>
+                      <a href="/2026/07/13/17-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" title="缺失的第一个正数">
+                        <span class="hidden-mobile">缺失的第一个正数</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

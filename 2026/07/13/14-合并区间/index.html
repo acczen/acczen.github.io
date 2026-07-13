@@ -19,18 +19,16 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="区间合并的经典模板题——排序后一次遍历，贪心合并重叠区间。">
+    <meta name="description" content="LeetCode 56 题「合并区间」—— 给定一组区间，合并所有重叠的区间。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 56. 合并区间（merge-intervals）">
+<meta property="og:title" content="合并区间">
 <meta property="og:url" content="http://example.com/2026/07/13/14-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="区间合并的经典模板题——排序后一次遍历，贪心合并重叠区间。">
+<meta property="og:description" content="LeetCode 56 题「合并区间」—— 给定一组区间，合并所有重叠的区间。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:56:46.332Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:33.976Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="区间合并">
 <meta property="article:tag" content="排序">
 <meta property="article:tag" content="数组">
@@ -38,7 +36,7 @@
   
   
   
-  <title>LeetCode 56. 合并区间（merge-intervals） - CodingOrange</title>
+  <title>合并区间 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -307,7 +305,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 56. 合并区间（merge-intervals）"></span>
+            <span id="subtitle" data-typed-text="合并区间"></span>
           
         </div>
 
@@ -330,7 +328,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          3.3k 字
         
       </span>
     
@@ -341,7 +339,7 @@
         
         
         
-          25 分钟
+          28 分钟
         
       </span>
     
@@ -380,96 +378,87 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 56. 合并区间（merge-intervals）</h1>
+            <h1 id="seo-header">合并区间</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/merge-intervals/">LeetCode 56. merge-intervals</a></p>
-</blockquote>
-<p>以数组 <code>intervals</code> 表示若干个区间的集合，其中单个区间为 <code>intervals[i] = [start_i, end_i]</code>。请你合并所有重叠的区间，并返回 <strong>一个不重叠的区间数组</strong>，该数组需恰好覆盖输入中的所有区间。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs inform7">输入：intervals = <span class="hljs-comment">[<span class="hljs-comment">[1,3]</span>,<span class="hljs-comment">[2,6]</span>,<span class="hljs-comment">[8,10]</span>,<span class="hljs-comment">[15,18]</span>]</span><br>输出：<span class="hljs-comment">[<span class="hljs-comment">[1,6]</span>,<span class="hljs-comment">[8,10]</span>,<span class="hljs-comment">[15,18]</span>]</span><br>解释：区间 <span class="hljs-comment">[1,3]</span> 和 <span class="hljs-comment">[2,6]</span> 重叠，将它们合并为 <span class="hljs-comment">[1,6]</span>。<br></code></pre></td></tr></table></figure>
+                <h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="0-问题理解"><a href="#0-问题理解" class="headerlink" title="0. 问题理解"></a>0. 问题理解</h3><p>先看题目：给定一个区间集合 <code>intervals</code>，其中每个区间 <code>[starti, endi]</code>，<strong>合并所有重叠的区间</strong>，返回不重叠的区间数组。</p>
+<p>比如 <code>[[1,3],[2,6],[8,10],[15,18]]</code>，<code>[1,3]</code> 和 <code>[2,6]</code> 有重叠，合并成 <code>[1,6]</code>，最终返回 <code>[[1,6],[8,10],[15,18]]</code>。</p>
+<h3 id="1-暴力解法-——-每次合并后重新检查"><a href="#1-暴力解法-——-每次合并后重新检查" class="headerlink" title="1. 暴力解法 —— 每次合并后重新检查"></a>1. 暴力解法 —— 每次合并后重新检查</h3><p>如果没有任何技巧，我们第一反应会怎么做？</p>
+<p>最直觉的做法：遍历所有区间，对于当前区间，检查它和后面每一个区间是否有重叠。如果有，就合并，然后<strong>从头开始重新检查</strong>——因为合并产生的新区间可能又和前面的区间重叠了。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs text">重复直到没有区间可以合并：<br>  对于每个区间 i：<br>    对于每个区间 j (j ≠ i)：<br>      如果 i 和 j 重叠：<br>        合并成新区间<br>        删除 i 和 j<br>        加入新区间<br>        重新开始<br></code></pre></td></tr></table></figure>
 
-<p><strong>示例 2：</strong></p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs lua">输入：intervals = <span class="hljs-string">[[1,4],[4,5]]</span><br>输出：<span class="hljs-string">[[1,5]]</span><br>解释：区间 [<span class="hljs-number">1</span>,<span class="hljs-number">4</span>] 和 [<span class="hljs-number">4</span>,<span class="hljs-number">5</span>] 可被视为重叠区间（端点相接也算重叠）。<br></code></pre></td></tr></table></figure>
-
-<p><strong>示例 3：</strong></p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs lua">输入：intervals = <span class="hljs-string">[[1,4],[0,4]]</span><br>输出：<span class="hljs-string">[[0,4]]</span><br>解释：输入未排序，[<span class="hljs-number">0</span>,<span class="hljs-number">4</span>] 覆盖了 [<span class="hljs-number">1</span>,<span class="hljs-number">4</span>]，合并后只剩 [<span class="hljs-number">0</span>,<span class="hljs-number">4</span>]。<br></code></pre></td></tr></table></figure>
-
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们先不急着写代码。假设你在一条数轴上画这些区间——有些区间互相覆盖，有些孤零零地待着。你的任务就是把所有”连在一起”的区间捏成一段。你会怎么做？</p>
-<p>先想想最直接的做法：<strong>两两比较</strong>。拿每一个区间和其余所有区间比较，如果重叠就合并。但等等——合并之后，新产生的区间可能又和别的区间重叠了，你得反复扫描直到没有变化为止。这种暴力解法的时间复杂度最坏能达到 $O(n^3)$，显然不够优雅。</p>
-<p>问题出在哪？<strong>输入的区间是乱序的</strong>。比如示例 3 里 <code>[1,4]</code> 在 <code>[0,4]</code> 前面，你扫到 <code>[1,4]</code> 时根本不知道后面还有个能吃掉它的大家伙。这让我们很难一次性判断”当前区间应该和谁合并”。</p>
-<p>那么，如果我们<strong>先排序</strong>呢？</p>
-<p>把区间按起点从小到大排好序，神奇的事情发生了——<strong>任何一个区间如果会和前面的区间重叠，它一定和紧挨着的前一个区间有交集</strong>。为什么？</p>
-<p>想象一根从左到右的数轴。如果区间 A 的起点比区间 B 早，而区间 C 的起点比 B 还晚，那么 C 想要和 A 重叠，它的起点就必须小于等于 A 的终点。但既然 B 在中间，这说明 B 的起点也小于等于 A 的终点——也就是说 <strong>B 已经和 A 重叠了</strong>。换言之，只要按起点排序，”重叠”这件事就只会发生在相邻元素之间，不会出现隔空重叠的现象。</p>
-<p>于是整个问题就变成了：排序，然后从左到右”推土机”式地一次遍历——维护一个”当前正在合并的区间”，遇到能接上的就扩展，遇到接不上的就结算当前区间，然后开启新区间。</p>
-<h2 id="解法：排序-一次遍历（贪心）"><a href="#解法：排序-一次遍历（贪心）" class="headerlink" title="解法：排序 + 一次遍历（贪心）"></a>解法：排序 + 一次遍历（贪心）</h2><h3 id="为什么选择这个策略？"><a href="#为什么选择这个策略？" class="headerlink" title="为什么选择这个策略？"></a>为什么选择这个策略？</h3><p>按起点排序后，问题从”任意两个区间都可能重叠”退化成了”只有相邻区间才可能重叠”。这让我们可以<strong>贪心</strong>地处理：每扫到一个新区间，只和当前正在合并的区间比较即可。</p>
-<p>其他备选方案：</p>
-<table>
-<thead>
-<tr>
-<th>方案</th>
-<th>思路</th>
-<th>问题</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>两两比较 + 反复扫描</td>
-<td>每次找到一个有重叠的区间对就合并，重复直到稳定</td>
-<td>最坏 $O(n^3)$，不可接受</td>
-</tr>
-<tr>
-<td>扫描线（差分数组）</td>
-<td>在坐标轴上标记区间起点 +1、终点 -1，扫描数轴</td>
-<td>坐标可能非常大（题设未限制），且无法直接输出区间列表</td>
-</tr>
-<tr>
-<td>排序 + 一次遍历</td>
-<td>按起点排序，贪心合并</td>
-<td>$O(n \log n)$，简洁高效</td>
-</tr>
-</tbody></table>
-<p>显然，排序法是我们在这个问题上的最优解——思路直观，代码短，复杂度优秀。</p>
-<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
-<li><strong>排序</strong>：将所有区间按 $start_i$ 升序排列。</li>
-<li><strong>初始化</strong>：用第一个区间作为”当前合并区间”（不妨叫 <code>cur</code>）。</li>
-<li><strong>遍历</strong>：从第二个区间开始，逐个与 <code>cur</code> 比较：<ul>
-<li>如果新区间的起点 $\leq$ <code>cur</code> 的终点 → <strong>重叠</strong>，更新 <code>cur</code> 的终点为两者终点的较大值。</li>
-<li>否则 → <strong>不重叠</strong>，将 <code>cur</code> 加入结果集，然后将新区间设为新的 <code>cur</code>。</li>
+<p>这个做法的问题在哪里？每次合并都要重新扫描，最坏情况下我们可能要扫描 $O(n)$ 次，每次扫描又需要 $O(n^2)$ 的检查——时间复杂度高达 $O(n^3)$。即使我们用一些标记来优化，也很难降到 $O(n^2)$ 以下。</p>
+<p>不妨想一下：<strong>为什么我们需要反复扫描？</strong> 核心原因在于，合并后的新区间可能向前”覆盖”——它可能变长了，和前面已经检查过的区间又重叠了。如果我们能提前<strong>安排好顺序</strong>，让每个区间只需要和它后面的区间比较一次，是不是就不用回头了？</p>
+<h3 id="2-排序优化-——-让重叠自然呈现"><a href="#2-排序优化-——-让重叠自然呈现" class="headerlink" title="2. 排序优化 —— 让重叠自然呈现"></a>2. 排序优化 —— 让重叠自然呈现</h3><p>带着上面的问题思考：有什么办法让合并只需要一次遍历？</p>
+<p>让我们换个角度。假设我们先把所有区间<strong>按左端点从小到大排序</strong>。排序之后，一定有以下性质：</p>
+<ul>
+<li>如果区间 $A$ 和区间 $B$ 重叠，那么 $A$ 的右端点一定 $\ge$ $B$ 的左端点（因为 $A$ 在 $B$ 前面，$A$ 的左端点 $\le$ $B$ 的左端点）。</li>
+<li>更重要的是：<strong>合并后的新区间，左端点就是当前区间的左端点，右端点是当前区间右端点和下一个区间右端点的较大值</strong>。</li>
+</ul>
+<p>这个性质让我们不需要回头。因为排序后，新区间的左端点不会比前面的区间更小（不会向左覆盖），只需要关心向右扩展。</p>
+<h3 id="3-最终解法-——-一次遍历合并"><a href="#3-最终解法-——-一次遍历合并" class="headerlink" title="3. 最终解法 —— 一次遍历合并"></a>3. 最终解法 —— 一次遍历合并</h3><p>有了排序的保证，算法就变得非常直接了：</p>
+<ol>
+<li>将所有区间按左端点升序排序</li>
+<li>初始化结果列表，将第一个区间加入结果</li>
+<li>遍历剩下的区间，对于每个区间 <code>[l, r]</code>：<ul>
+<li>如果 <code>l &lt;= lastR</code>（上一个区间的右端点），说明有重叠 → 更新 <code>lastR = max(lastR, r)</code></li>
+<li>否则没有重叠 → 将新区间加入结果列表</li>
 </ul>
 </li>
-<li><strong>收尾</strong>：遍历结束后，别忘了把最后一个 <code>cur</code> 加入结果集。</li>
 </ol>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
+<p>来看一个例子走一遍流程：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs inform7">intervals = <span class="hljs-comment">[<span class="hljs-comment">[1,3]</span>,<span class="hljs-comment">[2,6]</span>,<span class="hljs-comment">[8,10]</span>,<span class="hljs-comment">[15,18]</span>]</span><br><br>排序后（本来就有序）：<br><span class="hljs-comment">[1,3]</span> → 当前重叠区 = <span class="hljs-comment">[1,3]</span><br><span class="hljs-comment">[2,6]</span>: 2 &lt;= 3 → 重叠，合并 → <span class="hljs-comment">[1,6]</span><br><span class="hljs-comment">[8,10]</span>: 8 &gt; 6 → 不重叠，新开一段 → <span class="hljs-comment">[1,6]</span>, <span class="hljs-comment">[8,10]</span><br><span class="hljs-comment">[15,18]</span>: 15 &gt; 10 → 不重叠，新开一段 → <span class="hljs-comment">[1,6]</span>, <span class="hljs-comment">[8,10]</span>, <span class="hljs-comment">[15,18]</span><br><br>结果：<span class="hljs-comment">[<span class="hljs-comment">[1,6]</span>,<span class="hljs-comment">[8,10]</span>,<span class="hljs-comment">[15,18]</span>]</span><br></code></pre></td></tr></table></figure>
+
+<p>再试一个需要合并多次的例子：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs lua">intervals = <span class="hljs-string">[[1,4],[2,3]]</span><br><br>排序后：<br>[<span class="hljs-number">1</span>,<span class="hljs-number">4</span>] → 当前重叠区 = [<span class="hljs-number">1</span>,<span class="hljs-number">4</span>]<br>[<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]: <span class="hljs-number">2</span> &lt;= <span class="hljs-number">4</span> → 重叠，但 <span class="hljs-number">3</span> &lt; <span class="hljs-number">4</span>，右端点不变 → [<span class="hljs-number">1</span>,<span class="hljs-number">4</span>]<br><br>结果：<span class="hljs-string">[[1,4]]</span><br></code></pre></td></tr></table></figure>
+
+<p>注意这里 <code>[2,3]</code> 完全被包含在 <code>[1,4]</code> 里，合并后还是 <code>[1,4]</code>。我们用 <code>max(lastR, r)</code> 正好处理了这种情况。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.Arrays;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[][] merge(<span class="hljs-type">int</span>[][] intervals) &#123;<br>        <span class="hljs-comment">// 特殊情况处理</span><br>        <span class="hljs-keyword">if</span> (intervals == <span class="hljs-literal">null</span> || intervals.length &lt;= <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-keyword">return</span> intervals;<br>        &#125;<br><br>        <span class="hljs-comment">// 1. 按区间左端点升序排序</span><br>        Arrays.sort(intervals, (a, b) -&gt; a[<span class="hljs-number">0</span>] - b[<span class="hljs-number">0</span>]);<br><br>        <span class="hljs-comment">// 2. 用列表动态存储合并后的区间</span><br>        java.util.ArrayList&lt;<span class="hljs-type">int</span>[]&gt; merged = <span class="hljs-keyword">new</span> <span class="hljs-title class_">java</span>.util.ArrayList&lt;&gt;();<br><br>        <span class="hljs-comment">// 3. 遍历每个区间</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[] interval : intervals) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">l</span> <span class="hljs-operator">=</span> interval[<span class="hljs-number">0</span>];<br>            <span class="hljs-type">int</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> interval[<span class="hljs-number">1</span>];<br><br>            <span class="hljs-comment">// 如果 merged 为空，或者当前区间与上一个区间不重叠</span><br>            <span class="hljs-keyword">if</span> (merged.isEmpty() || l &gt; merged.get(merged.size() - <span class="hljs-number">1</span>)[<span class="hljs-number">1</span>]) &#123;<br>                merged.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;l, r&#125;);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// 有重叠，合并：更新右端点为较大值</span><br>                merged.get(merged.size() - <span class="hljs-number">1</span>)[<span class="hljs-number">1</span>] = <br>                    Math.max(merged.get(merged.size() - <span class="hljs-number">1</span>)[<span class="hljs-number">1</span>], r);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 4. 转换为二维数组返回</span><br>        <span class="hljs-keyword">return</span> merged.toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[merged.size()][]);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">merge</span>(<span class="hljs-params">self, intervals: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]</span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]:<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> intervals <span class="hljs-keyword">or</span> <span class="hljs-built_in">len</span>(intervals) &lt;= <span class="hljs-number">1</span>:<br>            <span class="hljs-keyword">return</span> intervals<br><br>        <span class="hljs-comment"># 1. 按左端点排序</span><br>        intervals.sort(key=<span class="hljs-keyword">lambda</span> x: x[<span class="hljs-number">0</span>])<br><br>        <span class="hljs-comment"># 2. 结果列表</span><br>        merged = []<br><br>        <span class="hljs-keyword">for</span> l, r <span class="hljs-keyword">in</span> intervals:<br>            <span class="hljs-comment"># 不重叠：新区间加入结果</span><br>            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> merged <span class="hljs-keyword">or</span> l &gt; merged[-<span class="hljs-number">1</span>][<span class="hljs-number">1</span>]:<br>                merged.append([l, r])<br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-comment"># 重叠：更新右端点</span><br>                merged[-<span class="hljs-number">1</span>][<span class="hljs-number">1</span>] = <span class="hljs-built_in">max</span>(merged[-<span class="hljs-number">1</span>][<span class="hljs-number">1</span>], r)<br><br>        <span class="hljs-keyword">return</span> merged<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
 <thead>
 <tr>
-<th>维度</th>
-<th>分析</th>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>时间复杂度</td>
-<td>$O(n \log n)$ — 排序占主导，一次遍历仅为 $O(n)$</td>
+<td>暴力法</td>
+<td>$O(n^3)$</td>
+<td>$O(n)$</td>
+<td>每次合并后重新扫描所有区间，最坏情况反复合并</td>
 </tr>
 <tr>
-<td>空间复杂度</td>
-<td>$O(\log n)$（不考虑结果数组）— 排序的递归栈深度；若结果数组计入则为 $O(n)$</td>
+<td>排序优化</td>
+<td>$O(n \log n)$</td>
+<td>$O(\log n)$ 或 $O(n)$</td>
+<td>排序 $O(n \log n)$，遍历 $O(n)$；空间取决于排序算法的栈空间（Java 的 <code>Arrays.sort()</code> 对原数组是 $O(\log n)$）或结果列表（$O(n)$）</td>
 </tr>
 </tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.Arrays;<br><span class="hljs-keyword">import</span> java.util.Comparator;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[][] merge(<span class="hljs-type">int</span>[][] intervals) &#123;<br>        <span class="hljs-keyword">if</span> (intervals.length &lt;= <span class="hljs-number">1</span>) &#123;<br>            <span class="hljs-keyword">return</span> intervals;<br>        &#125;<br><br>        <span class="hljs-comment">// 1. 按区间起点升序排序</span><br>        Arrays.sort(intervals, Comparator.comparingInt(a -&gt; a[<span class="hljs-number">0</span>]));<br><br>        List&lt;<span class="hljs-type">int</span>[]&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-comment">// 2. 初始化&quot;当前合并区间&quot;为第一个区间</span><br>        <span class="hljs-type">int</span>[] cur = intervals[<span class="hljs-number">0</span>];<br><br>        <span class="hljs-comment">// 3. 遍历剩余区间</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; intervals.length; i++) &#123;<br>            <span class="hljs-type">int</span>[] next = intervals[i];<br>            <span class="hljs-keyword">if</span> (next[<span class="hljs-number">0</span>] &lt;= cur[<span class="hljs-number">1</span>]) &#123;<br>                <span class="hljs-comment">// 重叠：扩展当前区间的终点</span><br>                cur[<span class="hljs-number">1</span>] = Math.max(cur[<span class="hljs-number">1</span>], next[<span class="hljs-number">1</span>]);<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// 不重叠：结算当前区间，开启新区间</span><br>                result.add(cur);<br>                cur = next;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 4. 别忘了最后一个区间</span><br>        result.add(cur);<br><br>        <span class="hljs-keyword">return</span> result.toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[result.size()][]);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">merge</span>(<span class="hljs-params">self, intervals: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]</span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]:<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(intervals) &lt;= <span class="hljs-number">1</span>:<br>            <span class="hljs-keyword">return</span> intervals<br><br>        <span class="hljs-comment"># 1. 按区间起点升序排序</span><br>        intervals.sort(key=<span class="hljs-keyword">lambda</span> x: x[<span class="hljs-number">0</span>])<br><br>        result = []<br>        <span class="hljs-comment"># 2. 初始化&quot;当前合并区间&quot;为第一个区间</span><br>        cur = intervals[<span class="hljs-number">0</span>]<br><br>        <span class="hljs-comment"># 3. 遍历剩余区间</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-built_in">len</span>(intervals)):<br>            nxt = intervals[i]<br>            <span class="hljs-keyword">if</span> nxt[<span class="hljs-number">0</span>] &lt;= cur[<span class="hljs-number">1</span>]:<br>                <span class="hljs-comment"># 重叠：扩展当前区间的终点</span><br>                cur[<span class="hljs-number">1</span>] = <span class="hljs-built_in">max</span>(cur[<span class="hljs-number">1</span>], nxt[<span class="hljs-number">1</span>])<br>            <span class="hljs-keyword">else</span>:<br>                <span class="hljs-comment"># 不重叠：结算当前区间，开启新区间</span><br>                result.append(cur)<br>                cur = nxt<br><br>        <span class="hljs-comment"># 4. 别忘了最后一个区间</span><br>        result.append(cur)<br><br>        <span class="hljs-keyword">return</span> result<br></code></pre></td></tr></table></figure>
-
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p><strong>排序可以将”全局无序关系”转化为”局部有序关系”</strong>。这道题是区间问题的经典模板——以后遇到”合并区间””插入区间””会议室问题””删除被覆盖区间”等变体，第一反应就应该是<strong>先排序，再贪心遍历</strong>。</p>
+<p><strong>为什么排序能解决这个问题？</strong> 排序把”二维”的重叠判断，变成了”一维”的右端点比较。排序后每个区间只需要和它紧挨着的前一个区间比较，不需要回头——这就是排序的力量。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>区间问题的核心套路——排序预处理。</strong> 很多区间类问题（合并区间、插入区间、无重叠区间、会议室等）都有一个共同点：区间之间的关系（重叠、包含、相离）在<strong>排序后变得极其清晰</strong>。排序让我们可以把 $O(n^2)$ 的暴力比较压缩成 $O(n)$ 的一次扫描。</p>
+<p>更抽象地说，这体现了<strong>预处理简化问题</strong>的思想：不要一上来就在原始数据上硬做，问问自己——如果先排个序、如果先建个哈希表、如果先做前缀和，数据之间的关系会不会变得一目了然？</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ol>
+<li><strong>问题的输入是否是区间&#x2F;线段&#x2F;时间范围？</strong> 如果是，排序大概率是第一步。</li>
+<li><strong>重叠的定义是什么？</strong> <code>[1,3]</code> 和 <code>[3,5]</code> 算不算重叠？这道题里，<code>3 &lt;= 3</code> 算重叠（闭区间），但有些题目会明确排除相接的情况。</li>
+<li><strong>比较的标准是左端点还是右端点？</strong> 合并区间按左端排序；无重叠区间按右端排序（贪心）——不同的目标对应不同的排序策略。</li>
+<li><strong>合并后是否可能产生新的连锁重叠？</strong> 只要排序方向正确，一次遍历就够，不需要回溯——这是我们可以放心的地方。</li>
+</ol>
+<p>最后留一个小思考：如果输入的区间是<strong>无序的流式数据</strong>（不能排序），我们还能高效合并吗？这时候可以考虑用<strong>区间树（Interval Tree）</strong> 或<strong>线段树</strong>来维护——这又是另一个话题了。</p>
+<hr>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
 </blockquote>
-<p>问自己一个问题：<strong>“如果我把数据按某个维度排序，相邻元素之间会不会呈现出某种确定性规律？”</strong> 如果答案是肯定的，那么排序大概率就是你解题的钥匙。</p>
 
                 
               </div>
@@ -488,7 +477,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95-LeetCode-Hot100/" class="category-chain-item">算法/LeetCode/Hot100</a>
   
   
 
@@ -503,11 +492,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
         <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
-      
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
       
         <a href="/tags/%E6%8E%92%E5%BA%8F/" class="print-no-link">#排序</a>
       
@@ -523,7 +508,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 56. 合并区间（merge-intervals）</div>
+      <div>合并区间</div>
       <div>http://example.com/2026/07/13/14-合并区间/</div>
     </div>
     <div class="license-meta">
@@ -568,9 +553,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/13/15-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84/" title="LeetCode 189. 轮转数组（rotate-array）">
+                      <a href="/2026/07/13/13-%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/" title="最大子数组和">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LeetCode 189. 轮转数组（rotate-array）</span>
+                        <span class="hidden-mobile">最大子数组和</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -578,8 +563,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/13/18-%E7%9F%A9%E9%98%B5%E7%BD%AE%E9%9B%B6/" title="LeetCode 73. 矩阵置零（set-matrix-zeroes）">
-                        <span class="hidden-mobile">LeetCode 73. 矩阵置零（set-matrix-zeroes）</span>
+                      <a href="/2026/07/13/15-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84/" title="轮转数组">
+                        <span class="hidden-mobile">轮转数组</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

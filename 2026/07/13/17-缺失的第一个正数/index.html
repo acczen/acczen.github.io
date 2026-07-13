@@ -19,25 +19,24 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="在无序数组中以 O(n) 时间、O(1) 空间找出缺失的最小正整数，掌握原地哈希的核心思想。">
+    <meta name="description" content="利用数组本身的索引作为哈希表，在不占用额外空间的前提下找到第一个缺失的正整数。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 41. 缺失的第一个正数（first-missing-positive）">
+<meta property="og:title" content="缺失的第一个正数">
 <meta property="og:url" content="http://example.com/2026/07/13/17-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="在无序数组中以 O(n) 时间、O(1) 空间找出缺失的最小正整数，掌握原地哈希的核心思想。">
+<meta property="og:description" content="利用数组本身的索引作为哈希表，在不占用额外空间的前提下找到第一个缺失的正整数。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:57:43.044Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:34.155Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="原地哈希">
 <meta property="article:tag" content="数组">
+<meta property="article:tag" content="索引映射">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>LeetCode 41. 缺失的第一个正数（first-missing-positive） - CodingOrange</title>
+  <title>缺失的第一个正数 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +305,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 41. 缺失的第一个正数（first-missing-positive）"></span>
+            <span id="subtitle" data-typed-text="缺失的第一个正数"></span>
           
         </div>
 
@@ -329,7 +328,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.2k 字
+          5.2k 字
         
       </span>
     
@@ -340,7 +339,7 @@
         
         
         
-          27 分钟
+          44 分钟
         
       </span>
     
@@ -379,121 +378,180 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 41. 缺失的第一个正数（first-missing-positive）</h1>
+            <h1 id="seo-header">缺失的第一个正数</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/first-missing-positive/">LeetCode 41. first-missing-positive</a></p>
-</blockquote>
+                <h1 id="缺失的第一个正数"><a href="#缺失的第一个正数" class="headerlink" title="缺失的第一个正数"></a>缺失的第一个正数</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><blockquote>
 <p>给你一个未排序的整数数组 <code>nums</code>，请你找出其中没有出现的最小的正整数。</p>
-<p>请你实现时间复杂度为 $O(n)$ 并且只使用常数级别额外空间的解决方案。</p>
+<p>请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。</p>
+</blockquote>
 <p><strong>示例 1：</strong></p>
-<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs inform7">输入：nums = <span class="hljs-comment">[1,2,0]</span><br>输出：3<br>解释：范围 <span class="hljs-comment">[1,2]</span> 中的数字都在数组里，所以缺失的最小正整数是 3。<br></code></pre></td></tr></table></figure>
+<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs fix"><span class="hljs-attr">输入：nums </span>=<span class="hljs-string"> [1,2,0]</span><br><span class="hljs-string">输出：3</span><br><span class="hljs-string">解释：1 和 2 都出现了，缺失的第一个正数是 3。</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>示例 2：</strong></p>
-<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs fix"><span class="hljs-attr">输入：nums </span>=<span class="hljs-string"> [3,4,-1,1]</span><br><span class="hljs-string">输出：2</span><br><span class="hljs-string">解释：1 存在但 2 缺失，所以答案是 2。</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs fix"><span class="hljs-attr">输入：nums </span>=<span class="hljs-string"> [3,4,-1,1]</span><br><span class="hljs-string">输出：2</span><br></code></pre></td></tr></table></figure>
 
 <p><strong>示例 3：</strong></p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入：nums = <span class="hljs-string">[7,8,9,11,12]</span><br>输出：<span class="hljs-number">1</span><br>解释：最小的正整数 <span class="hljs-number">1</span> 不在数组中，所以答案是 <span class="hljs-number">1</span>。<br></code></pre></td></tr></table></figure>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入：nums = <span class="hljs-string">[7,8,9,11,12]</span><br>输出：<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
 
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们先从最直接的想法出发。</p>
+<hr>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>让我们像做一道数学证明题一样，从最朴素的想法开始，一步步逼近最优解。</p>
+<h3 id="第一反应：暴力排序"><a href="#第一反应：暴力排序" class="headerlink" title="第一反应：暴力排序"></a>第一反应：暴力排序</h3><p>如果没有任何技巧，我们第一反应会怎么做？</p>
+<p>“把数组排序一下，然后从 1 开始往后找，第一个没出现的正整数不就是答案吗？”</p>
+<p>确实，排序后数组变得有序，我们只需要这样扫描：</p>
 <blockquote>
-<p>如果没有任何限制，你会怎么找缺失的第一个正数？</p>
+<p>从 1 开始递增，检查当前数是否等于这个期望值，如果不等或者已经超过数组长度，就找到了。</p>
 </blockquote>
-<p>最简单的做法是：把数组排序，然后从头扫描。时间复杂度 $O(n \log n)$，不满足题目要求的 $O(n)$。而且排序改变了原数组，但题目没说不让改。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">Arrays.sort(nums);<br><span class="hljs-type">int</span> <span class="hljs-variable">expect</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>    <span class="hljs-keyword">if</span> (num == expect) expect++;<br>&#125;<br><span class="hljs-keyword">return</span> expect;<br></code></pre></td></tr></table></figure>
+
+<p>这个解法很直观，但是——<strong>排序本身就需要 O(n log n) 的时间</strong>。题目明确要求 O(n) 时间复杂度，这条路走不通。</p>
 <blockquote>
-<p>那能不能进一步优化？我们需要比排序更快，又不想要额外空间。提示你一下——这道题的答案有没有范围限制？</p>
+<p>那能不能不排序？有没有办法在无序的数组中快速判断”某个数是否出现过”？</p>
 </blockquote>
-<p>考虑一个长度为 $n$ 的数组。缺失的最小正整数，<strong>最大可能的值是多少？</strong></p>
-<p>停下来想一想，然后再往下看。</p>
-<p>答案：最多是 $n + 1$。为什么呢？想象最极端的情况：数组恰好包含 $1, 2, 3, \dots, n$ 这 $n$ 个正整数，此时缺失的最小正整数是 $n + 1$。只要数组里缺了 $[1, n]$ 中的任何一个数，答案就一定落在 $[1, n]$ 内。</p>
+<h3 id="哈希集合：以空间换时间"><a href="#哈希集合：以空间换时间" class="headerlink" title="哈希集合：以空间换时间"></a>哈希集合：以空间换时间</h3><p>如果需要快速判断某个数是否存在，我们自然会想到哈希表。</p>
+<p>“把所有正数放进一个 HashSet，然后从 1 开始递增查询，第一个查不到的返回值就是答案。”</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java">Set&lt;Integer&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>    <span class="hljs-keyword">if</span> (num &gt; <span class="hljs-number">0</span>) set.add(num);<br>&#125;<br><span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><span class="hljs-keyword">while</span> (set.contains(i)) i++;<br><span class="hljs-keyword">return</span> i;<br></code></pre></td></tr></table></figure>
+
+<p>时间复杂度降到了 O(n)，完美满足时间要求。</p>
+<p>但代价是 O(n) 的额外空间——题目要求的是<strong>常数级别额外空间</strong>。</p>
 <blockquote>
-<p>所以，答案的范围被限定在 $[1, n+1]$ 之中。这个结论给了我们什么启发？</p>
+<p>问题来了：能不能既做到 O(n) 时间，又做到 O(1) 空间？</p>
 </blockquote>
-<p>一个关键洞察：<strong>所有不在 $[1, n]$ 范围内的数，对我们找答案没有任何帮助。</strong> 比如负数、0、大于 $n$ 的正数——这些都可以被”忽略”，因为它们不可能成为答案，也不会影响答案。</p>
+<p>这看起来像是”既要马儿跑，又要马儿不吃草”。但让我们想一想：<strong>哈希表的本质是什么？</strong></p>
+<p>哈希表本质上是一个”值→位置”的映射。我们为什么需要额外开一个哈希表？因为我们没有一个天然的、可以直接使用的映射结构。</p>
+<p>等一下——<strong>数组本身不就是一种天然的映射结构吗？</strong></p>
+<h3 id="关键洞察：答案的范围有界"><a href="#关键洞察：答案的范围有界" class="headerlink" title="关键洞察：答案的范围有界"></a>关键洞察：答案的范围有界</h3><p>让我们停下来思考一个问题：</p>
 <blockquote>
-<p>那么，你可能会想到：能不能利用数组的”下标”做文章？</p>
+<p>对于一个长度为 n 的数组，缺失的第一个正数最大可能是多少？</p>
 </blockquote>
-<p>这正是这道题的灵魂所在。想象一下：如果我们能把每个在 $[1, n]$ 范围内的数 $x$，放到数组的第 $x-1$ 个位置（也就是下标 $x-1$），那么：</p>
+<p>假设数组里包含了 1, 2, 3, …, n 所有正整数，那答案就是 n+1。否则，缺失的那个数一定在 1 到 n 之间。</p>
+<p><strong>所以答案一定在 [1, n+1] 这个范围内。</strong></p>
+<p>这意味着什么？意味着<strong>我们只需要关心 1 到 n 之间的数</strong>，超出这个范围的数（负数、零、大于 n 的数）对答案没有任何影响。</p>
+<blockquote>
+<p>那我们是不是可以利用数组本身来”标记”哪些数字出现过？</p>
+</blockquote>
+<h3 id="原地哈希：把数组变成我们的哈希表"><a href="#原地哈希：把数组变成我们的哈希表" class="headerlink" title="原地哈希：把数组变成我们的哈希表"></a>原地哈希：把数组变成我们的哈希表</h3><p>核心思想：<strong>用数组的索引（下标）来映射数字，用数组元素的值来标记该数字是否出现过。</strong></p>
+<p>具体来说：</p>
 <ul>
-<li>下标 $0$ 存的是 $1$（如果 $1$ 存在的话）</li>
-<li>下标 $1$ 存的是 $2$（如果 $2$ 存在的话）</li>
-<li>下标 $2$ 存的是 $3$（如果 $3$ 存在的话）</li>
-<li>…</li>
+<li>数字 <code>x</code> 应该对应索引 <code>x-1</code></li>
+<li>如果 <code>x</code> 出现过，我们就在索引 <code>x-1</code> 上做一个”已出现”的标记</li>
 </ul>
-<p>摆完之后，我们从头扫描：<strong>第一个下标 $i$ 上存的不是 $i+1$ 的位置，就说明 $i+1$ 缺失了。</strong> 如果所有位置都是对的，答案就是 $n+1$。</p>
+<p>那么问题来了：<strong>怎么做标记才不会丢失数组原有的信息？</strong></p>
+<p>有两种经典做法：</p>
+<h4 id="做法一：置换法"><a href="#做法一：置换法" class="headerlink" title="做法一：置换法"></a>做法一：置换法</h4><p>既然数字 <code>x</code> 应该放在索引 <code>x-1</code> 的位置上，那我们直接把每个数”送回家”不就行了？</p>
 <blockquote>
-<p>这个思路叫什么？你有什么感觉？</p>
+<p>遍历数组，对于每个在 [1, n] 范围内的数，把它放到它应该在的位置上。然后再次遍历，第一个”位置不对”的地方就是答案。</p>
 </blockquote>
-<p>这就是”<strong>原地哈希</strong>“（也常被称为”索引作为哈希键”或”循环交换”）。我们利用数组下标来模拟哈希表的”键”，数组元素值充当哈希表的”值”——不需要额外的空间，数组自己就是哈希表。</p>
-<h2 id="解法：原地哈希（索引放置）"><a href="#解法：原地哈希（索引放置）" class="headerlink" title="解法：原地哈希（索引放置）"></a>解法：原地哈希（索引放置）</h2><p>现在我们把思路落实到具体操作上。</p>
-<p>我们需要遍历数组的每个位置，对于当前位置 $i$：</p>
-<p><strong>如果 $nums[i]$ 的值在 $[1, n]$ 范围内，且它不在”自己的位置”上（即 $nums[nums[i]-1] \neq nums[i]$），就把它交换到正确的位置去。</strong> 交换后继续检查当前位置新换来的值——也就是用一个 <code>while</code> 循环，直到当前位置的值”安分”了为止。</p>
-<p>为什么用 <code>while</code> 循环？因为换过来的数可能也是一个”合法”的正整数，也需要被放到正确的位置。每交换一次，我们至少把一个数放到了它的”最终归宿”，所以每个数最多被交换一次——这就保证了总体的 $O(n)$ 时间复杂度。</p>
-<p>放置完毕后，再从头扫描一遍：第一个 $nums[i] \neq i+1$ 的位置，答案就是 $i+1$。全部符合则返回 $n+1$。</p>
-<h3 id="和备选方案的对比"><a href="#和备选方案的对比" class="headerlink" title="和备选方案的对比"></a>和备选方案的对比</h3><table>
+<p>好比整理书架：每本书上都印着它应该在的层架号，我们只需要把每本书放到正确的位置。整理完之后，第一个空着的书架位就是我们要找的答案。</p>
+<h4 id="做法二：正负标记法"><a href="#做法二：正负标记法" class="headerlink" title="做法二：正负标记法"></a>做法二：正负标记法</h4><p>我们换一种思路——不移动元素，而是用正负号来标记。</p>
+<blockquote>
+<p>第一步：把所有非正数（&lt;&#x3D;0）和大于 n 的数替换成一个”无害”的值（比如 n+1）。</p>
+<p>第二步：遍历数组，每遇到一个在 [1, n] 范围内的数 x，就把索引 x-1 上的数标记为负数（取绝对值后再取反）。</p>
+<p>第三步：遍历数组，第一个正数所在的索引 +1 就是答案。</p>
+</blockquote>
+<p>这个过程就像在考勤表上打勾——每个数出现一次，就在对应的格子上画一个勾（这里是把数变成负数）。</p>
+<hr>
+<p>让我们用具体的例子走一遍”标记法”的流程，这样更清楚。</p>
+<p>以 <code>nums = [3, 4, -1, 1]</code> 为例，n &#x3D; 4：</p>
+<p><strong>第一步：清理</strong><br>把 &lt;&#x3D; 0 或 &gt; n 的数替换成 n+1 &#x3D; 5：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"><span class="hljs-string">[3, 4, 5, 1]</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>第二步：标记</strong></p>
+<ul>
+<li>i&#x3D;0: nums[0] &#x3D; 3，标记索引 2 上的数：nums[2] &#x3D; -|5| &#x3D; -5 → [3, 4, -5, 1]</li>
+<li>i&#x3D;1: nums[1] &#x3D; 4，标记索引 3 上的数：nums[3] &#x3D; -|1| &#x3D; -1 → [3, 4, -5, -1]</li>
+<li>i&#x3D;2: nums[2] &#x3D; -5，取绝对值后是 5 &gt; n，忽略</li>
+<li>i&#x3D;3: nums[3] &#x3D; -1，取绝对值后是 1，标记索引 0 上的数：nums[0] &#x3D; -|3| &#x3D; -3 → [-3, 4, -5, -1]</li>
+</ul>
+<p><strong>第三步：扫描</strong></p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs subunit">[<span class="hljs-string">-3</span>, 4, <span class="hljs-string">-5</span>, <span class="hljs-string">-1</span>]<br>  ↑ 只有索引 1 上是正数<br></code></pre></td></tr></table></figure>
+<p>索引 1 上是正数（4 &gt; 0），说明数字 2 没有出现过。<br>答案是 1 + 1 &#x3D; 2。✅</p>
+<hr>
+<p><strong>你可能会问：置换法会不会更直观一些？</strong></p>
+<p>是的，置换法的思路更符合直觉——“把元素放回原位”。但有一个细节需要注意：<strong>交换的时候要用 while 循环</strong>，因为换过来的新数可能也需要继续归位。</p>
+<p>比如 <code>nums = [3, 4, -1, 1]</code>：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs inform7">i=0: nums<span class="hljs-comment">[0]</span>=3，应该在索引2 → 和nums<span class="hljs-comment">[2]</span>交换 → <span class="hljs-comment">[-1, 4, 3, 1]</span><br>     继续 while: nums<span class="hljs-comment">[0]</span>=-1 不在<span class="hljs-comment">[1,4]</span>，停止<br>i=1: nums<span class="hljs-comment">[1]</span>=4，应该在索引3 → 和nums<span class="hljs-comment">[3]</span>交换 → <span class="hljs-comment">[-1, 1, 3, 4]</span><br>     继续 while: nums<span class="hljs-comment">[1]</span>=1，应该在索引0 → 和nums<span class="hljs-comment">[0]</span>交换 → <span class="hljs-comment">[1, -1, 3, 4]</span><br>     继续 while: nums<span class="hljs-comment">[1]</span>=-1 不在<span class="hljs-comment">[1,4]</span>，停止<br>i=2: nums<span class="hljs-comment">[2]</span>=3，已经在正确位置<br>i=3: nums<span class="hljs-comment">[3]</span>=4，已经在正确位置<br><br>扫描发现索引1是-1 ≠ 2，所以答案是 2。<br></code></pre></td></tr></table></figure>
+
+<p>两种方法都可以，我们下面会分别给出代码。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><h3 id="方案一：置换法"><a href="#方案一：置换法" class="headerlink" title="方案一：置换法"></a>方案一：置换法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">firstMissingPositive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        <br>        <span class="hljs-comment">// 把每个在 [1, n] 范围内的数放到它正确的位置上</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// while 循环：换过来的新数可能也需要归位</span><br>            <span class="hljs-keyword">while</span> (nums[i] &gt; <span class="hljs-number">0</span> &amp;&amp; nums[i] &lt;= n &amp;&amp; nums[nums[i] - <span class="hljs-number">1</span>] != nums[i]) &#123;<br>                swap(nums, i, nums[i] - <span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 找到第一个位置不对的数</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (nums[i] != i + <span class="hljs-number">1</span>) &#123;<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 如果 1..n 都在正确位置，答案是 n+1</span><br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span>;<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">swap</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> nums[i];<br>        nums[i] = nums[j];<br>        nums[j] = tmp;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="方案二：正负标记法"><a href="#方案二：正负标记法" class="headerlink" title="方案二：正负标记法"></a>方案二：正负标记法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">firstMissingPositive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br>        <br>        <span class="hljs-comment">// 第一步：把非正数和大于 n 的数替换为 n+1</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (nums[i] &lt;= <span class="hljs-number">0</span> || nums[i] &gt; n) &#123;<br>                nums[i] = n + <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 第二步：用负数标记出现过的数字</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">num</span> <span class="hljs-operator">=</span> Math.abs(nums[i]);<br>            <span class="hljs-keyword">if</span> (num &lt;= n) &#123;<br>                <span class="hljs-comment">// 用负数标记索引 num-1</span><br>                <span class="hljs-keyword">if</span> (nums[num - <span class="hljs-number">1</span>] &gt; <span class="hljs-number">0</span>) &#123;<br>                    nums[num - <span class="hljs-number">1</span>] = -nums[num - <span class="hljs-number">1</span>];<br>                &#125;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 第三步：找到第一个正数的位置</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (nums[i] &gt; <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><h3 id="方案一：置换法-1"><a href="#方案一：置换法-1" class="headerlink" title="方案一：置换法"></a>方案一：置换法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">firstMissingPositive</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        n = <span class="hljs-built_in">len</span>(nums)<br>        <br>        <span class="hljs-comment"># 把每个在 [1, n] 范围内的数放到它正确的位置上</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">while</span> <span class="hljs-number">1</span> &lt;= nums[i] &lt;= n <span class="hljs-keyword">and</span> nums[nums[i] - <span class="hljs-number">1</span>] != nums[i]:<br>                <span class="hljs-comment"># 交换到正确位置</span><br>                correct_idx = nums[i] - <span class="hljs-number">1</span><br>                nums[i], nums[correct_idx] = nums[correct_idx], nums[i]<br>        <br>        <span class="hljs-comment"># 找到第一个位置不对的数</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">if</span> nums[i] != i + <span class="hljs-number">1</span>:<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span><br>        <br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="方案二：正负标记法-1"><a href="#方案二：正负标记法-1" class="headerlink" title="方案二：正负标记法"></a>方案二：正负标记法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">firstMissingPositive</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        n = <span class="hljs-built_in">len</span>(nums)<br>        <br>        <span class="hljs-comment"># 第一步：清理非正数和超出范围的数</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">if</span> nums[i] &lt;= <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> nums[i] &gt; n:<br>                nums[i] = n + <span class="hljs-number">1</span><br>        <br>        <span class="hljs-comment"># 第二步：用负数标记出现过的数字</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            num = <span class="hljs-built_in">abs</span>(nums[i])<br>            <span class="hljs-keyword">if</span> num &lt;= n:<br>                <span class="hljs-comment"># 把索引 num-1 上的数置为负数</span><br>                <span class="hljs-keyword">if</span> nums[num - <span class="hljs-number">1</span>] &gt; <span class="hljs-number">0</span>:<br>                    nums[num - <span class="hljs-number">1</span>] = -nums[num - <span class="hljs-number">1</span>]<br>        <br>        <span class="hljs-comment"># 第三步：找到第一个正数</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">if</span> nums[i] &gt; <span class="hljs-number">0</span>:<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span><br>        <br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><table>
 <thead>
 <tr>
-<th>方法</th>
-<th>时间</th>
-<th>空间</th>
-<th>评价</th>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>排序 + 扫描</td>
-<td>$O(n \log n)$</td>
-<td>$O(1)$</td>
-<td>不满足 $O(n)$ 要求</td>
+<td>排序暴力法</td>
+<td>O(n log n)</td>
+<td>O(1)（原地排序）</td>
+<td>排序后遍历查找，最简单但超时</td>
 </tr>
 <tr>
-<td>哈希集合</td>
-<td>$O(n)$</td>
-<td>$O(n)$</td>
-<td>直观但不满足 $O(1)$ 空间</td>
+<td>哈希集合法</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>用哈希集存储正数，不满足空间要求</td>
 </tr>
 <tr>
-<td><strong>原地哈希</strong></td>
-<td>$O(n)$</td>
-<td>$O(1)$</td>
-<td>时间空间双最优</td>
+<td>原地置换法</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>每个元素最多被交换一次（准确说每个索引最多被访问两次）</td>
+</tr>
+<tr>
+<td>正负标记法</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>三遍线性扫描，不使用额外空间</td>
 </tr>
 </tbody></table>
-<ul>
-<li><strong>排序</strong>的瓶颈在于比较排序的下界就是 $O(n \log n)$，我们需要更聪明的方式跳过排序。</li>
-<li><strong>哈希集合</strong>很直观：把数都丢进集合，然后从 $1$ 开始往上找。但是需要 $O(n)$ 额外空间——题目卡的就是这个。</li>
-<li><strong>原地哈希</strong>把数组本身当成哈希表用，一举两得：既规避了排序的时间代价，又省掉了额外的哈希空间。</li>
-</ul>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>分析</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>时间复杂度</td>
-<td>$O(n)$ — 每个数最多被交换一次，<code>while</code> 循环的总体的执行次数不会超过 $n$，加上最后的扫描，总时间线性</td>
-</tr>
-<tr>
-<td>空间复杂度</td>
-<td>$O(1)$ — 只用到了循环变量和交换用的临时变量，不随输入规模增长</td>
-</tr>
-</tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.*;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">firstMissingPositive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> nums.length;<br><br>        <span class="hljs-comment">// 第一遍：把每个在 [1, n] 范围内的数放到正确的位置</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// 用 while 而不是 if：交换后当前位置可能又来了一个需要归位的数</span><br>            <span class="hljs-comment">// 条件解释：</span><br>            <span class="hljs-comment">//   nums[i] &gt; 0 &amp;&amp; nums[i] &lt;= n  — 值在有效范围内</span><br>            <span class="hljs-comment">//   nums[nums[i] - 1] != nums[i] — 目标位置还没放对（避免死循环）</span><br>            <span class="hljs-keyword">while</span> (nums[i] &gt; <span class="hljs-number">0</span> &amp;&amp; nums[i] &lt;= n &amp;&amp; nums[nums[i] - <span class="hljs-number">1</span>] != nums[i]) &#123;<br>                swap(nums, i, nums[i] - <span class="hljs-number">1</span>);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 第二遍：扫描找答案</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">if</span> (nums[i] != i + <span class="hljs-number">1</span>) &#123;<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 所有位置都对了，答案就是 n + 1</span><br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">swap</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> nums[i];<br>        nums[i] = nums[j];<br>        nums[j] = temp;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">firstMissingPositive</span>(<span class="hljs-params">self, nums: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        n = <span class="hljs-built_in">len</span>(nums)<br><br>        <span class="hljs-comment"># 第一遍：把每个在 [1, n] 范围内的数放到正确的位置</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-comment"># 用 while 而不是 if：交换后当前位置可能又来了一个需要归位的数</span><br>            <span class="hljs-comment"># 条件解释：</span><br>            <span class="hljs-comment">#   1 &lt;= nums[i] &lt;= n           — 值在有效范围内</span><br>            <span class="hljs-comment">#   nums[nums[i] - 1] != nums[i] — 目标位置还没放对（避免死循环）</span><br>            <span class="hljs-keyword">while</span> <span class="hljs-number">1</span> &lt;= nums[i] &lt;= n <span class="hljs-keyword">and</span> nums[nums[i] - <span class="hljs-number">1</span>] != nums[i]:<br>                <span class="hljs-comment"># 将 nums[i] 交换到下标 nums[i] - 1 的位置</span><br>                idx = nums[i] - <span class="hljs-number">1</span><br>                nums[i], nums[idx] = nums[idx], nums[i]<br><br>        <span class="hljs-comment"># 第二遍：扫描找答案</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">if</span> nums[i] != i + <span class="hljs-number">1</span>:<br>                <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span><br><br>        <span class="hljs-comment"># 所有位置都对了，答案就是 n + 1</span><br>        <span class="hljs-keyword">return</span> n + <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
-
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p>这道题的核心是”把数组下标当哈希键”——当答案范围被限定在 $[1, n]$ 时，数组本身就足够承载所有可能答案的”存在性”信息。这种用空间换时间（但空间就是输入本身，所以不额外花钱）的逆向思维，是很多数组难题的突破口。</p>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>补充说明：置换法中看似用了 while 循环，但每个元素最多被交换到正确位置一次，所以整体仍然是 O(n) 时间复杂度。</p>
 </blockquote>
-<p>遇到”在不使用额外空间的前提下，在数组上做查找 &#x2F; 去重 &#x2F; 存在性判断”类问题时，先问自己：<strong>“答案的值域是否比数组长度还要小？能不能通过交换或标记，把数组改造成一个自索引的结构？”</strong> 这是原地哈希和其变体（如使用正负号标记、交换归位等技巧）的通用解法框架。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>利用数组本身作为哈希表</strong>是一个极其重要的技巧。当我们被限制不能使用额外空间，却又需要”快速查找”的能力时，不妨看看数据本身是否提供了天然的索引结构。</p>
+<p>这道题给我们的启示是：</p>
+<ul>
+<li>首先分析<strong>答案的可能范围</strong>——很多时候看似无限的问题，在给定输入规模下是有边界的</li>
+<li>在范围确定的前提下，<strong>数组的下标就是天然的哈希键</strong>，值是天然的标记位</li>
+<li>原地修改数组时，要确保修改是可逆的或不会丢失关键信息（置换法通过交换保留了所有信息，标记法通过符号位保留了数值的绝对值）</li>
+</ul>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><p>当看到这些关键词时，可以优先考虑原地哈希的思路：</p>
+<ol>
+<li><strong>“缺失的第一个 XXX”</strong>——答案范围往往有界，可以用索引映射</li>
+<li><strong>“O(n) 时间，O(1) 额外空间”</strong>——极大概率需要原地哈希</li>
+<li><strong>“数组中的数字在 [1, n] 范围内”<strong>或</strong>“数组中只包含 1 到 n”</strong>——这是最直接的信号</li>
+</ol>
+<p>实际上，LeetCode 上还有好几道同类型题目：</p>
+<ul>
+<li><strong>442. 数组中重复的数据</strong>——同样用索引标记法找出现两次的数</li>
+<li><strong>448. 找到所有数组中消失的数字</strong>——同样是 [1, n] 范围，用索引找没出现的数</li>
+</ul>
+<p>这三道题共享同一个核心思想：<strong>当数组元素的值本身可以被映射到数组的索引范围时，就用索引作为哈希表。</strong></p>
+<blockquote>
+<p>记住这个”索引映射”三板斧：置换归位、正负标记、遍历检测。下次遇到同类问题，可以让思路沿着这条线先跑一遍。</p>
+</blockquote>
+<hr>
+<p><em>本文由「LeetCode 题解」系列发出，欢迎讨论交流。</em> 🚀</p>
+<hr>
+<blockquote>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
+</blockquote>
 
                 
               </div>
@@ -512,8 +570,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -527,13 +599,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
         <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
       
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
-      
         <a href="/tags/%E5%8E%9F%E5%9C%B0%E5%93%88%E5%B8%8C/" class="print-no-link">#原地哈希</a>
+      
+        <a href="/tags/%E7%B4%A2%E5%BC%95%E6%98%A0%E5%B0%84/" class="print-no-link">#索引映射</a>
       
     </div>
   
@@ -545,7 +615,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 41. 缺失的第一个正数（first-missing-positive）</div>
+      <div>缺失的第一个正数</div>
       <div>http://example.com/2026/07/13/17-缺失的第一个正数/</div>
     </div>
     <div class="license-meta">
@@ -590,9 +660,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/13/19-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/" title="LeetCode 54. 螺旋矩阵（spiral-matrix）">
+                      <a href="/2026/07/13/15-%E8%BD%AE%E8%BD%AC%E6%95%B0%E7%BB%84/" title="轮转数组">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LeetCode 54. 螺旋矩阵（spiral-matrix）</span>
+                        <span class="hidden-mobile">轮转数组</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -600,8 +670,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/13/20-%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/" title="LeetCode 48. 旋转图像（rotate-image）">
-                        <span class="hidden-mobile">LeetCode 48. 旋转图像（rotate-image）</span>
+                      <a href="/2026/07/13/16-%E9%99%A4%E4%BA%86%E8%87%AA%E8%BA%AB%E4%BB%A5%E5%A4%96%E6%95%B0%E7%BB%84%E7%9A%84%E4%B9%98%E7%A7%AF/" title="除了自身以外数组的乘积">
+                        <span class="hidden-mobile">除了自身以外数组的乘积</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

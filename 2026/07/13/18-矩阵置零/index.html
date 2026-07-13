@@ -19,29 +19,23 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="给定一个 m×n 的矩阵，如果一个元素为 0，则将其所在行和列的所有元素都置为 0。请使用原地算法，在 O(1) 额外空间内完成。">
+    <meta name="description" content="从暴力复制到原地标记 —— 矩阵置零问题的三种解法演进">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 73. 矩阵置零（set-matrix-zeroes）">
+<meta property="og:title" content="矩阵置零">
 <meta property="og:url" content="http://example.com/2026/07/13/18-%E7%9F%A9%E9%98%B5%E7%BD%AE%E9%9B%B6/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="给定一个 m×n 的矩阵，如果一个元素为 0，则将其所在行和列的所有元素都置为 0。请使用原地算法，在 O(1) 额外空间内完成。">
+<meta property="og:description" content="从暴力复制到原地标记 —— 矩阵置零问题的三种解法演进">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://assets.leetcode.com/uploads/2020/08/17/mat1.jpg">
-<meta property="og:image" content="https://assets.leetcode.com/uploads/2020/08/17/mat2.jpg">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:57:47.032Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:34.209Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="原地算法">
-<meta property="article:tag" content="数组">
 <meta property="article:tag" content="矩阵">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://assets.leetcode.com/uploads/2020/08/17/mat1.jpg">
   
   
   
-  <title>LeetCode 73. 矩阵置零（set-matrix-zeroes） - CodingOrange</title>
+  <title>矩阵置零 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -310,7 +304,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 73. 矩阵置零（set-matrix-zeroes）"></span>
+            <span id="subtitle" data-typed-text="矩阵置零"></span>
           
         </div>
 
@@ -333,7 +327,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.8k 字
+          3.3k 字
         
       </span>
     
@@ -344,7 +338,7 @@
         
         
         
-          40 分钟
+          28 分钟
         
       </span>
     
@@ -383,139 +377,123 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 73. 矩阵置零（set-matrix-zeroes）</h1>
+            <h1 id="seo-header">矩阵置零</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/set-matrix-zeroes/">LeetCode 73. set-matrix-zeroes</a></p>
-</blockquote>
-<p>给定一个 $m \times n$ 的矩阵，如果一个元素为 $0$，则将其所在行和列的所有元素都设为 $0$。请使用<strong>原地</strong>算法。</p>
-<p><strong>示例 1：</strong></p>
-<p><img src="https://assets.leetcode.com/uploads/2020/08/17/mat1.jpg" srcset="/img/loading.gif" lazyload></p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lua">输入：matrix = <span class="hljs-string">[[1,1,1],[1,0,1],[1,1,1]]</span><br>输出：<span class="hljs-string">[[1,0,1],[0,0,0],[1,0,1]]</span><br></code></pre></td></tr></table></figure>
-
-<p><strong>示例 2：</strong></p>
-<p><img src="https://assets.leetcode.com/uploads/2020/08/17/mat2.jpg" srcset="/img/loading.gif" lazyload></p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lua">输入：matrix = <span class="hljs-string">[[0,1,2,0],[3,4,5,2],[1,3,1,5]]</span><br>输出：<span class="hljs-string">[[0,0,0,0],[0,4,5,0],[0,3,1,0]]</span><br></code></pre></td></tr></table></figure>
-
-<p><strong>提示：</strong></p>
+                <h1 id="矩阵置零"><a href="#矩阵置零" class="headerlink" title="矩阵置零"></a>矩阵置零</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一反应：暴力复制"><a href="#第一反应：暴力复制" class="headerlink" title="第一反应：暴力复制"></a>第一反应：暴力复制</h3><p>拿到这道题，先别急着想技巧。不妨先问自己一个问题：<strong>如果没有任何限制，我们第一反应会怎么做？</strong></p>
+<p>最简单直接的想法是：再准备一个同样大小的矩阵，遍历原矩阵，遇到零就把新矩阵对应的整行整列置零。最后把新矩阵复制回去。</p>
+<p>这个思路几乎不需要动脑筋，但它的代价是什么？</p>
 <ul>
-<li>$m &#x3D;&#x3D; matrix.length$</li>
-<li>$n &#x3D;&#x3D; matrix[0].length$</li>
-<li>$1 \leq m, n \leq 200$</li>
-<li>$-2^{31} \leq matrix[i][j] \leq 2^{31} - 1$</li>
+<li>空间上，我们需要一个 <code>O(mn)</code> 的额外矩阵。</li>
+<li>时间上，每个零都要扫一遍它所在的行和列，最坏情况下（全是零）会退化到 <code>O(mn * (m+n))</code>。</li>
 </ul>
-<p><strong>进阶：</strong> 一个直观的解决方案是使用 $O(mn)$ 的额外空间，但这并不是一个好的解决方案。一个简单的改进方案是使用 $O(m+n)$ 的额外空间，但这仍然不是最好的解决方案。你能想出一个仅使用<strong>常量空间</strong>的解决方案吗？</p>
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们先别急着写代码。让我们像侦探一样，从最笨的办法开始，一步步挖出那个”啊哈！”时刻。</p>
-<h3 id="第一层：暴力复制"><a href="#第一层：暴力复制" class="headerlink" title="第一层：暴力复制"></a>第一层：暴力复制</h3><p>最直接的想法是什么？遍历一遍矩阵，把所有的 $0$ 记下来，然后再遍历一遍，把对应的行和列都置零。</p>
-<p>这需要多少空间？我们需要记住每一个 $0$ 的位置，最坏情况下整个矩阵都是 $0$，那就需要 $O(mn)$ 的空间。</p>
-<p><strong>为什么这个不够好？</strong> 题目明示了：$O(mn)$ 的额外空间”并不是一个好的解决方案”。我们可以做得更省。</p>
-<h3 id="第二层：行列标记数组"><a href="#第二层：行列标记数组" class="headerlink" title="第二层：行列标记数组"></a>第二层：行列标记数组</h3><p>注意一个关键事实：我们关心的是<strong>哪些行</strong>有 $0$、<strong>哪些列</strong>有 $0$，而不是每个 $0$ 的精确坐标。 一行有多个 $0$，和我们只需知道这一行”存在 $0$”——标一次就够了。</p>
-<p>这就引出了 $O(m+n)$ 的方案：用一个长度为 $m$ 的布尔数组标记哪些行要清零，用一个长度为 $n$ 的布尔数组标记哪些列要清零。第一遍扫描时打标记，第二遍根据标记执行清零。</p>
-<p>空间从 $O(mn)$ 降到了 $O(m+n)$。但题目还在追问：<strong>能不能只用常量空间？</strong></p>
-<h3 id="第三层：把标记藏进矩阵本身"><a href="#第三层：把标记藏进矩阵本身" class="headerlink" title="第三层：把标记藏进矩阵本身"></a>第三层：把标记藏进矩阵本身</h3><p>$O(1)$ 意味着我们不能额外开辟和输入规模相关的数组。那我们得把标记信息存在哪里呢？</p>
-<p>问问自己：矩阵本身有 $m \times n$ 个格子，我们能不能”借用”其中一些格子来当标记？</p>
-<p>这就引出了一个漂亮的想法：<strong>用矩阵的第一行和第一列来当我们的标记数组</strong>。</p>
-<p>具体来说：</p>
+<p>显然，这不是一个优雅的做法。</p>
+<h3 id="第一次优化：用数组记住「哪些行、哪些列需要置零」"><a href="#第一次优化：用数组记住「哪些行、哪些列需要置零」" class="headerlink" title="第一次优化：用数组记住「哪些行、哪些列需要置零」"></a>第一次优化：用数组记住「哪些行、哪些列需要置零」</h3><p>上面的暴力法之所以慢，是因为<strong>重复计算</strong>——同一个位置可能被不同的零反复置零。那么我们能不能<strong>先把信息存下来，一次性地处理</strong>？</p>
+<p>答案是肯定的。我们可以准备两个布尔数组：</p>
 <ul>
-<li><code>matrix[i][0]</code> 为 $0$，表示第 $i$ 行需要清零（$i &gt; 0$）</li>
-<li><code>matrix[0][j]</code> 为 $0$，表示第 $j$ 列需要清零（$j &gt; 0$）</li>
+<li><code>rows[]</code> —— 大小为 m，记录哪一行需要置零</li>
+<li><code>cols[]</code> —— 大小为 n，记录哪一列需要置零</li>
 </ul>
-<p>这样就省掉了那两个额外的布尔数组——我们把标记直接写在矩阵的第一行和第一列里。</p>
-<p>但这里有一个陷阱：那第一行和第一列自己的”命运”呢？如果第一行原本就有 $0$，它自己也需要被清零，但我们用它的格子来存别人的标记，改了它之后，我们怎么知道它原本是否包含 $0$？</p>
-<p>这个问题你可以暂停想一想……答案其实很直接：<strong>用两个单独的布尔变量，提前记录第一行和第一列原本是否包含 $0$。</strong> 因为只有这两个维度的信息需要额外保存，而且它们是常量——不管矩阵多大，都是两个变量。</p>
-<h3 id="思考链条回顾"><a href="#思考链条回顾" class="headerlink" title="思考链条回顾"></a>思考链条回顾</h3><ol>
-<li>暴力记录所有 $0$ → $O(mn)$ 空间，冗余</li>
-<li>发现我们只需知道”哪些行、哪些列” → $O(m+n)$ 空间</li>
-<li>发现可以从矩阵本身”借用”第一行和第一列来当标记 → $O(1)$ 空间，但需要两个变量保护首行首列</li>
+<p>第一遍遍历矩阵，如果 <code>matrix[i][j] == 0</code>，就把 <code>rows[i] = true</code>、<code>cols[j] = true</code>。</p>
+<p>第二遍遍历，对于每个位置 <code>(i, j)</code>，如果 <code>rows[i]</code> 或 <code>cols[j]</code> 为 true，就把它设为 0。</p>
+<p>这样一来，时间复杂度降到了 <code>O(mn)</code>，空间复杂度是 <code>O(m + n)</code>。</p>
+<p><strong>相比暴力法，我们进步在哪里？</strong></p>
+<p>我们付出了 <code>O(m+n)</code> 的空间，换来了<strong>一次遍历记录、一次遍历执行</strong>的线性时间。本质上是用空间换时间，把信息集中管理，避免了重复劳动。</p>
+<h3 id="还可以再省吗？——-O-1-空间的终极优化"><a href="#还可以再省吗？——-O-1-空间的终极优化" class="headerlink" title="还可以再省吗？—— O(1) 空间的终极优化"></a>还可以再省吗？—— O(1) 空间的终极优化</h3><p>走到这一步，我们自然会追问：<strong>能不能连 <code>O(m+n)</code> 的额外空间都不要？</strong></p>
+<p>如果我们能把「哪行哪列需要置零」的信息<strong>直接存在矩阵本身</strong>，不就省掉额外数组了吗？</p>
+<p>矩阵中哪些位置是”闲置”的？——<strong>第一行和第一列</strong>。</p>
+<p>具体做法是：</p>
+<ol>
+<li>先检查第一行和第一列本身是否包含 0，用两个布尔变量 <code>firstRowZero</code>、<code>firstColZero</code> 记下来。</li>
+<li>然后，<strong>把第一行和第一列当作标记数组来用</strong>：遍历矩阵剩余部分（从 <code>(1,1)</code> 开始），如果 <code>matrix[i][j] == 0</code>，就让 <code>matrix[i][0] = 0</code> 和 <code>matrix[0][j] = 0</code>。</li>
+<li>接着，根据第一行和第一列的标记，把对应行和列置零（同样从 <code>(1,1)</code> 开始）。</li>
+<li>最后，处理第一行和第一列本身——如果之前的标记变量为 true，就把它们置零。</li>
 </ol>
-<p>这就是从 $O(mn)$ 到 $O(m+n)$ 再到 $O(1)$ 的完整思考过程。每一步的精髓都不同：第一步在<strong>去除冗余</strong>，第二步在<strong>借用已有空间</strong>。</p>
-<h2 id="解法：原地标记法"><a href="#解法：原地标记法" class="headerlink" title="解法：原地标记法"></a>解法：原地标记法</h2><p>现在我们把这个思路落实到具体步骤上。</p>
-<h3 id="为什么选择这个方案？"><a href="#为什么选择这个方案？" class="headerlink" title="为什么选择这个方案？"></a>为什么选择这个方案？</h3><p>我们对比一下备选方案：</p>
-<table>
+<p>为什么要用两个变量保存第一行和第一列的原始信息？因为第一行和第一列在步骤 2 中被改写了，如果不提前保存，我们就丢失了它们原本是否包含 0 的信息。</p>
+<p><strong>这个思路的核心</strong>：整个矩阵的标记信息被压缩到了两条”边界线”上，我们不需要任何额外数组。这就是原地算法的精髓——<strong>在已有空间里巧妙地编码额外信息</strong>。</p>
+<h3 id="三种解法对比"><a href="#三种解法对比" class="headerlink" title="三种解法对比"></a>三种解法对比</h3><table>
 <thead>
 <tr>
-<th>方案</th>
+<th>版本</th>
+<th>思路</th>
 <th>空间</th>
-<th>优点</th>
-<th>缺点</th>
+<th>时间</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>复制整个矩阵</td>
-<td>$O(mn)$</td>
-<td>思路简单，不会覆盖原始数据</td>
-<td>空间浪费巨大</td>
+<td>暴力法</td>
+<td>复制矩阵，遇到零就改副本</td>
+<td>O(mn)</td>
+<td>O(mn(m+n))</td>
 </tr>
 <tr>
-<td>行列标记数组</td>
-<td>$O(m+n)$</td>
-<td>去掉了坐标冗余</td>
-<td>仍需要线性额外空间</td>
+<td>标记数组</td>
+<td>用两个数组记录需要置零的行和列</td>
+<td>O(m+n)</td>
+<td>O(mn)</td>
 </tr>
 <tr>
-<td><strong>首行首列标记</strong></td>
-<td>$O(1)$</td>
-<td>完全原地，空间最优</td>
-<td>需要小心处理首行首列</td>
+<td>原地标记</td>
+<td>用第一行和第一列做标记</td>
+<td>O(1)</td>
+<td>O(mn)</td>
 </tr>
 </tbody></table>
-<p>显然，第三个方案是本题的”正解”——它完美利用了矩阵自身的空间，把额外开销降到常数级。</p>
-<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><p>设矩阵为 $matrix$，有 $m$ 行 $n$ 列。</p>
-<p><strong>第一步：检查第一行和第一列。</strong></p>
-<p>我们需要先知道第一行和第一列原本是否包含 $0$。为什么必须”先”？因为后面我们会用第一行和第一列的格子来做标记，它们的值会被修改，到时候就分不清是”原本的 $0$”还是”后来写的标记”了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">boolean</span> <span class="hljs-variable">firstRowHasZero</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br><span class="hljs-type">boolean</span> <span class="hljs-variable">firstColHasZero</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>    <span class="hljs-keyword">if</span> (matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span>) firstRowHasZero = <span class="hljs-literal">true</span>;<br>&#125;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>    <span class="hljs-keyword">if</span> (matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span>) firstColHasZero = <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setZeroes</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] matrix)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> matrix.length, n = matrix[<span class="hljs-number">0</span>].length;<br><br>        <span class="hljs-comment">// 1. 检查第一行和第一列是否有零</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">firstRowZero</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>, firstColZero = <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>            <span class="hljs-keyword">if</span> (matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span>) &#123;<br>                firstRowZero = <span class="hljs-literal">true</span>;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">if</span> (matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span>) &#123;<br>                firstColZero = <span class="hljs-literal">true</span>;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 2. 用第一行和第一列记录其余行列的零信息</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-keyword">if</span> (matrix[i][j] == <span class="hljs-number">0</span>) &#123;<br>                    matrix[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;<br>                    matrix[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 3. 根据标记置零（除第一行第一列）</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-keyword">if</span> (matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span> || matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span>) &#123;<br>                    matrix[i][j] = <span class="hljs-number">0</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 4. 处理第一行和第一列</span><br>        <span class="hljs-keyword">if</span> (firstRowZero) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>                matrix[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (firstColZero) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>                matrix[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>第二步：遍历内部区域，用第一行和第一列打标记。</strong></p>
-<p>从 $(1,1)$ 开始遍历矩阵的”内部”（去掉第一行和第一列）。每当 <code>matrix[i][j] == 0</code>，就把这一行和这一列的”标志位”设为 $0$：</p>
-<ul>
-<li><code>matrix[i][0] = 0</code> → “第 $i$ 行有 $0$”</li>
-<li><code>matrix[0][j] = 0</code> → “第 $j$ 列有 $0$”</li>
-</ul>
-<p>比如，我们发现在 $(2,3)$ 有一个 $0$，就把 <code>matrix[2][0]</code> 和 <code>matrix[0][3]</code> 都设为 $0$。</p>
-<p><strong>第三步：根据标记清零内部区域。</strong></p>
-<p>再次遍历内部区域，检查每一格对应的”行标志”或”列标志”是否为 $0$：</p>
-<ul>
-<li>如果 <code>matrix[i][0] == 0</code> 或 <code>matrix[0][j] == 0</code>，就把 <code>matrix[i][j]</code> 设为 $0$。</li>
-</ul>
-<p>注意：这里检查的条件是<strong>或</strong>——行或列只要有一个被标记，这个格子就得清零。</p>
-<p><strong>第四步：根据预先记录的两个变量，处理第一行和第一列。</strong></p>
-<ul>
-<li>如果 <code>firstRowHasZero</code> 为真，把整个第一行清零。</li>
-<li>如果 <code>firstColHasZero</code> 为真，把整个第一列清零。</li>
-</ul>
-<h3 id="为什么不能打乱顺序？"><a href="#为什么不能打乱顺序？" class="headerlink" title="为什么不能打乱顺序？"></a>为什么不能打乱顺序？</h3><p>你可能会想：能不能在第二步就顺便把首行首列也标记了？问题在于，如果我们用 <code>matrix[0][0]</code> 同时表示”第一行有 $0$”和”第一列有 $0$”，这两个信息会互相覆盖——一个格子存不下两个含义。</p>
-<p>这就是为什么我们单独用两个变量来记住首行首列的状态，而 <code>matrix[0][0]</code> 只用来参与内部区域的标记（它同时是”第一行标记数组”的第一个元素和”第一列标记数组”的第一个元素——但这两个标记数组的交集就是它本身，所以会冲突。把首行首列用独立变量记录，就完美解决了这个冲突）。</p>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">setZeroes</span>(<span class="hljs-params">self, matrix: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]</span>) -&gt; <span class="hljs-literal">None</span>:<br>        m, n = <span class="hljs-built_in">len</span>(matrix), <span class="hljs-built_in">len</span>(matrix[<span class="hljs-number">0</span>])<br><br>        <span class="hljs-comment"># 1. 检查第一行和第一列是否有零</span><br>        first_row_zero = <span class="hljs-built_in">any</span>(matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span> <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n))<br>        first_col_zero = <span class="hljs-built_in">any</span>(matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m))<br><br>        <span class="hljs-comment"># 2. 用第一行和第一列记录零信息</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, m):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, n):<br>                <span class="hljs-keyword">if</span> matrix[i][j] == <span class="hljs-number">0</span>:<br>                    matrix[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span><br>                    matrix[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 3. 根据标记置零</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, m):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, n):<br>                <span class="hljs-keyword">if</span> matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span>:<br>                    matrix[i][j] = <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 4. 处理第一行和第一列</span><br>        <span class="hljs-keyword">if</span> first_row_zero:<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>                matrix[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span><br>        <span class="hljs-keyword">if</span> first_col_zero:<br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m):<br>                matrix[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><table>
 <thead>
 <tr>
-<th>维度</th>
-<th>分析</th>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>时间复杂度</td>
-<td>$O(m \times n)$ — 我们遍历了矩阵常数次（检查首行首列一次，打标记一次，清零一次，处理首行首列一次），每次都是 $O(mn)$，常数倍不影响复杂度</td>
+<td>暴力复制法</td>
+<td>O(mn(m+n))</td>
+<td>O(mn)</td>
+<td>每个零都独立扫行和列，大量重复；需要完整副本</td>
 </tr>
 <tr>
-<td>空间复杂度</td>
-<td>$O(1)$ — 只用了两个布尔变量，与输入规模无关</td>
+<td>标记数组法</td>
+<td>O(mn)</td>
+<td>O(m+n)</td>
+<td>两遍遍历，用额外数组记录标记，无重复</td>
+</tr>
+<tr>
+<td>原地标记法</td>
+<td>O(mn)</td>
+<td>O(1)</td>
+<td>两遍遍历，利用第一行第一列自身存储标记信息</td>
 </tr>
 </tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setZeroes</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] matrix)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> matrix.length;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> matrix[<span class="hljs-number">0</span>].length;<br><br>        <span class="hljs-comment">// 第一步：记录第一行和第一列原本是否包含 0</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">firstRowHasZero</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">firstColHasZero</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>            <span class="hljs-keyword">if</span> (matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span>) &#123;<br>                firstRowHasZero = <span class="hljs-literal">true</span>;<br>                <span class="hljs-keyword">break</span>; <span class="hljs-comment">// 找到一个就够了</span><br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">if</span> (matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span>) &#123;<br>                firstColHasZero = <span class="hljs-literal">true</span>;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 第二步：用第一行和第一列作为标记数组</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-keyword">if</span> (matrix[i][j] == <span class="hljs-number">0</span>) &#123;<br>                    matrix[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>; <span class="hljs-comment">// 标记第 i 行</span><br>                    matrix[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span>; <span class="hljs-comment">// 标记第 j 列</span><br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 第三步：根据标记，将内部区域清零</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-keyword">if</span> (matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span> || matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span>) &#123;<br>                    matrix[i][j] = <span class="hljs-number">0</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 第四步：处理第一行</span><br>        <span class="hljs-keyword">if</span> (firstRowHasZero) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>                matrix[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 处理第一列</span><br>        <span class="hljs-keyword">if</span> (firstColHasZero) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) &#123;<br>                matrix[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">setZeroes</span>(<span class="hljs-params">self, matrix: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]</span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Do not return anything, modify matrix in-place instead.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        m = <span class="hljs-built_in">len</span>(matrix)<br>        n = <span class="hljs-built_in">len</span>(matrix[<span class="hljs-number">0</span>])<br><br>        <span class="hljs-comment"># 第一步：记录第一行和第一列原本是否包含 0</span><br>        first_row_has_zero = <span class="hljs-built_in">any</span>(matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span> <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n))<br>        first_col_has_zero = <span class="hljs-built_in">any</span>(matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m))<br><br>        <span class="hljs-comment"># 第二步：用第一行和第一列作为标记数组</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, m):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, n):<br>                <span class="hljs-keyword">if</span> matrix[i][j] == <span class="hljs-number">0</span>:<br>                    matrix[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>  <span class="hljs-comment"># 标记第 i 行</span><br>                    matrix[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span>  <span class="hljs-comment"># 标记第 j 列</span><br><br>        <span class="hljs-comment"># 第三步：根据标记，将内部区域清零</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, m):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, n):<br>                <span class="hljs-keyword">if</span> matrix[i][<span class="hljs-number">0</span>] == <span class="hljs-number">0</span> <span class="hljs-keyword">or</span> matrix[<span class="hljs-number">0</span>][j] == <span class="hljs-number">0</span>:<br>                    matrix[i][j] = <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 第四步：处理第一行</span><br>        <span class="hljs-keyword">if</span> first_row_has_zero:<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>                matrix[<span class="hljs-number">0</span>][j] = <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 处理第一列</span><br>        <span class="hljs-keyword">if</span> first_col_has_zero:<br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(m):<br>                matrix[i][<span class="hljs-number">0</span>] = <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
-
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p><strong>“借用已有空间”是一种强大的思维模式。</strong> 当题目要求 $O(1)$ 空间但你又需要额外的存储时，不妨环顾四周——输入数组本身能不能”兼职”做你的辅助结构？本题用第一行第一列做标记数组、原地哈希中用数组索引存信息、甚至链表反转中复用节点指针，都是同一套心法。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>在原始数据上编码额外信息的技巧。</strong> 很多时候，我们需要记录一些”元信息”（比如哪些行该置零），并不一定要开辟新的空间——如果原来的数据结构中有某些”闲置”的位置，完全可以拿来做标记。本题中的第一行和第一列天然成了两个”标记数组”的替代品。</p>
+<p>这个思想在很多原地算法中都有体现，比如：</p>
+<ul>
+<li>原地哈希（用数组本身记录某个数字是否出现过）</li>
+<li>原地 DP（在输入数组上直接做状态转移，节省空间）</li>
+</ul>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ul>
+<li><strong>是否允许修改原数据？</strong> 如果允许，考虑利用原数据的存储空间。</li>
+<li><strong>标记信息能否压缩到边界或少量位置？</strong> 比如第一行、第一列、对角线等”特殊位置”。</li>
+<li><strong>信息的流向是什么？</strong> 本题中，信息从矩阵内部”汇聚”到边界（第一行&#x2F;列），再从边界”扩散”到整个矩阵。画清楚信息流向，代码结构自然就清晰了。</li>
+<li><strong>是否需要保留原始信息？</strong> 我们在使用第一行&#x2F;列前先检查了它们自身的零值，因为标记过程会覆盖这些位置——<strong>先保存，再复用</strong>是一个常见套路。</li>
+</ul>
+<p>下次遇到”需要标记但希望省空间”的矩阵问题，不妨先想想：<strong>哪里可以当黑板用？</strong></p>
+<hr>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
 </blockquote>
-<p>先问自己：<strong>“我需要记住的信息，能不能写在输入数据本身里面，而不是另开一个新的数组？”</strong> 如果可以，下一个问题就是——“我写进去之后，怎么把它和原始数据区分开？” 本题的答案是用两个独立变量保护首行首列；别的题可能用正负号、位移、甚至不同的数值范围来区分。核心矛盾永远是：<strong>如何在不丢失原始信息的前提下，复用现有空间。</strong></p>
 
                 
               </div>
@@ -534,8 +512,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -548,12 +540,6 @@
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
-        <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
-      
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
       
         <a href="/tags/%E7%9F%A9%E9%98%B5/" class="print-no-link">#矩阵</a>
       
@@ -569,7 +555,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 73. 矩阵置零（set-matrix-zeroes）</div>
+      <div>矩阵置零</div>
       <div>http://example.com/2026/07/13/18-矩阵置零/</div>
     </div>
     <div class="license-meta">
@@ -614,9 +600,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/13/14-%E5%90%88%E5%B9%B6%E5%8C%BA%E9%97%B4/" title="LeetCode 56. 合并区间（merge-intervals）">
+                      <a href="/2026/07/13/21-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5%20II/" title="搜索二维矩阵 II">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LeetCode 56. 合并区间（merge-intervals）</span>
+                        <span class="hidden-mobile">搜索二维矩阵 II</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -624,8 +610,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/13/19-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/" title="LeetCode 54. 螺旋矩阵（spiral-matrix）">
-                        <span class="hidden-mobile">LeetCode 54. 螺旋矩阵（spiral-matrix）</span>
+                      <a href="/2026/07/13/10-%E5%92%8C%E4%B8%BA%20K%20%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/" title="和为 K 的子数组">
+                        <span class="hidden-mobile">和为 K 的子数组</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

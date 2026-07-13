@@ -19,25 +19,23 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="给定一个整数数组和一个目标值，找出数组中和为目标值的两个数的下标——从暴力枚举到哈希表一次遍历的优化思路。">
+    <meta name="description" content="从暴力枚举到哈希表优化，一步步拆解 LeetCode 第一题「两数之和」的思考过程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 1. 两数之和（two-sum）">
+<meta property="og:title" content="两数之和">
 <meta property="og:url" content="http://example.com/2026/07/13/01-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="给定一个整数数组和一个目标值，找出数组中和为目标值的两个数的下标——从暴力枚举到哈希表一次遍历的优化思路。">
+<meta property="og:description" content="从暴力枚举到哈希表优化，一步步拆解 LeetCode 第一题「两数之和」的思考过程">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:56:46.300Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:33.336Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="哈希表">
 <meta property="article:tag" content="数组">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>LeetCode 1. 两数之和（two-sum） - CodingOrange</title>
+  <title>两数之和 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +304,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 1. 两数之和（two-sum）"></span>
+            <span id="subtitle" data-typed-text="两数之和"></span>
           
         </div>
 
@@ -329,7 +327,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.4k 字
+          2.9k 字
         
       </span>
     
@@ -340,7 +338,7 @@
         
         
         
-          21 分钟
+          25 分钟
         
       </span>
     
@@ -379,110 +377,78 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 1. 两数之和（two-sum）</h1>
+            <h1 id="seo-header">两数之和</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/two-sum/">LeetCode 1. two-sum</a></p>
-</blockquote>
-<p>给定一个整数数组 <code>nums</code> 和一个整数目标值 <code>target</code>，请你在该数组中找出 <strong>和为目标值</strong> <code>target</code> 的那 <strong>两个</strong> 整数，并返回它们的数组下标。</p>
-<p>你可以假设每种输入只会对应一个答案，并且你不能使用两次相同的元素。你可以按任意顺序返回答案。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs inform7">输入：nums = <span class="hljs-comment">[2,7,11,15]</span>, target = 9<br>输出：<span class="hljs-comment">[0,1]</span><br>解释：因为 nums<span class="hljs-comment">[0]</span> + nums<span class="hljs-comment">[1]</span> == 9 ，返回 <span class="hljs-comment">[0, 1]</span> 。<br></code></pre></td></tr></table></figure>
+                <h1 id="两数之和"><a href="#两数之和" class="headerlink" title="两数之和"></a>两数之和</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一反应：暴力枚举"><a href="#第一反应：暴力枚举" class="headerlink" title="第一反应：暴力枚举"></a>第一反应：暴力枚举</h3><p>拿到这道题，我们的第一反应往往很直接——两层循环，挨个检查每一对数字的和是否等于 <code>target</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i + <span class="hljs-number">1</span>; j &lt; nums.length; j++) &#123;<br>        <span class="hljs-keyword">if</span> (nums[i] + nums[j] == target) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;i, j&#125;;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>示例 2：</strong></p>
-<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs inform7">输入：nums = <span class="hljs-comment">[3,2,4]</span>, target = 6<br>输出：<span class="hljs-comment">[1,2]</span><br></code></pre></td></tr></table></figure>
-
-<p><strong>示例 3：</strong></p>
-<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs inform7">输入：nums = <span class="hljs-comment">[3,3]</span>, target = 6<br>输出：<span class="hljs-comment">[0,1]</span><br></code></pre></td></tr></table></figure>
-
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们先从最朴素的想法出发。</p>
+<p>这个解法没错，但让我们想想它的代价。对于数组中的每一个元素，我们都要遍历它后面所有的元素。如果数组有 <code>n</code> 个数，第一层循环跑 <code>n</code> 次，第二层平均跑 <code>n/2</code> 次，总的比较次数大约是 <code>n^2 / 2</code>。时间复杂度是 <code>O(n^2)</code>。</p>
+<p>空间上我们只用了两个循环变量，额外空间是 <code>O(1)</code>。</p>
+<p>当 <code>n</code> 很大的时候，<code>O(n^2)</code> 的算法就会变得很慢。LeetCode 的测试数据中数组长度可能达到 <code>10^4</code> 甚至 <code>10^5</code> 级别，<code>n^2</code> 就是 <code>10^8</code> 到 <code>10^10</code> 次操作——显然不可接受。</p>
+<p>那么问题来了：<strong>有没有办法减少重复计算？</strong></p>
+<h3 id="换个角度看问题"><a href="#换个角度看问题" class="headerlink" title="换个角度看问题"></a>换个角度看问题</h3><p>让我们重新审视一下题目。对于每个元素 <code>nums[i]</code>，我们真正想找的是：在数组中是否存在另一个数 <code>x</code>，使得 <code>nums[i] + x == target</code>。</p>
+<p>移项一下：<code>x = target - nums[i]</code>。</p>
+<p>所以问题变成了：<strong>对于当前元素，我们想知道 <code>target - nums[i]</code> 之前有没有出现过</strong>。</p>
+<p>这个视角的转变很关键。我们不是在”找两个数的组合”，而是在”查一个数是否出现过”。</p>
+<h3 id="用空间换时间"><a href="#用空间换时间" class="headerlink" title="用空间换时间"></a>用空间换时间</h3><p>“查一个数是否出现过”——什么数据结构最擅长做这件事？哈希表（Hash Table），它的查找时间复杂度是 <code>O(1)</code>。</p>
+<p>于是我们可以这样改进：</p>
+<p><strong>遍历数组的过程中，把每个元素的值和它的下标存到哈希表里。对于当前元素 <code>nums[i]</code>，检查 <code>target - nums[i]</code> 是否已经在哈希表中。如果在，我们就找到了答案。</strong></p>
+<p>这里有一个细节需要注意：题目要求同一个元素不能使用两次。我们是在遍历到 <code>nums[i]</code> 的时候去查哈希表，而哈希表里存的是之前遍历过的元素，所以当前元素和哈希表中的元素一定是不同的下标，天然满足题目的要求。</p>
+<p>让我们想一想：<strong>我们应该先把所有元素都放进哈希表再查找，还是边遍历边放？</strong></p>
+<p>如果先把所有元素都放进哈希表再查找，会有一个问题：如果数组中有重复元素（比如 <code>nums = [3, 3]</code>, <code>target = 6</code>），后一个 <code>3</code> 会覆盖前一个 <code>3</code> 的下标。但更关键的是，我们可能错误地使用同一个元素两次——例如 <code>nums = [3, 2, 4]</code>, <code>target = 6</code>，如果先全部放入，查 <code>3</code> 的时候哈希表里 <code>target - 3 = 3</code> 指向的就是它自己。</p>
+<p>所以正确做法是<strong>边遍历边查，查完再放入</strong>。这样查的时候，哈希表里只有当前元素之前的元素，绝不会误用自身。</p>
+<h3 id="最优解的核心思想"><a href="#最优解的核心思想" class="headerlink" title="最优解的核心思想"></a>最优解的核心思想</h3><p>最终的核心思路只有一句话：</p>
 <blockquote>
-<p>如果你没有任何算法技巧，只有纸和笔，你会怎么找？</p>
+<p><strong>在遍历数组的过程中，用哈希表记录已经遍历过的元素值及其下标，对于当前元素，检查 <code>target - nums[i]</code> 是否存在于哈希表中。</strong></p>
 </blockquote>
-<p>很自然：先看第一个数，然后依次看后面的每一个数，检查它们的和是否等于 <code>target</code>。第一对数不行，再看第二个数和它后面的每个数……如此反复，直到找到目标对。</p>
-<p>这就是<strong>暴力枚举</strong>——两层循环遍历所有数对：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">for i = 0 .. n-1:<br>    for j = i+1 .. n-1:<br>        if nums[i] + nums[j] == target:<br>            返回 [i, j]<br></code></pre></td></tr></table></figure>
+<p>这个过程像不像是我们在玩一个配对游戏——每遇到一个新数字，我们就看看它的”另一半”是不是已经来过了。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[] twoSum(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> target) &#123;<br>        <span class="hljs-comment">// 哈希表：key 为元素值，value 为元素下标</span><br>        Map&lt;Integer, Integer&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br>        <br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">complement</span> <span class="hljs-operator">=</span> target - nums[i];<br>            <span class="hljs-comment">// 检查 complement 是否已经在哈希表中</span><br>            <span class="hljs-keyword">if</span> (map.containsKey(complement)) &#123;<br>                <span class="hljs-comment">// 找到了！complement 的下标在前，当前下标在后</span><br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;map.get(complement), i&#125;;<br>            &#125;<br>            <span class="hljs-comment">// 没找到就把当前元素放入哈希表，供后续元素查找</span><br>            map.put(nums[i], i);<br>        &#125;<br>        <br>        <span class="hljs-comment">// 根据题意，一定有解，不会执行到这里</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>&#125;;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>它能解决问题吗？能。时间复杂度是 $O(n^2)$，对于小数据量足够了。</p>
-<p>但我们可以问自己一个问题：</p>
-<blockquote>
-<p>暴力做法的<strong>瓶颈</strong>在哪里？哪一步在”浪费时间”？</p>
-</blockquote>
-<p>仔细看内层循环：当我们固定了 <code>nums[i]</code> 后，我们需要找到 <code>target - nums[i]</code>。但我们在数组里<strong>盲目地</strong>一个一个往后找，每次都要扫完整个尾部。这些”扫过去但不匹配”的数，下次固定一个新的 <code>i</code> 时又会被重新扫一遍——大量重复劳动。</p>
-<blockquote>
-<p>有没有一种方式，让我们<strong>不靠扫描</strong>就能立刻知道某个数是否在数组里，以及它在哪？</p>
-</blockquote>
-<p>这就引出了核心洞察：<strong>把”查找”从 $O(n)$ 降到 $O(1)$</strong>。</p>
-<p>什么数据结构能帮我们做到这一点？——<strong>哈希表</strong>。哈希表支持近乎 $O(1)$ 的查找。我们遍历数组时，对于每个数 <code>x</code>，只需要问哈希表一句：”<code>target - x</code> 出现过吗？”。如果出现过，直接返回答案；如果没出现过，就把当前数存进去，留给后面的元素来查。</p>
-<p>这样，我们只遍历一次数组，每次只做一次哈希查询，总时间 $O(n)$。</p>
-<h2 id="解法：哈希表（一次遍历）"><a href="#解法：哈希表（一次遍历）" class="headerlink" title="解法：哈希表（一次遍历）"></a>解法：哈希表（一次遍历）</h2><p>我们维护一个哈希表 <code>map</code>，<strong>键</strong>是数组中的元素值，<strong>值</strong>是该元素的下标。</p>
-<p>遍历数组的每一步，做两件事：</p>
-<ol>
-<li><strong>查</strong>：计算 <code>complement = target - nums[i]</code>，检查 <code>map</code> 中是否已有 <code>complement</code>。</li>
-<li><strong>存</strong>：如果没命中，把当前 <code>(nums[i], i)</code> 存入 <code>map</code>，供后续元素使用。</li>
-</ol>
-<p>为什么这个顺序是对的？题目要求两个不同下标，而我们每次查的是之前遍历过的元素——天然保证 <code>complement</code> 的下标和当前下标不同，不会自己和自己配对。</p>
-<p>对比一下备选方案：</p>
-<table>
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">twoSum</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], target: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>        <span class="hljs-comment"># 哈希表：key 为元素值，value 为元素下标</span><br>        seen = &#123;&#125;<br>        <br>        <span class="hljs-keyword">for</span> i, num <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(nums):<br>            complement = target - num<br>            <span class="hljs-comment"># 检查 complement 是否已经在哈希表中</span><br>            <span class="hljs-keyword">if</span> complement <span class="hljs-keyword">in</span> seen:<br>                <span class="hljs-comment"># 找到了！返回 complement 的下标和当前下标</span><br>                <span class="hljs-keyword">return</span> [seen[complement], i]<br>            <span class="hljs-comment"># 没找到就把当前元素放入哈希表</span><br>            seen[num] = i<br>        <br>        <span class="hljs-comment"># 根据题意，一定有解</span><br>        <span class="hljs-keyword">return</span> [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
 <thead>
 <tr>
-<th>方案</th>
+<th>版本</th>
 <th>时间复杂度</th>
 <th>空间复杂度</th>
 <th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>暴力枚举</td>
-<td>$O(n^2)$</td>
-<td>$O(1)$</td>
-<td>小数据量可行，数据量大时不可接受</td>
+<td>暴力法</td>
+<td>O(n^2)</td>
+<td>O(1)</td>
+<td>两层循环遍历所有数对，不消耗额外空间</td>
 </tr>
 <tr>
-<td>排序 + 双指针</td>
-<td>$O(n \log n)$</td>
-<td>$O(n)$（需存原下标）</td>
-<td>需要额外处理下标映射，代码更繁琐</td>
-</tr>
-<tr>
-<td><strong>哈希表一次遍历</strong></td>
-<td>$O(n)$</td>
-<td>$O(n)$</td>
-<td>✅ 最优解，简洁高效</td>
+<td>哈希表法（最优解）</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>单层遍历，哈希表最多存储 n 个元素</td>
 </tr>
 </tbody></table>
-<p>排序 + 双指针也是常见思路，但它需要额外记录原始下标，并且排序破坏了原数组的顺序，反而增加了实现复杂度。在”需要返回下标”的场景下，哈希表是最自然、最简洁的选择。</p>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>分析</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>时间复杂度</td>
-<td>$O(n)$ — 只遍历数组一次，每次哈希表查找为 $O(1)$</td>
-</tr>
-<tr>
-<td>空间复杂度</td>
-<td>$O(n)$ — 最坏情况下，哈希表需要存储所有 $n$ 个元素</td>
-</tr>
-</tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.HashMap;<br><span class="hljs-keyword">import</span> java.util.Map;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[] twoSum(<span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> target) &#123;<br>        <span class="hljs-comment">// key: 元素值, value: 下标</span><br>        Map&lt;Integer, Integer&gt; map = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>&lt;&gt;();<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nums.length; i++) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">complement</span> <span class="hljs-operator">=</span> target - nums[i];<br>            <span class="hljs-comment">// 检查之前遍历过的元素中是否有目标补数</span><br>            <span class="hljs-keyword">if</span> (map.containsKey(complement)) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;map.get(complement), i&#125;;<br>            &#125;<br>            <span class="hljs-comment">// 将当前元素存入哈希表，供后续查找</span><br>            map.put(nums[i], i);<br>        &#125;<br><br>        <span class="hljs-comment">// 根据题意，输入保证有解，这里不会执行</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>&#125;;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">twoSum</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], target: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>        <span class="hljs-comment"># key: 元素值, value: 下标</span><br>        seen = &#123;&#125;<br><br>        <span class="hljs-keyword">for</span> i, num <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(nums):<br>            complement = target - num<br>            <span class="hljs-comment"># 检查之前遍历过的元素中是否有目标补数</span><br>            <span class="hljs-keyword">if</span> complement <span class="hljs-keyword">in</span> seen:<br>                <span class="hljs-keyword">return</span> [seen[complement], i]<br>            <span class="hljs-comment"># 将当前元素存入字典，供后续查找</span><br>            seen[num] = i<br><br>        <span class="hljs-comment"># 根据题意，输入保证有解，这里不会执行</span><br>        <span class="hljs-keyword">return</span> [-<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>]<br></code></pre></td></tr></table></figure>
-
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p><strong>“查找”是很多暴力算法中的隐藏瓶颈。</strong> 当你看到 $O(n^2)$ 的两重循环中有一层是在”找某个值”时，优先思考能否用哈希表把查找压到 $O(1)$，往往就能把整体复杂度降一个量级。</p>
+<p>为什么哈希表法是 O(n)？因为遍历数组一次，每次操作（查表和插入）都是 O(1) 的哈希表操作。空间上哈希表最多存 n 个键值对，所以是 O(n)。</p>
+<p>对比之下，暴力法虽然空间省，但时间上慢了一个数量级——这就是<strong>用空间换时间</strong>的经典案例。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>哈希表是一种强大的”以空间换时间”的工具。</strong> 当我们遇到”查找一个元素是否存在”或者”记录元素出现位置”这类需求时，首先想到的就应该是哈希表。</p>
+<p>另外，这道题揭示了一个重要的思考方式：<strong>有时候把问题转化一下，答案就变得清晰了。</strong> 从”找两个数和为 target”到”查 target - nums[i] 是否出现过”，只是移了一下项，但解决问题的思路完全不同了。这种”换个角度定义问题”的能力，在算法学习中会反复用到。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ol>
+<li><strong>是否能通过等式变换，把”找组合”转化为”查存在性”？</strong> 凡是”找两个元素满足某个条件”的问题，都值得尝试这个思路。</li>
+<li><strong>是否需要记录元素的额外信息？</strong> 这道题需要返回下标，所以哈希表的值存的是下标。如果只问是否存在（比如变体题”两数之和是否存在”），哈希表的值只需要存布尔值，甚至用 HashSet 就够了。</li>
+<li><strong>同一个元素能否被重复使用？</strong> 这个约束会影响我们是在遍历前全部放入，还是边遍历边放入。务必在动笔之前想清楚这个细节。</li>
+</ol>
+<p>LeetCode 的第一题，看似简单，却承载了”暴力 -&gt; 优化 -&gt; 空间换时间”这一完整的思维训练。后面的很多题目，都会沿用这套思考框架。掌握它，远远比背下这道题的代码更重要。</p>
+<hr>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
 </blockquote>
-<p>先问自己：<strong>暴力做法里，哪个步骤是”在集合中寻找某个东西”？</strong> 如果能把这个动作抽象成”给定一个值，查询它是否存在于一个集合中”，那么哈希表大概率是你的朋友。这个思维模式不仅适用于两数之和，也适用于三数之和、四数之和、最长和谐子序列等一系列”配对&#x2F;互补”类问题。</p>
 
                 
               </div>
@@ -501,8 +467,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -516,13 +496,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
         <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="print-no-link">#哈希表</a>
       
         <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
-      
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
       
     </div>
   
@@ -534,7 +510,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 1. 两数之和（two-sum）</div>
+      <div>两数之和</div>
       <div>http://example.com/2026/07/13/01-两数之和/</div>
     </div>
     <div class="license-meta">
@@ -579,9 +555,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/13/03-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" title="LeetCode 128. 最长连续序列（longest-consecutive-sequence）">
+                      <a href="/2026/07/13/05-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/" title="盛最多水的容器">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LeetCode 128. 最长连续序列（longest-consecutive-sequence）</span>
+                        <span class="hidden-mobile">盛最多水的容器</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -589,8 +565,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/13/04-%E7%A7%BB%E5%8A%A8%E9%9B%B6/" title="LeetCode 283. 移动零（move-zeroes）">
-                        <span class="hidden-mobile">LeetCode 283. 移动零（move-zeroes）</span>
+                      <a href="/2026/07/13/06-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" title="三数之和">
+                        <span class="hidden-mobile">三数之和</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

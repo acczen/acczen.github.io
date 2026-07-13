@@ -19,25 +19,23 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="给定未排序整数数组，找出数字连续的最长序列长度，要求 O(n) 时间复杂度。核心技巧：哈希集合 + 只从序列起点开始计数。">
+    <meta name="description" content="给定一个未排序的整数数组，找出最长连续序列的长度，要求算法时间复杂度为 O(n)。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 128. 最长连续序列（longest-consecutive-sequence）">
+<meta property="og:title" content="最长连续序列">
 <meta property="og:url" content="http://example.com/2026/07/13/03-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="给定未排序整数数组，找出数字连续的最长序列长度，要求 O(n) 时间复杂度。核心技巧：哈希集合 + 只从序列起点开始计数。">
+<meta property="og:description" content="给定一个未排序的整数数组，找出最长连续序列的长度，要求算法时间复杂度为 O(n)。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:57:25.954Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:33.434Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="哈希表">
 <meta property="article:tag" content="数组">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>LeetCode 128. 最长连续序列（longest-consecutive-sequence） - CodingOrange</title>
+  <title>最长连续序列 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -306,7 +304,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 128. 最长连续序列（longest-consecutive-sequence）"></span>
+            <span id="subtitle" data-typed-text="最长连续序列"></span>
           
         </div>
 
@@ -329,7 +327,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.5k 字
+          3.3k 字
         
       </span>
     
@@ -340,7 +338,7 @@
         
         
         
-          29 分钟
+          28 分钟
         
       </span>
     
@@ -379,115 +377,102 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 128. 最长连续序列（longest-consecutive-sequence）</h1>
+            <h1 id="seo-header">最长连续序列</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/longest-consecutive-sequence/">LeetCode 128. longest-consecutive-sequence</a></p>
+                <h1 id="最长连续序列"><a href="#最长连续序列" class="headerlink" title="最长连续序列"></a>最长连续序列</h1><blockquote>
+<p>难度：MEDIUM | 题号：128 | 英文名：Longest Consecutive Sequence</p>
 </blockquote>
-<p>给定一个<strong>未排序</strong>的整数数组 <code>nums</code>，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。请你设计并实现时间复杂度为 $O(n)$ 的算法解决此问题。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入：nums = <span class="hljs-string">[100,4,200,1,3,2]</span><br>输出：<span class="hljs-number">4</span><br>解释：最长数字连续序列是 <span class="hljs-string">[1, 2, 3, 4]</span>。它的长度为 <span class="hljs-number">4</span>。<br></code></pre></td></tr></table></figure>
+<hr>
+<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一反应：暴力法"><a href="#第一反应：暴力法" class="headerlink" title="第一反应：暴力法"></a>第一反应：暴力法</h3><p>题目给了我们一个未排序的整数数组，让我们找出最长连续序列的长度。</p>
+<p>不妨想一下，如果没有任何技巧，我们第一反应会怎么做？</p>
+<p>最直接的想法是：对于数组中的每一个元素 <code>x</code>，我们逐个检查 <code>x+1</code>、<code>x+2</code>、<code>x+3</code>……是否也在数组中，直到找不到下一个数为止，然后统计这段连续序列的长度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-variable">longest</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x : nums) &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">cur</span> <span class="hljs-operator">=</span> x;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">while</span> (数组中包含 cur + <span class="hljs-number">1</span>) &#123;<br>        cur++;<br>        len++;<br>    &#125;<br>    longest = Math.max(longest, len);<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>示例 2：</strong></p>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">输入：nums = <span class="hljs-string">[0,3,7,2,5,8,4,6,0,1]</span><br>输出：<span class="hljs-number">9</span><br>解释：最长数字连续序列是 <span class="hljs-string">[0, 1, 2, 3, 4, 5, 6, 7, 8]</span>。<br></code></pre></td></tr></table></figure>
+<p>这个做法的问题在哪里呢？<code>&quot;数组中包含&quot;</code> 这个操作本身，如果在原数组里线性查找，那么每个 <code>while</code> 循环都要 O(n) 的时间，最坏情况下我们会对每个元素都向后查找一大段，总复杂度会达到 O(n³)。即使我们用一些优化手段，这依然是一个不可接受的方案。</p>
+<h3 id="排序之后呢？"><a href="#排序之后呢？" class="headerlink" title="排序之后呢？"></a>排序之后呢？</h3><p>暴力法太慢了，让我们换个角度想一想。</p>
+<p>连续序列有一个天然的性质：<strong>有序</strong>。如果我们先把数组排好序，那么连续的数值就会乖乖地排在一起，我们只需要从左到右扫描一遍，统计相邻的递增段就行了。</p>
+<p>来试一下：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs inform7">nums = <span class="hljs-comment">[100, 4, 200, 1, 3, 2]</span><br>排序后 = <span class="hljs-comment">[1, 2, 3, 4, 100, 200]</span><br>扫描 → 找到 <span class="hljs-comment">[1,2,3,4]</span> 长度为 4<br></code></pre></td></tr></table></figure>
 
-<p><strong>示例 3：</strong></p>
-<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">输入：nums <span class="hljs-operator">=</span> []<br>输出：<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<p>这样只需要 O(n log n) 的排序时间加上 O(n) 的扫描时间，比暴力法好多了。</p>
+<p>但是！题目明确要求了 <strong>时间复杂度 O(n)</strong>，排序法虽然简单直观，却不满足题目的硬性要求。</p>
+<p>那么问题来了：<strong>有没有办法在不排序的情况下，也能快速判断一个数的”下一个”是否存在？</strong></p>
+<h3 id="哈希表带来转机"><a href="#哈希表带来转机" class="headerlink" title="哈希表带来转机"></a>哈希表带来转机</h3><p>我们需要一种数据结构，可以 O(1) 地判断一个数是否在数组中——这正是哈希表的拿手好戏。</p>
+<p>把数组中的所有元素放入一个 HashSet，然后我们就可以在 O(1) 时间内回答”数组中是否包含某个数”这个问题了。</p>
+<p>这样一来，我们似乎可以写出一个 O(n) 的解法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java">Set&lt;Integer&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x : nums) set.add(x);<br><br><span class="hljs-type">int</span> <span class="hljs-variable">longest</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> x : nums) &#123;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">len</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">while</span> (set.contains(x + len)) &#123;<br>        len++;<br>    &#125;<br>    longest = Math.max(longest, len);<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>提示：</strong></p>
+<p>但这里还有一个隐藏的陷阱：想一想，如果数组是 <code>[1, 2, 3, 4]</code>，当我们遍历到 <code>1</code> 的时候，会查到 <code>2, 3, 4</code>，得到长度 4；然后遍历到 <code>2</code> 的时候，又会查到 <code>3, 4</code>，得到长度 3……我们做了大量重复的计算。</p>
+<p><strong>有没有办法避免这种重复？</strong></p>
+<p>关键洞察是：<strong>我们只需要从连续序列的”起点”开始统计</strong>。换句话说，如果一个数 <code>x</code> 在数组中存在前驱 <code>x-1</code>，那么 <code>x</code> 一定不是某个连续序列的开头，我们就不必以它为起点向后统计。</p>
+<p>还是 <code>[1, 2, 3, 4]</code> 这个例子：</p>
 <ul>
-<li>$0 \le nums.length \le 10^5$</li>
-<li>$-10^9 \le nums[i] \le 10^9$</li>
+<li>遍历到 <code>1</code>：检查 <code>0</code> 不在 set 中 → <code>1</code> 是起点 → 向后查到 2, 3, 4 → 长度 4</li>
+<li>遍历到 <code>2</code>：检查 <code>1</code> 在 set 中 → <code>2</code> 不是起点 → 跳过</li>
+<li>遍历到 <code>3</code>：检查 <code>2</code> 在 set 中 → <code>3</code> 不是起点 → 跳过</li>
+<li>遍历到 <code>4</code>：检查 <code>3</code> 在 set 中 → <code>4</code> 不是起点 → 跳过</li>
 </ul>
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们最容易想到的做法是什么？</p>
-<p>排序。把数组排好序，然后一趟扫描，看相邻元素是否连续，就能轻松找出最长连续段。这个思路清晰直接，时间复杂度 $O(n \log n)$，空间复杂度 $O(1)$（如果允许原地排序）。</p>
-<p>那么问题来了：<strong>题目为什么非要卡 $O(n)$？排序差在哪？</strong></p>
-<p>因为排序的 $O(n \log n)$ 在面对 $n &#x3D; 10^5$ 时固然能跑，但如果我们能把时间压到 $O(n)$，就说明我们真正”理解”了连续性的本质——<strong>连续意味着 <code>x</code> 和 <code>x+1</code> 之间只差 1</strong>，我们不需要”全局排序”来获得这个信息，只需要能<strong>快速查询某个数是否存在</strong>。</p>
-<p>这就引出了核心思考方向：能不能换一种数据结构，让我们能以 $O(1)$ 的代价判断”当前数的下一个数是否在数组中”？</p>
-<p>答案呼之欲出——<strong>哈希集合</strong>（<code>HashSet</code>）。</p>
-<p>把所有数扔进哈希集合里，查 <code>num + 1</code> 是否存在就是 $O(1)$ 的。现在我们从任意一个数出发，不断 <code>+1</code> 往后找，就能测出一段连续序列的长度。</p>
-<p>但是——这样真的 $O(n)$ 吗？如果每个数都向后展开一遍，最坏情况是不是 $O(n^2)$？</p>
-<p>对，这正是我们需要面对的挑战。假设数组是 <code>[1,2,3,4,5]</code>，如果我们对 <code>1</code> 展开一次得到了长度 5，然后对 <code>2</code>、<code>3</code>、<code>4</code>、<code>5</code> 又各自展开一次，就做了大量重复工作。</p>
-<p><strong>突破口在哪？</strong></p>
-<p>我们问自己一个问题：一段连续序列 <code>[x, x+1, x+2, ..., x+k]</code> 中，有哪一个位置是”独特的”——一旦我们从那里出发，就不会有人再从序列中间出发做无用功？</p>
-<p>想想看：<strong><code>x</code> 的前驱 <code>x-1</code> 不在数组中</strong>。只有起点才具备这个性质。对于 <code>x+1</code>，它的前驱 <code>x</code> 在数组中，所以它不可能是一个”新序列的起点”——它必然已经被 <code>x</code> 覆盖了。</p>
-<p>于是策略变为：</p>
-<blockquote>
-<p><strong>只从”前驱不存在”的数开始向后延伸。每一个数如果在某个序列中但不是起点，就跳过。</strong></p>
-</blockquote>
-<p>这样一来，数组中的每个数最多被访问两次：一次在外层循环判断”我是不是起点”，一次在内层 <code>while</code> 中被前驱数”扫过”。总时间复杂度稳稳地落在 $O(n)$。</p>
-<h3 id="思考链条回顾"><a href="#思考链条回顾" class="headerlink" title="思考链条回顾"></a>思考链条回顾</h3><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss">暴力枚举所有子数组 → <span class="hljs-built_in">O</span>(n³)，不可接受<br>    ↓<br>排序 + 一趟扫描 → <span class="hljs-built_in">O</span>(n log n)，不符合 <span class="hljs-built_in">O</span>(n) 要求<br>    ↓<br>哈希集合 <span class="hljs-built_in">O</span>(<span class="hljs-number">1</span>) 查找 → 但每个数都展开会 <span class="hljs-built_in">O</span>(n²)<br>    ↓<br>只从起点展开，避免重复 → <span class="hljs-built_in">O</span>(n) ✓<br></code></pre></td></tr></table></figure>
-
-<h2 id="解法：哈希集合-贪心起点扫描"><a href="#解法：哈希集合-贪心起点扫描" class="headerlink" title="解法：哈希集合 + 贪心起点扫描"></a>解法：哈希集合 + 贪心起点扫描</h2><p>这是本题的唯一最优解，没有中间过渡方案。</p>
-<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
-<li><strong>构建哈希集合</strong>：将 <code>nums</code> 中所有元素加入 <code>HashSet</code>，自动去重。</li>
-<li><strong>遍历集合中的每个数 <code>num</code></strong>：<ul>
-<li><strong>起点判断</strong>：检查 <code>num - 1</code> 是否在集合中。如果在，说明 <code>num</code> 不是一段连续序列的起点，直接跳过。</li>
-<li><strong>序列延伸</strong>：如果 <code>num - 1</code> 不在集合中，则 <code>num</code> 是起点。从 <code>num</code> 开始不断 <code>+1</code>，用 <code>while</code> 循环向后探测，累加当前序列长度。</li>
-<li><strong>更新全局最大值</strong>。</li>
-</ul>
-</li>
-<li><strong>返回最长长度</strong>。</li>
+<p>这样一来，每个数最多只会被访问两次（一次作为起点建入 set，一次作为某个起点的后续被查到），总复杂度是 O(n)。</p>
+<h3 id="最优解核心思想总结"><a href="#最优解核心思想总结" class="headerlink" title="最优解核心思想总结"></a>最优解核心思想总结</h3><ol>
+<li>将所有数字存入 HashSet，实现 O(1) 的查找</li>
+<li>遍历每个数字，只对<strong>没有前驱</strong>（即 <code>num-1</code> 不在 set 中）的数字开始统计连续序列的长度</li>
+<li>不断向后查找 <code>num+1</code>、<code>num+2</code>……直到找不到为止，更新最长长度</li>
 </ol>
-<h3 id="为什么不用排序？"><a href="#为什么不用排序？" class="headerlink" title="为什么不用排序？"></a>为什么不用排序？</h3><table>
+<p>整个过程只需要遍历数组常数次，时间复杂度 O(n)，空间复杂度 O(n)。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.HashSet;<br><span class="hljs-keyword">import</span> java.util.Set;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">longestConsecutive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-comment">// 1. 将所有数字存入哈希集合</span><br>        Set&lt;Integer&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>            set.add(num);<br>        &#125;<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">longest</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>        <span class="hljs-comment">// 2. 遍历每个数字</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>            <span class="hljs-comment">// 关键剪枝：只从连续序列的起点开始统计</span><br>            <span class="hljs-comment">// 如果 num-1 存在，说明 num 不是起点，跳过</span><br>            <span class="hljs-keyword">if</span> (!set.contains(num - <span class="hljs-number">1</span>)) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">currentNum</span> <span class="hljs-operator">=</span> num;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">length</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br>                <span class="hljs-comment">// 向后查找连续的数字</span><br>                <span class="hljs-keyword">while</span> (set.contains(currentNum + <span class="hljs-number">1</span>)) &#123;<br>                    currentNum++;<br>                    length++;<br>                &#125;<br><br>                <span class="hljs-comment">// 更新最长长度</span><br>                longest = Math.max(longest, length);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> longest;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">longestConsecutive</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># 1. 将所有数字存入哈希集合</span><br>        num_set = <span class="hljs-built_in">set</span>(nums)<br>        longest = <span class="hljs-number">0</span><br>        <br>        <span class="hljs-comment"># 2. 遍历每个数字</span><br>        <span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> num_set:<br>            <span class="hljs-comment"># 关键剪枝：只从连续序列的起点开始统计</span><br>            <span class="hljs-comment"># 如果 num-1 存在，说明 num 不是起点，跳过</span><br>            <span class="hljs-keyword">if</span> num - <span class="hljs-number">1</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> num_set:<br>                current = num<br>                length = <span class="hljs-number">1</span><br>                <br>                <span class="hljs-comment"># 向后查找连续的数字</span><br>                <span class="hljs-keyword">while</span> current + <span class="hljs-number">1</span> <span class="hljs-keyword">in</span> num_set:<br>                    current += <span class="hljs-number">1</span><br>                    length += <span class="hljs-number">1</span><br>                <br>                <span class="hljs-comment"># 更新最长长度</span><br>                longest = <span class="hljs-built_in">max</span>(longest, length)<br>        <br>        <span class="hljs-keyword">return</span> longest<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：Python 版本中直接遍历 <code>num_set</code> 而非 <code>nums</code>，可以避免对重复元素的无效遍历，效率稍高。</p>
+</blockquote>
+<hr>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><table>
 <thead>
 <tr>
-<th>方案</th>
+<th>版本</th>
 <th>时间复杂度</th>
 <th>空间复杂度</th>
-<th>可行性</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>排序 + 扫描</td>
-<td>$O(n \log n)$</td>
-<td>$O(1)$</td>
-<td>可 AC，但不满足题意</td>
+<td>暴力法</td>
+<td>O(n³)</td>
+<td>O(1)</td>
+<td>对每个元素线性查找其后继，每次查找需 O(n)，最多查找 O(n) 层</td>
 </tr>
 <tr>
-<td>哈希 + 起点扫描</td>
-<td>$O(n)$</td>
-<td>$O(n)$</td>
-<td>最优解</td>
+<td>排序法</td>
+<td>O(n log n)</td>
+<td>O(1) 或 O(n)</td>
+<td>排序后扫描，排序本身决定了时间复杂度的下限</td>
+</tr>
+<tr>
+<td>哈希表最优解</td>
+<td><strong>O(n)</strong></td>
+<td>O(n)</td>
+<td>每个元素至多被访问两次，一次存入 set，一次作为起点或后继被查</td>
 </tr>
 </tbody></table>
-<h3 id="为什么不用并查集（Union-Find）？"><a href="#为什么不用并查集（Union-Find）？" class="headerlink" title="为什么不用并查集（Union Find）？"></a>为什么不用并查集（Union Find）？</h3><p>并查集也能做——把相邻的数合并到同一个连通分量里，最后看哪个分量最大。但并查集需要维护 <code>parent</code> 映射和 <code>size</code> 映射，额外常数较大，且不如哈希集合方案直观。对于这道题，哈希集合方案已经足够简洁高效，没有必要引入更重的数据结构。</p>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>分析</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>时间复杂度</td>
-<td>$O(n)$ — 构建哈希集合 $O(n)$；外层循环遍历每个数，但每个数最多在内层 <code>while</code> 中被访问一次（被访问过的数一定满足 <code>num-1</code> 在集合中，之后会被跳过），所有 <code>while</code> 循环的总执行次数不超过 $n$。哈希查找 $O(1)$，总计 $O(n)$。</td>
-</tr>
-<tr>
-<td>空间复杂度</td>
-<td>$O(n)$ — 哈希集合存储所有不重复的元素，最坏情况下所有元素都不重复。</td>
-</tr>
-</tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.HashSet;<br><span class="hljs-keyword">import</span> java.util.Set;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">longestConsecutive</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        <span class="hljs-comment">// 边界处理：空数组直接返回 0</span><br>        <span class="hljs-keyword">if</span> (nums == <span class="hljs-literal">null</span> || nums.length == <span class="hljs-number">0</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br><br>        <span class="hljs-comment">// 将所有元素放入哈希集合，自动去重</span><br>        Set&lt;Integer&gt; set = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : nums) &#123;<br>            set.add(num);<br>        &#125;<br><br>        <span class="hljs-type">int</span> <span class="hljs-variable">longest</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>        <span class="hljs-comment">// 遍历集合中的每个数</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> num : set) &#123;<br>            <span class="hljs-comment">// 核心优化：只有当 num 是连续序列的起点时，才开始向后延伸</span><br>            <span class="hljs-comment">// 起点特征：num - 1 不在集合中</span><br>            <span class="hljs-keyword">if</span> (!set.contains(num - <span class="hljs-number">1</span>)) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">currentNum</span> <span class="hljs-operator">=</span> num;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">currentStreak</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br><br>                <span class="hljs-comment">// 不断 +1，向后延伸直到断裂</span><br>                <span class="hljs-keyword">while</span> (set.contains(currentNum + <span class="hljs-number">1</span>)) &#123;<br>                    currentNum++;<br>                    currentStreak++;<br>                &#125;<br><br>                <span class="hljs-comment">// 更新全局最长长度</span><br>                longest = Math.max(longest, currentStreak);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> longest;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">longestConsecutive</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># 边界处理：空数组直接返回 0</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> nums:<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 将所有元素放入哈希集合，自动去重</span><br>        num_set = <span class="hljs-built_in">set</span>(nums)<br>        longest = <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 遍历集合中的每个数</span><br>        <span class="hljs-keyword">for</span> num <span class="hljs-keyword">in</span> num_set:<br>            <span class="hljs-comment"># 核心优化：只有当 num 是连续序列的起点时，才开始向后延伸</span><br>            <span class="hljs-comment"># 起点特征：num - 1 不在集合中</span><br>            <span class="hljs-keyword">if</span> num - <span class="hljs-number">1</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> num_set:<br>                current_num = num<br>                current_streak = <span class="hljs-number">1</span><br><br>                <span class="hljs-comment"># 不断 +1，向后延伸直到断裂</span><br>                <span class="hljs-keyword">while</span> current_num + <span class="hljs-number">1</span> <span class="hljs-keyword">in</span> num_set:<br>                    current_num += <span class="hljs-number">1</span><br>                    current_streak += <span class="hljs-number">1</span><br><br>                <span class="hljs-comment"># 更新全局最长长度</span><br>                longest = <span class="hljs-built_in">max</span>(longest, current_streak)<br><br>        <span class="hljs-keyword">return</span> longest<br></code></pre></td></tr></table></figure>
-
-<h3 id="代码要点提醒"><a href="#代码要点提醒" class="headerlink" title="代码要点提醒"></a>代码要点提醒</h3><ol>
-<li><strong>遍历 <code>set</code> 而不是 <code>nums</code></strong>：<code>set</code> 已经去重，遍历它可以避免对重复元素做无意义的起点判断。虽然遍历 <code>nums</code> 再用 <code>set</code> 做判断在渐进复杂度上一样，但遍历 <code>set</code> 常数更优。</li>
-<li><strong>空数组检查</strong>：<code>nums.length == 0</code> 时直接返回 0，Java 中还要检查 <code>nums == null</code>。</li>
-<li><strong><code>num - 1</code> 的判断是灵魂</strong>：去掉这行判断，代码逻辑仍然正确，但会退化为 $O(n^2)$——这正是本题区分 $O(n)$ 和 $O(n^2)$ 的关键一行。</li>
-</ol>
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p>这道题教给我们一个重要的思维模式：<strong>用空间换时间不是终点，找到”不必重复计算的起点”才是真正的优化核心。</strong> 哈希集合给了我们 $O(1)$ 的查询能力，而”只从起点出发”这条贪心规则，让我们把 $O(n^2)$ 的重复劳动压缩到了 $O(n)$。二者缺一不可。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>哈希表不仅仅是用来做查找的，它更是”降维打击”的利器。</strong> 当我们需要频繁地判断”某个元素是否存在于集合中”时，哈希表可以将 O(n) 的查找变成 O(1)，从而让整个算法的时间复杂度跃升一个量级。</p>
+<p>更深入一层，这道题教会了我们<strong>如何识别”冗余计算”</strong>。在暴力枚举中，以每个元素为起点的统计覆盖了大量重复的区间。通过 <code>num-1</code> 存在性判断来过滤非起点，本质上是一种<strong>剪枝策略</strong>——只做那些真正有意义的计算。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ul>
+<li><strong>“是否存在”类的查询</strong>：如果一个问题中反复出现”判断某个值是否在集合中”的操作，第一反应就考虑用哈希表来加速。</li>
+<li><strong>连续&#x2F;相邻关系</strong>：当问题涉及连续数值、相邻元素或某种”链条”关系时，可以先思考是否能用 HashSet 来构建 O(1) 的连接判断。</li>
+<li><strong>起点过滤</strong>：如果链条&#x2F;序列可以从多个位置开始统计，找到唯一的最小起点（或等价条件）来避免重复统计，往往是将复杂度从 O(n²) 降到 O(n) 的关键。</li>
+</ul>
+<p><strong>举一反三</strong>：类似的思路还可以用在”最长连续递增子序列”、图的连通分量统计等场景中——核心都是找到那个”不被包含的更小值”作为起点。</p>
+<hr>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
 </blockquote>
-<p>优先观察：<strong>“我能不能找到一个性质，只从某个特殊位置开始计算，而跳过所有已经被覆盖的冗余位置？”</strong> 这个启发式不仅适用于连续序列问题，也适用于任何需要”枚举区间&#x2F;子数组&#x2F;子序列”但想避免重复工作的场景——先思考有没有一个”唯一入口”能够代表整个区间。</p>
 
                 
               </div>
@@ -506,8 +491,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -521,13 +520,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
         <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" class="print-no-link">#哈希表</a>
       
         <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
-      
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
       
     </div>
   
@@ -539,7 +534,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 128. 最长连续序列（longest-consecutive-sequence）</div>
+      <div>最长连续序列</div>
       <div>http://example.com/2026/07/13/03-最长连续序列/</div>
     </div>
     <div class="license-meta">
@@ -584,12 +579,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2026/07/13/45-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%8F%B3%E8%A7%86%E5%9B%BE/" title="二叉树的右视图">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">二叉树的右视图</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/13/01-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" title="LeetCode 1. 两数之和（two-sum）">
-                        <span class="hidden-mobile">LeetCode 1. 两数之和（two-sum）</span>
+                      <a href="/2026/07/13/02-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/" title="字母异位词分组">
+                        <span class="hidden-mobile">字母异位词分组</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

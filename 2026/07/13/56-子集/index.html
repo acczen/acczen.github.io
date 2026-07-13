@@ -1,0 +1,946 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="给定一个不含重复元素的整数数组，返回其所有可能的子集（幂集）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="子集">
+<meta property="og:url" content="http://example.com/2026/07/13/56-%E5%AD%90%E9%9B%86/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="给定一个不含重复元素的整数数组，返回其所有可能的子集（幂集）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:45:59.494Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="位运算">
+<meta property="article:tag" content="回溯">
+<meta property="article:tag" content="数组">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>子集 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="子集"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          30 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">子集</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="子集"><a href="#子集" class="headerlink" title="子集"></a>子集</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="从”选还是不选”开始"><a href="#从”选还是不选”开始" class="headerlink" title="从”选还是不选”开始"></a>从”选还是不选”开始</h3><p>先看题目：给定 <code>nums = [1, 2, 3]</code>，输出它的所有子集。</p>
+<p>答案长这样：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7"><span class="hljs-comment">[<span class="hljs-comment">[]</span>, <span class="hljs-comment">[1]</span>, <span class="hljs-comment">[2]</span>, <span class="hljs-comment">[1,2]</span>, <span class="hljs-comment">[3]</span>, <span class="hljs-comment">[1,3]</span>, <span class="hljs-comment">[2,3]</span>, <span class="hljs-comment">[1,2,3]</span>]</span><br></code></pre></td></tr></table></figure>
+
+<p>观察一下，一共有 8 个子集。为什么是 8？</p>
+<p><strong>不妨想一下</strong>：对于数组中的每个元素，它只有两种命运——在子集中，或者不在。3 个元素，每个 2 种选择，总组合数就是 $$2^3 &#x3D; 8$$。</p>
+<p>推而广之，对于长度为 n 的数组，子集总数一定是 $$2^n$$ 个。</p>
+<p><strong>那么问题来了</strong>：如何系统性地枚举出这 $$2^n$$ 种组合，不重复、不遗漏？</p>
+<p>沿着这个问题往下走，我们会发现三条不同的路，而它们的内核惊人地一致。</p>
+<hr>
+<h3 id="解法一：回溯法-——-在决策树上散步"><a href="#解法一：回溯法-——-在决策树上散步" class="headerlink" title="解法一：回溯法 —— 在决策树上散步"></a>解法一：回溯法 —— 在决策树上散步</h3><p>把枚举过程想象成一棵二叉树：</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs prolog">             []<br>       ┌─────┴─────┐<br>     不选<span class="hljs-number">1</span>         选<span class="hljs-number">1</span><br>     []           [<span class="hljs-number">1</span>]<br>   ┌──┴──┐     ┌───┴───┐<br> 不选<span class="hljs-number">2</span>  选<span class="hljs-number">2</span>  不选<span class="hljs-number">2</span>    选<span class="hljs-number">2</span><br>  []    [<span class="hljs-number">2</span>]   [<span class="hljs-number">1</span>]    [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]<br>┌─┴─┐  ┌─┴─┐ ┌─┴─┐  ┌─┴─┐<br><span class="hljs-number">3</span>  ..  ..  .. ..  .. ..  ..<br></code></pre></td></tr></table></figure>
+
+<p>每个节点就是一个子集。从根（空集）出发，走到每个节点时记录路径，正好覆盖所有子集。</p>
+<p>这是我们最常见的递归写法：</p>
+<ol>
+<li>用一个 <code>path</code> 列表记录当前正在构造的子集</li>
+<li>每次进入递归，先把当前 <code>path</code> 的快照加入结果集</li>
+<li>从当前位置 <code>start</code> 开始，依次选择每个元素加入 <code>path</code></li>
+<li>递归到下一层（<code>start + 1</code>）</li>
+<li>撤销刚才的选择，尝试下一个元素</li>
+</ol>
+<p><strong>为什么一进入递归就记录结果？</strong></p>
+<p>因为子集不要求”选满”，空集、只选一个、选两个……每一步的中间状态都是合法的子集。所以我们在每个节点都收集一次。</p>
+<p><strong>为什么从 <code>start</code> 开始而不是从 0 开始？</strong></p>
+<p>这是为了避免重复。当我们已经决定跳过前面的元素，就不应该再回头选它们——否则 <code>[1, 2]</code> 和 <code>[2, 1]</code> 都会被生成。用 <code>start</code> 控制遍历的起点，保证了子集中元素的相对顺序和原数组一致，从而天然消除了重复。</p>
+<p>回溯法的代码非常优雅，只有十几行，却把 $$2^n$$ 条路径全部走了一遍。</p>
+<hr>
+<h3 id="解法二：迭代法-——-从空集开始，逐层扩张"><a href="#解法二：迭代法-——-从空集开始，逐层扩张" class="headerlink" title="解法二：迭代法 —— 从空集开始，逐层扩张"></a>解法二：迭代法 —— 从空集开始，逐层扩张</h3><p>换一个视角：如果你已经知道前 k 个元素的所有子集，当第 k+1 个元素到来时，会发生什么？</p>
+<p><strong>不妨想一下</strong>：新的元素可以和现有的每一个子集组合，形成一批新的子集。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs lua">初始: <span class="hljs-string">[[]]</span><br>遇到 <span class="hljs-number">1</span>: 复制所有子集 → <span class="hljs-string">[[]]</span>, 每个都加上 <span class="hljs-number">1</span> → <span class="hljs-string">[[], [1]]</span><br>遇到 <span class="hljs-number">2</span>: 复制所有子集 → <span class="hljs-string">[[], [1]]</span>, 每个都加上 <span class="hljs-number">2</span> → <span class="hljs-string">[[], [1], [2], [1,2]]</span><br>遇到 <span class="hljs-number">3</span>: 复制所有子集 → <span class="hljs-string">[[], [1], [2], [1,2]]</span>, 每个都加上 <span class="hljs-number">3</span> → <span class="hljs-string">[[], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]]</span><br></code></pre></td></tr></table></figure>
+
+<p>每一步都像一个同心圆在不断扩张。</p>
+<p><strong>为什么这个方法是正确的？</strong></p>
+<p>数学归纳法：假设前 k 个元素已经生成了所有子集（共 $$2^k$$ 个）。第 k+1 个元素加入后，新的子集 &#x3D; 旧的 $$2^k$$ 个子集 + 旧子集各加上新元素得到的 $$2^k$$ 个新子集 &#x3D; $$2^{k+1}$$ 个，恰好覆盖。</p>
+<p><strong>和回溯法有什么联系？</strong></p>
+<p>迭代法其实是回溯法”展开”后的样子。回溯法通过递归隐式地维护了”当前元素前已有的子集”，迭代法则显式地用列表保存它们。</p>
+<hr>
+<h3 id="解法三：位运算法-——-用二进制写答案"><a href="#解法三：位运算法-——-用二进制写答案" class="headerlink" title="解法三：位运算法 —— 用二进制写答案"></a>解法三：位运算法 —— 用二进制写答案</h3><p>既然每个元素只有”选”和”不选”两种状态，那为什么不用二进制位来表示呢？</p>
+<p>假设用 0 表示”不选”，1 表示”选”：</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-symbol">000 </span>→ []<br><span class="hljs-symbol">001 </span>→ [<span class="hljs-number">1</span>]      （第 <span class="hljs-number">0</span> 位是 <span class="hljs-number">1</span>）<br><span class="hljs-symbol">010 </span>→ [<span class="hljs-number">2</span>]      （第 <span class="hljs-number">1</span> 位是 <span class="hljs-number">1</span>）<br><span class="hljs-symbol">011 </span>→ [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]   （第 <span class="hljs-number">0</span>、<span class="hljs-number">1</span> 位是 <span class="hljs-number">1</span>）<br><span class="hljs-symbol">100 </span>→ [<span class="hljs-number">3</span>]<br><span class="hljs-symbol">101 </span>→ [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>]<br><span class="hljs-symbol">110 </span>→ [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br><span class="hljs-symbol">111 </span>→ [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]<br></code></pre></td></tr></table></figure>
+
+<p>从 0 遍历到 $$2^n - 1$$，每个数字对应一个子集。检查每个数字的第 j 位是否为 1，就能确定 nums[j] 是否在当前子集中。</p>
+<p><strong>这看起来有点炫技，但它的思想很有价值——将组合问题映射到二进制运算上，用数学的方式理解枚举。</strong></p>
+<hr>
+<h3 id="三种解法本质"><a href="#三种解法本质" class="headerlink" title="三种解法本质"></a>三种解法本质</h3><table>
+<thead>
+<tr>
+<th>解法</th>
+<th>核心思想</th>
+<th>遍历顺序</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>回溯法</td>
+<td>深度优先搜索决策树</td>
+<td>按元素顺序深度探索</td>
+</tr>
+<tr>
+<td>迭代法</td>
+<td>逐层扩展，每次”复制+添加”</td>
+<td>广度推进</td>
+</tr>
+<tr>
+<td>位运算法</td>
+<td>用二进制编码表示选择状态</td>
+<td>按数字顺序线性遍历</td>
+</tr>
+</tbody></table>
+<p>三种方法的时间复杂度都是 $$O(n \times 2^n)$$，空间复杂度各有千秋。回溯法最灵活，迭代法最直观，位运算法最省辅助空间。在实际面试中，回溯法是最常被考察和扩展的写法。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="hljs-title function_">subsets</span><span class="hljs-params">(<span class="hljs-type">int</span>[] nums)</span> &#123;<br>        List&lt;List&lt;Integer&gt;&gt; result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        backtrack(result, <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(), nums, <span class="hljs-number">0</span>);<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">backtrack</span><span class="hljs-params">(List&lt;List&lt;Integer&gt;&gt; result, List&lt;Integer&gt; path, <span class="hljs-type">int</span>[] nums, <span class="hljs-type">int</span> start)</span> &#123;<br>        <span class="hljs-comment">// 记录当前路径的副本（每个中间状态都是合法子集）</span><br>        result.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(path));<br><br>        <span class="hljs-comment">// 从 start 开始遍历，避免重复</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> start; i &lt; nums.length; i++) &#123;<br>            path.add(nums[i]);           <span class="hljs-comment">// 选择当前元素</span><br>            backtrack(result, path, nums, i + <span class="hljs-number">1</span>); <span class="hljs-comment">// 递归到下一层</span><br>            path.remove(path.size() - <span class="hljs-number">1</span>); <span class="hljs-comment">// 撤销选择，回溯</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">subsets</span>(<span class="hljs-params">self, nums: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]:<br>        result = []<br><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">backtrack</span>(<span class="hljs-params">start: <span class="hljs-built_in">int</span>, path: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-literal">None</span>:<br>            <span class="hljs-comment"># 每次进入递归都记录当前子集</span><br>            result.append(path[:])<br><br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(start, <span class="hljs-built_in">len</span>(nums)):<br>                path.append(nums[i])          <span class="hljs-comment"># 选择</span><br>                backtrack(i + <span class="hljs-number">1</span>, path)        <span class="hljs-comment"># 递归</span><br>                path.pop()                    <span class="hljs-comment"># 撤销</span><br><br>        backtrack(<span class="hljs-number">0</span>, [])<br>        <span class="hljs-keyword">return</span> result<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>回溯法</td>
+<td>$$O(n \times 2^n)$$</td>
+<td>$$O(n)$$</td>
+<td>递归栈深度为 n，每条路径复制到结果需 O(n)</td>
+</tr>
+<tr>
+<td>迭代法</td>
+<td>$$O(n \times 2^n)$$</td>
+<td>$$O(n)$$</td>
+<td>每轮遍历已有子集并复制添加新元素</td>
+</tr>
+<tr>
+<td>位运算法</td>
+<td>$$O(n \times 2^n)$$</td>
+<td>$$O(1)$$</td>
+<td>不计输出空间，仅需常数辅助空间</td>
+</tr>
+</tbody></table>
+<p><strong>时间复杂度详解</strong>：无论哪种方法，都要生成 $$2^n$$ 个子集，每个子集平均长度约为 $$n&#x2F;2$$，将子集加入结果时需要进行一次拷贝，因此总时间复杂度为 $$O(n \times 2^n)$$。对于 n ≤ 10（题目约束），这个复杂度完全可行。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><ul>
+<li><strong>“选或不选”是组合类问题的基本原子</strong>。子集、组合、分割……几乎所有回溯问题都可以归结为”对每个元素做决策”。</li>
+<li><strong>从暴力到结构化</strong>。最原始的暴力是手动枚举，而回溯法给出了一个优雅的框架——用递归和剪枝系统性地遍历解空间。</li>
+<li><strong>一题多解</strong>。同一个问题可以有回溯、迭代、位运算三种完全不同的视角，它们看似不同，本质上都在枚举 $$2^n$$ 种选择状态。这种”殊途同归”的感觉正是算法的魅力。</li>
+<li><strong>space-time tradeoff</strong> 的体现。位运算法省去了递归栈的开销，但思路更抽象；回溯法代码最自然，但有递归深度限制的风险。</li>
+</ul>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ul>
+<li>是不是”从集合中选出若干元素”的问题？如果是，优先考虑回溯法。</li>
+<li>元素是否唯一？如果不唯一，需要先排序再加剪枝去重（参考 LeetCode 90. 子集 II）。</li>
+<li>数据规模多大？如果 n ≤ 20 左右，$$O(2^n)$$ 的复杂度通常可接受；再大就需要更高效的策略（如双向搜索）。</li>
+<li>是否要求顺序？如果不要求，用 <code>start</code> 控制遍历顺序来去重是经典套路。</li>
+</ul>
+<p>掌握”子集”这道题，其实就掌握了回溯法最核心的骨架。接下来无论是组合总和、全排列还是分割回文串，你会发现它们的代码结构和这里几乎一模一样——只不过决策规则稍作调整罢了。</p>
+<hr>
+<blockquote>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95-LeetCode-Hot100/" class="category-chain-item">算法/LeetCode/Hot100</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
+      
+        <a href="/tags/%E4%BD%8D%E8%BF%90%E7%AE%97/" class="print-no-link">#位运算</a>
+      
+        <a href="/tags/%E5%9B%9E%E6%BA%AF/" class="print-no-link">#回溯</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>子集</div>
+      <div>http://example.com/2026/07/13/56-子集/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/54-%E5%AE%9E%E7%8E%B0%20Trie%20(%E5%89%8D%E7%BC%80%E6%A0%91)/" title="实现 Trie (前缀树)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">实现 Trie (前缀树)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/57-%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81%E7%9A%84%E5%AD%97%E6%AF%8D%E7%BB%84%E5%90%88/" title="电话号码的字母组合">
+                        <span class="hidden-mobile">电话号码的字母组合</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

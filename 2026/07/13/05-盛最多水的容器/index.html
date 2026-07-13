@@ -19,27 +19,23 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="给定一组垂直线高度，找出两条线与 x 轴围成的容器能盛放的最大水量，经典双指针从两端向中间收缩的贪心思路。">
+    <meta name="description" content="从暴力枚举到双指针，用&quot;短板效应&quot;的直觉一步步推导出最优解。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 11. 盛最多水的容器（container-with-most-water）">
+<meta property="og:title" content="盛最多水的容器">
 <meta property="og:url" content="http://example.com/2026/07/13/05-%E7%9B%9B%E6%9C%80%E5%A4%9A%E6%B0%B4%E7%9A%84%E5%AE%B9%E5%99%A8/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="给定一组垂直线高度，找出两条线与 x 轴围成的容器能盛放的最大水量，经典双指针从两端向中间收缩的贪心思路。">
+<meta property="og:description" content="从暴力枚举到双指针，用&quot;短板效应&quot;的直觉一步步推导出最优解。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/uploads/2018/07/25/question_11.jpg">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:56:52.858Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:33.529Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="双指针">
 <meta property="article:tag" content="贪心">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/uploads/2018/07/25/question_11.jpg">
   
   
   
-  <title>LeetCode 11. 盛最多水的容器（container-with-most-water） - CodingOrange</title>
+  <title>盛最多水的容器 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -308,7 +304,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 11. 盛最多水的容器（container-with-most-water）"></span>
+            <span id="subtitle" data-typed-text="盛最多水的容器"></span>
           
         </div>
 
@@ -331,7 +327,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.5k 字
+          2.6k 字
         
       </span>
     
@@ -342,7 +338,7 @@
         
         
         
-          29 分钟
+          22 分钟
         
       </span>
     
@@ -381,131 +377,105 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 11. 盛最多水的容器（container-with-most-water）</h1>
+            <h1 id="seo-header">盛最多水的容器</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/container-with-most-water/">LeetCode 11. container-with-most-water</a></p>
-</blockquote>
-<p>给定一个长度为 $n$ 的整数数组 <code>height</code>。有 $n$ 条垂直线，第 $i$ 条线的两个端点是 $(i, 0)$ 和 $(i, height[i])$。</p>
-<p>找出其中的两条线，使得它们与 $x$ 轴共同构成的容器可以容纳最多的水。返回容器可以储存的最大水量。</p>
-<p><strong>注意</strong>：你不能倾斜容器。</p>
-<p><strong>示例 1：</strong></p>
-<p><img src="https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/uploads/2018/07/25/question_11.jpg" srcset="/img/loading.gif" lazyload alt="示意图"></p>
-<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dns">输入：[<span class="hljs-number">1,8,6,2</span>,<span class="hljs-number">5,4,8,3</span>,<span class="hljs-number">7</span>]<br>输出：<span class="hljs-number">49</span><br>解释：图中垂直线代表输入数组 [<span class="hljs-number">1,8,6,2</span>,<span class="hljs-number">5,4,8,3</span>,<span class="hljs-number">7</span>]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 <span class="hljs-number">49</span>。<br></code></pre></td></tr></table></figure>
-
-<p><strong>示例 2：</strong></p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arduino">输入：height = [<span class="hljs-number">1</span>,<span class="hljs-number">1</span>]<br>输出：<span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
-
-<p><strong>提示：</strong></p>
+                <h1 id="盛最多水的容器"><a href="#盛最多水的容器" class="headerlink" title="盛最多水的容器"></a>盛最多水的容器</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一步：读懂问题"><a href="#第一步：读懂问题" class="headerlink" title="第一步：读懂问题"></a>第一步：读懂问题</h3><p>给定一个长度为 <code>n</code> 的整数数组 <code>height</code>，每个元素代表一条垂线的高度。我们要找出其中的两条线，使得它们与 x 轴共同构成的容器能容纳最多的水。</p>
+<p>换句话说，选两个下标 <code>i</code> 和 <code>j</code>（<code>i &lt; j</code>），容器的容量由两个因素决定：</p>
 <ul>
-<li>$n &#x3D; height.length$</li>
-<li>$2 \le n \le 10^5$</li>
-<li>$0 \le height[i] \le 10^4$</li>
+<li><strong>宽度</strong>：两条线之间的距离 <code>j - i</code></li>
+<li><strong>高度</strong>：由两条线中<strong>较短的那条</strong>决定（水会从短板溢出）</li>
 </ul>
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们不妨先问问自己：<strong>如果没有任何优化技巧，最朴素的做法是什么？</strong></p>
-<p>很自然地，我们会想到枚举所有可能的左右边界组合 $(i, j)$，计算它们围成的容器面积 $\min(height[i], height[j]) \times (j - i)$，然后取最大值。</p>
-<p>这个思路对不对？对的。但问题出在哪？</p>
+<p>所以面积公式是：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">area = <span class="hljs-built_in">min</span>(<span class="hljs-built_in">height</span>[i], <span class="hljs-built_in">height</span>[j]) * (j - i)<br></code></pre></td></tr></table></figure>
+
+<p>我们的目标就是找到 <code>max(area)</code>。</p>
+<h3 id="第二步：暴力法-——-枚举所有可能"><a href="#第二步：暴力法-——-枚举所有可能" class="headerlink" title="第二步：暴力法 —— 枚举所有可能"></a>第二步：暴力法 —— 枚举所有可能</h3><p>如果没有任何技巧，我们第一反应会怎么做？</p>
+<p>不妨想一下，最直接的方式就是<strong>枚举所有可能的线对</strong>。两层循环，外层固定左线，内层遍历右线，计算每个容器面积并更新最大值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-variable">maxArea</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i + <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">area</span> <span class="hljs-operator">=</span> Math.min(height[i], height[j]) * (j - i);<br>        maxArea = Math.max(maxArea, area);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个解法的问题在哪里呢？</p>
+<p>当 <code>n = 10^5</code> 时，<code>n(n-1)/2</code> ≈ 5 × 10⁹ 次计算，显然会超时。<strong>时间复杂度是 O(n²)</strong>，而空间复杂度是 O(1)。</p>
+<p>那么，有没有办法减少不必要的枚举呢？</p>
+<h3 id="第三步：寻找优化方向"><a href="#第三步：寻找优化方向" class="headerlink" title="第三步：寻找优化方向"></a>第三步：寻找优化方向</h3><p>我们来观察面积公式：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">area = <span class="hljs-built_in">min</span>(<span class="hljs-built_in">height</span>[i], <span class="hljs-built_in">height</span>[j]) * (j - i)<br></code></pre></td></tr></table></figure>
+
+<p>面积由<strong>短板高度</strong>和<strong>宽度</strong>共同决定。</p>
+<p>假如我们一开始就把两个指针放在最左和最右，此时宽度最大。然后我们移动指针，宽度必然减小。为了让面积变大，唯一的希望就是<strong>让短板变高</strong>。</p>
+<p>这就引出了一个关键的自问：</p>
 <blockquote>
-<p>如果 $n &#x3D; 10^5$，枚举所有组合需要多少次计算？</p>
+<p>当我们固定了两条线中的一条，移动另一条时，面积会如何变化？</p>
 </blockquote>
-<p>组合数大约是 $\frac{n(n-1)}{2} \approx 5 \times 10^9$ 次，显然会超时。所以，暴力解法在思路上是正确的，但在数据规模面前不够用。</p>
-<p>那么关键问题是：<strong>我们真的需要检查每一对组合吗？能不能跳过一些明显不可能成为答案的组合？</strong></p>
-<p>我们来观察一下容器的面积公式：</p>
-<p>$$<br>\text{Area} &#x3D; \min(height[left], height[right]) \times (right - left)<br>$$</p>
-<p>这里有三个变量：左边界高度、右边界高度、以及宽度。直觉上，<strong>宽度越宽越有利，高度越高越有利</strong>。但两者是矛盾的——我们无法同时最大化宽度和高度。</p>
-<p>再追问一步：<strong>如果我们从两端（宽度最大）开始，然后逐步向中间移动，会发生什么？</strong></p>
-<p>当我们把左右指针放在数组两端时，宽度是最大的。接下来如果要移动指针，宽度一定会变小。那么，要想让面积变大，唯一的希望就是<strong>高度变得更大</strong>。</p>
-<p>现在问自己一个关键问题：</p>
-<blockquote>
-<p>假设 $height[left] &lt; height[right]$，我们应该移动哪个指针？</p>
-</blockquote>
-<p>容器的实际高度由<strong>较矮的那根</strong>决定。如果我们移动较高的指针（right），新容器的高度不可能超过 $height[left]$（因为短板还是 left 或者更矮），而宽度却减小了——面积只可能变小或不变。</p>
-<p>反之，如果我们移动较矮的指针（left），虽然宽度也减小了，但新高度有可能超过原来的 $height[left]$，从而有机会得到更大的面积。</p>
-<p>这就是贪心的直觉：<strong>每次移动较矮的那一侧，赌一个更高的”墙”来弥补宽度的损失。</strong></p>
-<p>这个思考链条下来，我们从”枚举所有”自然过渡到了”只检查 $O(n)$ 对候选”——这就是双指针解法。</p>
-<h2 id="解法：双指针（对撞指针）"><a href="#解法：双指针（对撞指针）" class="headerlink" title="解法：双指针（对撞指针）"></a>解法：双指针（对撞指针）</h2><h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
-<li>初始化左右指针 $left &#x3D; 0$，$right &#x3D; n - 1$。</li>
-<li>计算当前容器面积 $\min(height[left], height[right]) \times (right - left)$，更新最大值。</li>
-<li>比较 $height[left]$ 和 $height[right]$：<ul>
-<li>如果 $height[left] &lt; height[right]$，则 $left$ 右移一步；</li>
-<li>否则 $right$ 左移一步。</li>
-</ul>
-</li>
-<li>重复步骤 2-3，直到 $left \ge right$。</li>
-<li>返回记录的最大值。</li>
+<p>让我们用一个具体的例子来感受一下。</p>
+<p>假设 <code>height = [1, 8, 6, 2, 5, 4, 8, 3, 7]</code>，左右指针分别指向 <code>1</code> 和 <code>7</code>。</p>
+<p>此时容器高度取决于短板 <code>1</code>，面积是 <code>1 × 8 = 8</code>。</p>
+<p>现在我们面临两个选择：</p>
+<ol>
+<li><strong>移动较高的线（右边）</strong>：新的容器高度最多是 <code>1</code>（因为短板还是左边这个 <code>1</code>），宽度却变小了，面积只可能变小或不变。</li>
+<li><strong>移动较矮的线（左边）</strong>：短板可能变成一个新的更高的值，面积有可能变大。</li>
 </ol>
-<h3 id="为什么选择双指针？"><a href="#为什么选择双指针？" class="headerlink" title="为什么选择双指针？"></a>为什么选择双指针？</h3><p>与其他备选方案的对比：</p>
-<table>
+<p>所以直觉告诉我们：<strong>每次移动较矮的那条线</strong>。</p>
+<h3 id="第四步：证明正确性"><a href="#第四步：证明正确性" class="headerlink" title="第四步：证明正确性"></a>第四步：证明正确性</h3><p>为什么要移动较矮的那条？我们来严格地想一想。</p>
+<p>设左右指针为 <code>l</code> 和 <code>r</code>，且 <code>height[l] &lt; height[r]</code>。当前面积是 <code>height[l] * (r - l)</code>。</p>
+<p>如果我们固定 <code>l</code> 向左移动 <code>r</code>，那么对于任意 <code>l&#39; = l</code>、<code>r&#39; &lt; r</code>：</p>
+<ul>
+<li>宽度 <code>r&#39; - l &lt; r - l</code>，变小了</li>
+<li>高度 <code>min(height[l], height[r&#39;])</code> ≤ <code>height[l]</code>（因为 <code>height[l]</code> 已经是短板了，换一个右边只会更矮或者不变）</li>
+</ul>
+<p>所以面积<strong>一定小于</strong> <code>height[l] * (r - l)</code>。换句话说，<strong>对于当前的左线 <code>l</code> 来说，右线是 <code>r</code> 时已经得到了它能参与的最大面积</strong>。继续用 <code>l</code> 和任何其他右线配对都不会更大，所以可以直接抛弃 <code>l</code>，左指针右移。</p>
+<p>反之如果 <code>height[r]</code> 是短板，同理，抛弃 <code>r</code>，右指针左移。</p>
+<p>这个证明告诉我们：每次移动短板指针是<strong>安全</strong>的，不会错过最优解。</p>
+<h3 id="第五步：双指针法的完整过程"><a href="#第五步：双指针法的完整过程" class="headerlink" title="第五步：双指针法的完整过程"></a>第五步：双指针法的完整过程</h3><ol>
+<li>初始化左指针 <code>l = 0</code>，右指针 <code>r = n - 1</code></li>
+<li>计算当前面积，更新最大值</li>
+<li>比较 <code>height[l]</code> 和 <code>height[r]</code>，移动较短的指针</li>
+<li>重复直到 <code>l &gt;= r</code></li>
+</ol>
+<p>这个过程每一步都在<strong>缩小搜索范围</strong>，但保证不会丢掉最优解。它本质上是一种<strong>贪心策略</strong>——每次都做出局部最优的选择（舍弃不可能成为答案的线对）。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">maxArea</span><span class="hljs-params">(<span class="hljs-type">int</span>[] height)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">l</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, r = height.length - <span class="hljs-number">1</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">ans</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <br>        <span class="hljs-keyword">while</span> (l &lt; r) &#123;<br>            <span class="hljs-comment">// 计算当前容器面积</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">area</span> <span class="hljs-operator">=</span> Math.min(height[l], height[r]) * (r - l);<br>            ans = Math.max(ans, area);<br>            <br>            <span class="hljs-comment">// 移动较短的那条线</span><br>            <span class="hljs-keyword">if</span> (height[l] &lt; height[r]) &#123;<br>                l++;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                r--;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-keyword">return</span> ans;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">maxArea</span>(<span class="hljs-params">self, height: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        l, r = <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(height) - <span class="hljs-number">1</span><br>        ans = <span class="hljs-number">0</span><br>        <br>        <span class="hljs-keyword">while</span> l &lt; r:<br>            <span class="hljs-comment"># 计算当前容器面积</span><br>            area = <span class="hljs-built_in">min</span>(height[l], height[r]) * (r - l)<br>            ans = <span class="hljs-built_in">max</span>(ans, area)<br>            <br>            <span class="hljs-comment"># 移动较短的那条线</span><br>            <span class="hljs-keyword">if</span> height[l] &lt; height[r]:<br>                l += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">else</span>:<br>                r -= <span class="hljs-number">1</span><br>        <br>        <span class="hljs-keyword">return</span> ans<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
 <thead>
 <tr>
-<th>方案</th>
+<th>版本</th>
 <th>时间复杂度</th>
 <th>空间复杂度</th>
-<th>可行性</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>暴力枚举</td>
-<td>$O(n^2)$</td>
-<td>$O(1)$</td>
-<td>$n&#x3D;10^5$ 时超时</td>
+<td>暴力法</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+<td>两层循环枚举所有线对，n &#x3D; 10⁵ 时超时</td>
 </tr>
 <tr>
-<td>单调栈</td>
-<td>&#x2F;</td>
-<td>&#x2F;</td>
-<td>本题不适用——面积由两根柱子共同决定，不是单侧极值问题</td>
-</tr>
-<tr>
-<td>排序 + 二分</td>
-<td>$O(n\log n)$</td>
-<td>$O(n)$</td>
-<td>排序会丢失下标信息，宽度无法计算</td>
-</tr>
-<tr>
-<td><strong>双指针</strong></td>
-<td><strong>$O(n)$</strong></td>
-<td><strong>$O(1)$</strong></td>
-<td><strong>最优</strong></td>
+<td>双指针法</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>每轮移动一个指针，最多移动 n 步，只需常数空间</td>
 </tr>
 </tbody></table>
-<p>双指针的正确性基于一个非常漂亮的不变量：<strong>被淘汰的那些组合，不可能成为最优解</strong>。当我们移动较矮的指针时，我们实际上是在说”以当前较矮柱子为边界的、更窄的那些容器，都不需要看了”——因为宽度更小、高度又不会超过这根矮柱子，面积必然更小。这个”剪枝”动作扔掉的是严格劣解，所以不会错过最优解。</p>
-<h3 id="实现注意事项"><a href="#实现注意事项" class="headerlink" title="实现注意事项"></a>实现注意事项</h3><ul>
-<li><strong>指针移动条件</strong>：<code>height[left] &lt; height[right]</code> 时移动左指针，否则移动右指针。注意这里用了 <code>&lt;</code> 而非 <code>&lt;=</code>，两者在正确性上等价，但 <code>&lt;</code> 让相等时移动右指针——其实移动哪边都可以，因为两根一样高时，无论移动哪边，新容器的高度都不会超过当前的高度。</li>
-<li><strong>面积计算</strong>：小心不要写成 <code>height[left] * height[right]</code>——这是矩形面积，不是容器面积。正确的公式是 $\min(height[left], height[right]) \times (right - left)$。</li>
-<li><strong>数据范围</strong>：$height[i]$ 最大 $10^4$，$n$ 最大 $10^5$，理论上最大面积约为 $10^4 \times 10^5 &#x3D; 10^9$，在 Java <code>int</code> 范围内（约 $2.1 \times 10^9$），直接用 <code>int</code> 即可。但如果未来数据加强，记得考虑 <code>long</code>。</li>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>双指针缩减搜索空间 + 贪心决策</strong>。我们并不是盲目地双指针，而是找到了一个<strong>单调性</strong>——当固定短板时，移动长板面积只会变小，因此可以安全地抛弃短板。这个思路的本质是：每一步都找到当前局面下”不可能产生更优解”的候选，将其排除。</p>
+<p>这种证明方式在双指针问题中非常常见（比如 “三数之和” 也用到了类似的思想——排序后根据和的大小决定移动哪个指针）。</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ul>
+<li><strong>能否用两个指针从两端向中间移动？</strong> 通常当问题的答案涉及两个元素之间的距离时，可以考虑双指针。</li>
+<li><strong>有没有单调性可以利用？</strong> 当我们固定一个变量，另一个变量的变化是否导致结果单调变化？找到这个单调性就可以大胆地移动指针。</li>
+<li><strong>“短板效应”的直觉</strong>：如果结果受限于某个”短板”，尝试移动短板去寻找更优解。</li>
 </ul>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>分析</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>时间复杂度</td>
-<td>$O(n)$ — 左右指针各自从两端向中间移动，每个元素最多被访问一次，共 $n$ 步</td>
-</tr>
-<tr>
-<td>空间复杂度</td>
-<td>$O(1)$ — 只用了几个变量记录指针位置和最大值，不随输入规模增长</td>
-</tr>
-</tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">maxArea</span><span class="hljs-params">(<span class="hljs-type">int</span>[] height)</span> &#123;<br>        <span class="hljs-comment">// 初始化左右指针，分别指向数组两端</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">right</span> <span class="hljs-operator">=</span> height.length - <span class="hljs-number">1</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">maxArea</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>        <span class="hljs-comment">// 双指针向中间移动，直到相遇</span><br>        <span class="hljs-keyword">while</span> (left &lt; right) &#123;<br>            <span class="hljs-comment">// 计算当前容器的宽度</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">width</span> <span class="hljs-operator">=</span> right - left;<br>            <span class="hljs-comment">// 容器高度由较矮的柱子决定</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">currentHeight</span> <span class="hljs-operator">=</span> Math.min(height[left], height[right]);<br>            <span class="hljs-comment">// 更新最大面积</span><br>            maxArea = Math.max(maxArea, width * currentHeight);<br><br>            <span class="hljs-comment">// 移动较矮的那一侧：保留较高的柱子，期待找到更高的短板</span><br>            <span class="hljs-keyword">if</span> (height[left] &lt; height[right]) &#123;<br>                left++;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                right--;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> maxArea;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">maxArea</span>(<span class="hljs-params">self, height: <span class="hljs-built_in">list</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># 初始化左右指针，分别指向数组两端</span><br>        left = <span class="hljs-number">0</span><br>        right = <span class="hljs-built_in">len</span>(height) - <span class="hljs-number">1</span><br>        max_area = <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 双指针向中间移动，直到相遇</span><br>        <span class="hljs-keyword">while</span> left &lt; right:<br>            <span class="hljs-comment"># 计算当前容器的宽度</span><br>            width = right - left<br>            <span class="hljs-comment"># 容器高度由较矮的柱子决定</span><br>            current_height = <span class="hljs-built_in">min</span>(height[left], height[right])<br>            <span class="hljs-comment"># 更新最大面积</span><br>            max_area = <span class="hljs-built_in">max</span>(max_area, width * current_height)<br><br>            <span class="hljs-comment"># 移动较矮的那一侧：保留较高的柱子，期待找到更高的短板</span><br>            <span class="hljs-keyword">if</span> height[left] &lt; height[right]:<br>                left += <span class="hljs-number">1</span><br>            <span class="hljs-keyword">else</span>:<br>                right -= <span class="hljs-number">1</span><br><br>        <span class="hljs-keyword">return</span> max_area<br></code></pre></td></tr></table></figure>
-
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p>这道题的核心思维模式是<strong>利用贪心策略，通过排除严格劣解来缩小搜索空间</strong>。很多看似需要 $O(n^2)$ 枚举的问题，只要我们能证明”某些候选解一定不如另一些候选解”，就可以用双指针或滑动窗口将复杂度降到 $O(n)$。关键不在于记住”移动矮的那一根”这个结论，而在于理解<strong>为什么被跳过的那些组合不会影响最终答案</strong>。</p>
+<p>最后留一个小问题：如果容器可以倾斜（即水可以没过较高的线），那解法会有什么不同呢？感兴趣的话可以搜索「Trapping Rain Water」——也就是接雨水问题，它在盛水问题上又进了一步。</p>
+<hr>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
 </blockquote>
-<p>先问自己：<strong>问题的最优解是否具有”单调舍弃”的性质？</strong> 换句话说，如果我按照某种顺序遍历候选解，能否在每一步证明”不看某些候选也不会错过最优解”？如果能找到这样的不变量，双指针、滑动窗口或者贪心大概率就是突破口。这类问题的典型信号包括：两数之和类问题中的有序性、接雨水、三数之和等。</p>
 
                 
               </div>
@@ -524,8 +494,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -538,10 +522,6 @@
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
       
         <a href="/tags/%E5%8F%8C%E6%8C%87%E9%92%88/" class="print-no-link">#双指针</a>
       
@@ -557,7 +537,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 11. 盛最多水的容器（container-with-most-water）</div>
+      <div>盛最多水的容器</div>
       <div>http://example.com/2026/07/13/05-盛最多水的容器/</div>
     </div>
     <div class="license-meta">
@@ -602,9 +582,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/13/10-%E5%92%8C%E4%B8%BA%20K%20%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84/" title="LeetCode 560. 和为 K 的子数组（subarray-sum-equals-k）">
+                      <a href="/2026/07/13/02-%E5%AD%97%E6%AF%8D%E5%BC%82%E4%BD%8D%E8%AF%8D%E5%88%86%E7%BB%84/" title="字母异位词分组">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LeetCode 560. 和为 K 的子数组（subarray-sum-equals-k）</span>
+                        <span class="hidden-mobile">字母异位词分组</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -612,8 +592,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/13/08-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" title="LeetCode 3. 无重复字符的最长子串（longest-substring-without-repeating-characters）">
-                        <span class="hidden-mobile">LeetCode 3. 无重复字符的最长子串（longest-substring-without-repeating-characters）</span>
+                      <a href="/2026/07/13/01-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" title="两数之和">
+                        <span class="hidden-mobile">两数之和</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

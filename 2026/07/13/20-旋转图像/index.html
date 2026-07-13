@@ -19,26 +19,24 @@
   <meta name="author" content="CodingOrange">
   <meta name="keywords" content="">
   
-    <meta name="description" content="给定一个 n x n 的二维矩阵，将其原地顺时针旋转 90 度，要求不使用额外矩阵空间。">
+    <meta name="description" content="一步步推导如何将 n×n 矩阵顺时针旋转 90 度，从暴力解法到优雅的原地操作。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode 48. 旋转图像（rotate-image）">
+<meta property="og:title" content="旋转图像">
 <meta property="og:url" content="http://example.com/2026/07/13/20-%E6%97%8B%E8%BD%AC%E5%9B%BE%E5%83%8F/index.html">
 <meta property="og:site_name" content="CodingOrange">
-<meta property="og:description" content="给定一个 n x n 的二维矩阵，将其原地顺时针旋转 90 度，要求不使用额外矩阵空间。">
+<meta property="og:description" content="一步步推导如何将 n×n 矩阵顺时针旋转 90 度，从暴力解法到优雅的原地操作。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-13T09:57:45.180Z">
+<meta property="article:modified_time" content="2026-07-13T10:36:34.315Z">
 <meta property="article:author" content="CodingOrange">
-<meta property="article:tag" content="Hot 100">
-<meta property="article:tag" content="LeetCode">
-<meta property="article:tag" content="数学">
+<meta property="article:tag" content="原地操作">
 <meta property="article:tag" content="数组">
 <meta property="article:tag" content="矩阵">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>LeetCode 48. 旋转图像（rotate-image） - CodingOrange</title>
+  <title>旋转图像 - CodingOrange</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -307,7 +305,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="LeetCode 48. 旋转图像（rotate-image）"></span>
+            <span id="subtitle" data-typed-text="旋转图像"></span>
           
         </div>
 
@@ -330,7 +328,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.6k 字
+          2.9k 字
         
       </span>
     
@@ -341,7 +339,7 @@
         
         
         
-          31 分钟
+          25 分钟
         
       </span>
     
@@ -380,127 +378,96 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">LeetCode 48. 旋转图像（rotate-image）</h1>
+            <h1 id="seo-header">旋转图像</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/rotate-image/">LeetCode 48. rotate-image</a></p>
-</blockquote>
-<p>给定一个 $n \times n$ 的二维矩阵 <code>matrix</code> 表示一个图像。请你将图像顺时针旋转 90 度。</p>
-<p>你必须在<strong>原地</strong>旋转图像，这意味着你需要直接修改输入的二维矩阵。<strong>请不要</strong>使用另一个矩阵来旋转图像。</p>
-<p><strong>示例 1：</strong></p>
-<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lua">输入：matrix = <span class="hljs-string">[[1,2,3],[4,5,6],[7,8,9]]</span><br>输出：<span class="hljs-string">[[7,4,1],[8,5,2],[9,6,3]]</span><br></code></pre></td></tr></table></figure>
+                <h1 id="旋转图像"><a href="#旋转图像" class="headerlink" title="旋转图像"></a>旋转图像</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一反应：新矩阵拷贝"><a href="#第一反应：新矩阵拷贝" class="headerlink" title="第一反应：新矩阵拷贝"></a>第一反应：新矩阵拷贝</h3><p>题目要求我们将一个 n×n 的二维矩阵顺时针旋转 90 度。不妨想一下，如果没有任何技巧，我们第一反应会怎么做？</p>
+<p>最简单直白的做法就是申请一个同样大小的新矩阵，然后遍历原矩阵，把每个元素放到它旋转之后应该去的位置。</p>
+<p>对于一个 n×n 矩阵，旋转 90 度后，位置 <code>(i, j)</code> 上的元素会去到 <code>(j, n - 1 - i)</code>。这一点我们可以用一个简单的例子验证：左上角 <code>(0, 0)</code> 会去到 <code>(0, n-1)</code>，也就是右上角；右上角 <code>(0, n-1)</code> 会去到 <code>(n-1, n-1)</code>，也就是右下角——刚好对应顺时针旋转一圈的轨迹。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span>[][] newMatrix = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[n][n];<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) &#123;<br>        newMatrix[j][n - <span class="hljs-number">1</span> - i] = matrix[i][j];<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p><strong>示例 2：</strong></p>
-<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs inform7">输入：matrix = <span class="hljs-comment">[<span class="hljs-comment">[5,1,9,11]</span>,<span class="hljs-comment">[2,4,8,10]</span>,<span class="hljs-comment">[13,3,6,7]</span>,<span class="hljs-comment">[15,14,12,16]</span>]</span><br>输出：<span class="hljs-comment">[<span class="hljs-comment">[15,13,2,5]</span>,<span class="hljs-comment">[14,3,4,1]</span>,<span class="hljs-comment">[12,6,8,9]</span>,<span class="hljs-comment">[16,7,10,11]</span>]</span><br></code></pre></td></tr></table></figure>
+<p>这个解法的时间复杂度是 O(n²)，因为我们遍历了所有 n² 个元素。空间复杂度同样是 O(n²)，因为我们额外申请了一个同样大小的矩阵。</p>
+<p><strong>问题出在哪里？</strong> 题目要求原地修改，不允许额外分配矩阵。我们需要想一个不需要额外空间的方案。</p>
+<h3 id="能不能省下一行数组的空间？"><a href="#能不能省下一行数组的空间？" class="headerlink" title="能不能省下一行数组的空间？"></a>能不能省下一行数组的空间？</h3><p>既然不能直接开一个新矩阵，我们可能会想：至少能不能省一点空间？比如只用一个一维数组来暂存一行？</p>
+<p>旋转一行的操作其实是有规律的：顶行的元素会跑到右列，右列跑到底行，底行跑到左列，左列跑到顶行。如果我们用一个临时数组保存顶行，然后依次把左列赋给顶行、底列赋给左列……这样确实只需要 O(n) 的额外空间。</p>
+<p>但问题是，这种方式操作起来比较繁琐，而且我们仍然没有达到原地操作的要求——“原地”意味着除了常数个变量外，不能使用任何额外空间。</p>
+<h3 id="进一步思考：如何做到真正的原地？"><a href="#进一步思考：如何做到真正的原地？" class="headerlink" title="进一步思考：如何做到真正的原地？"></a>进一步思考：如何做到真正的原地？</h3><p>有没有办法让每个元素直接覆盖到它该去的位置，而不需要额外存储一整行呢？</p>
+<p>我们仔细观察一下旋转过程中一个元素的运动轨迹。以 4×4 矩阵为例，元素从 <code>(0, 0)</code> 出发：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss">(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>) → (<span class="hljs-number">0</span>, <span class="hljs-number">3</span>) → (<span class="hljs-number">3</span>, <span class="hljs-number">3</span>) → (<span class="hljs-number">3</span>, <span class="hljs-number">0</span>) → (<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure>
 
-<p><strong>提示：</strong></p>
+<p>有意思！四个角上的元素刚好形成一个长度为 4 的循环。不止是角上的元素，实际上，<strong>矩阵中每四个对称位置上的元素都构成一个长度为 4 的循环</strong>。</p>
+<p>那么我们可以这样操作：对于每个这样的四元组，用一个临时变量保存第一个元素，然后依次把后一个元素覆盖到前一个位置，最后把临时变量赋给最后一个位置。这样一来，我们只需要 <strong>O(1)</strong> 的额外空间。</p>
+<p>哪些位置需要参与这样的交换？我们只需要处理矩阵的四分之一部分（比如左上角那块）即可——因为每个四元组覆盖了四个不同象限的位置。</p>
+<p>对于 n×n 矩阵，我们按层处理。最外层从 <code>i = 0</code> 遍历到 <code>n/2 - 1</code>（层数），内层从 <code>j = i</code> 遍历到 <code>n - i - 2</code>（避免重复处理最后一个元素，因为它是一个四元组的起点也是上一个的终点）。</p>
+<p>四个位置的关系是：</p>
 <ul>
-<li>$n &#x3D; matrix.length &#x3D; matrix[i].length$</li>
-<li>$1 \le n \le 20$</li>
-<li>$-1000 \le matrix[i][j] \le 1000$</li>
+<li>顶：<code>(i, j)</code></li>
+<li>右：<code>(j, n - 1 - i)</code></li>
+<li>底：<code>(n - 1 - i, n - 1 - j)</code></li>
+<li>左：<code>(n - 1 - j, i)</code></li>
 </ul>
-<h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><p>拿到这道题，我们先看看能不能”暴力”解决。</p>
-<h3 id="找到目标位置"><a href="#找到目标位置" class="headerlink" title="找到目标位置"></a>找到目标位置</h3><p>最直接的想法：我们创建一个同样大小的新矩阵 <code>newMatrix</code>，然后对于原矩阵的每个元素 <code>matrix[i][j]</code>，算出它在旋转后的新位置，填进去，最后拷贝回来。</p>
-<p>现在的问题是：<code>matrix[i][j]</code> 旋转 90 度后去哪了？</p>
-<p>让我们用 $3 \times 3$ 的例子找规律。把坐标标出来：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-attr">[0,0]</span> <span class="hljs-selector-attr">[0,1]</span> <span class="hljs-selector-attr">[0,2]</span>          <span class="hljs-selector-attr">[2,0]</span> <span class="hljs-selector-attr">[1,0]</span> <span class="hljs-selector-attr">[0,0]</span><br><span class="hljs-selector-attr">[1,0]</span> <span class="hljs-selector-attr">[1,1]</span> <span class="hljs-selector-attr">[1,2]</span>    →     <span class="hljs-selector-attr">[2,1]</span> <span class="hljs-selector-attr">[1,1]</span> <span class="hljs-selector-attr">[0,1]</span><br><span class="hljs-selector-attr">[2,0]</span> <span class="hljs-selector-attr">[2,1]</span> <span class="hljs-selector-attr">[2,2]</span>          <span class="hljs-selector-attr">[2,2]</span> <span class="hljs-selector-attr">[1,2]</span> <span class="hljs-selector-attr">[0,2]</span><br></code></pre></td></tr></table></figure>
+<p>这样我们就得到了一个空间 O(1) 的原地旋转算法。</p>
+<h3 id="更优雅的思路：转置-翻转"><a href="#更优雅的思路：转置-翻转" class="headerlink" title="更优雅的思路：转置 + 翻转"></a>更优雅的思路：转置 + 翻转</h3><p>不过说实话，上面那种逐层四元组交换的方法虽然做到了原地，但下标关系有点绕，写起来容易出错。有没有更直观的方式？</p>
+<p>我们不妨换个角度思考：顺时针旋转 90 度，能不能分解成两个更简单的操作？</p>
+<p>试着想想——如果我们先把矩阵沿主对角线翻转（即转置），然后每一行水平翻转，会得到什么？</p>
+<figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs tap">原始矩阵：<br>1<span class="hljs-number"> 2 </span>3<br>4<span class="hljs-number"> 5 </span>6<br>7<span class="hljs-number"> 8 </span>9<br><br>转置后（沿主对角线翻转）：<br>1<span class="hljs-number"> 4 </span>7<br>2<span class="hljs-number"> 5 </span>8<br>3<span class="hljs-number"> 6 </span>9<br><br>每行反转后：<br>7<span class="hljs-number"> 4 </span>1<br>8<span class="hljs-number"> 5 </span>2<br>9<span class="hljs-number"> 6 </span>3<br></code></pre></td></tr></table></figure>
 
-<p>你发现了什么？旋转后：</p>
-<ul>
-<li>原来的<strong>行号</strong>变成了新位置的<strong>列号</strong>（而且是倒序）</li>
-<li>原来的<strong>列号</strong>变成了新位置的<strong>行号</strong></li>
-</ul>
-<p>更精确地说，<code>matrix[i][j]</code> 旋转后的位置是 <code>newMatrix[j][n-1-i]</code>。验证一下：左上角 <code>(0,0)</code> 去了 <code>(0, 2)</code>，即 <code>newMatrix[0][3-1-0] = [0][2]</code>，对应输出第一行第三列的 7 … 不对，<code>(0,0)</code> 的值是 1，旋转后应该在最右上角也就是第一行第三列——没错，输出是 <code>[7,4,1]</code>，1 确实在第 0 行第 2 列。</p>
-<p>所以借助额外数组的解法是可行的，时间 $O(n^2)$，空间 $O(n^2)$。</p>
-<blockquote>
-<p>但题目明确要求<strong>原地</strong>旋转。难点就在这——我们不能让所有元素同时搬家，因为每次修改都会覆盖掉还没用过的旧值。怎么办？</p>
-</blockquote>
-<h3 id="能不能”逐个换位”？"><a href="#能不能”逐个换位”？" class="headerlink" title="能不能”逐个换位”？"></a>能不能”逐个换位”？</h3><p>一个自然的想法是：像拧魔方一样，看一个元素旋转 4 次之后回到原位。比如 <code>(0,0)</code> 上的值 1，旋转 90 度到 <code>(0,2)</code>，再旋转 90 度到 <code>(2,2)</code>，再到 <code>(2,0)</code>，最后回到 <code>(0,0)</code>。这恰好是一个四元环！</p>
-<p>如果能把每个这样的”四人组”一次性轮换到位，就能只用一个临时变量完成原地旋转。这是一种可行的思路（称”环形替换”），但需要处理”哪些位置是新的轮换起点”这个边界问题。</p>
-<blockquote>
-<p>不过，还有没有更直观、更不容易写错的方法？矩阵操作中，有没有”<strong>用已知操作组合出新操作</strong>“的技巧？</p>
-</blockquote>
-<h3 id="换个角度：把旋转拆成两步"><a href="#换个角度：把旋转拆成两步" class="headerlink" title="换个角度：把旋转拆成两步"></a>换个角度：把旋转拆成两步</h3><p>回想一下：在”轮转数组”那道题里，我们用”反转”这个简单操作，通过<strong>三次组合</strong>完成了轮转。矩阵有没有类似的”原子操作”可以用？</p>
-<p>顺时针旋转 90 度，可以拆成两个更简单、各自也容易在原地实现的操作：</p>
-<ol>
-<li><strong>转置</strong>（Transpose）：沿着主对角线翻转，<code>matrix[i][j]</code> ↔ <code>matrix[j][i]</code></li>
-<li><strong>水平翻转</strong>（每行反转）：把每一行的元素左右颠倒</li>
-</ol>
-<p>来看看对不对：</p>
-<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs inform7">原始:        转置后:       再水平翻转每行:<br><span class="hljs-comment">[1, 2, 3]</span>   <span class="hljs-comment">[1, 4, 7]</span>    <span class="hljs-comment">[7, 4, 1]</span><br><span class="hljs-comment">[4, 5, 6]</span> → <span class="hljs-comment">[2, 5, 8]</span>  → <span class="hljs-comment">[8, 5, 2]</span><br><span class="hljs-comment">[7, 8, 9]</span>   <span class="hljs-comment">[3, 6, 9]</span>    <span class="hljs-comment">[9, 6, 3]</span><br></code></pre></td></tr></table></figure>
+<p>这不就是顺时针旋转 90 度的结果吗！</p>
+<p>反过来，如果先水平翻转再转置，得到的是逆时针旋转 90 度。</p>
+<p>这个方法最大的优点就是<strong>思路清晰</strong>：我们不需要记忆复杂的四元组下标关系，只需要理解”转置”和”翻转”两个直观的操作，组合起来就能达到目标。而且两个步骤各自都非常容易实现。</p>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">rotate</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] matrix)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> matrix.length;<br>        <br>        <span class="hljs-comment">// 步骤一：沿主对角线翻转（转置）</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i; j &lt; n; j++) &#123;<br>                <span class="hljs-comment">// 交换 matrix[i][j] 和 matrix[j][i]</span><br>                <span class="hljs-type">int</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> matrix[i][j];<br>                matrix[i][j] = matrix[j][i];<br>                matrix[j][i] = temp;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 步骤二：每一行水平翻转</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n / <span class="hljs-number">2</span>; j++) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> matrix[i][j];<br>                matrix[i][j] = matrix[i][n - <span class="hljs-number">1</span> - j];<br>                matrix[i][n - <span class="hljs-number">1</span> - j] = temp;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>与示例输出 <code>[[7,4,1],[8,5,2],[9,6,3]]</code> 完全一致！</p>
-<blockquote>
-<p>这样一来，问题就变成了”如何原地完成转置和水平翻转”——两个小问题，各自都非常清晰。</p>
-</blockquote>
-<p>转置只需要遍历主对角线右上方的元素（即 $j &gt; i$ 的元素），与对称位置的元素交换。水平翻转更简单——对每一行用双指针交换首尾元素直到中间。</p>
-<p><strong>另一种拆法</strong>（逆时针旋转 90 度则是”转置 + 垂直翻转”），但顺时针这道题用”转置 + 水平翻转”最自然。</p>
-<h3 id="总结思考链条"><a href="#总结思考链条" class="headerlink" title="总结思考链条"></a>总结思考链条</h3><p>暴力法（借助额外矩阵观察规律）→ 发现四元环替换 → 但实现复杂 → 想到”用简单操作组合出旋转” → 转置 + 行翻转，两步都在 $O(1)$ 空间内轻松完成。</p>
-<h2 id="解法：转置-水平翻转"><a href="#解法：转置-水平翻转" class="headerlink" title="解法：转置 + 水平翻转"></a>解法：转置 + 水平翻转</h2><h3 id="为什么选择这个解法？"><a href="#为什么选择这个解法？" class="headerlink" title="为什么选择这个解法？"></a>为什么选择这个解法？</h3><table>
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">rotate</span>(<span class="hljs-params">self, matrix: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]</span>) -&gt; <span class="hljs-literal">None</span>:<br>        n = <span class="hljs-built_in">len</span>(matrix)<br>        <br>        <span class="hljs-comment"># 步骤一：沿主对角线翻转（转置）</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(i, n):<br>                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]<br>        <br>        <span class="hljs-comment"># 步骤二：每一行水平翻转</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            matrix[i].reverse()<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><table>
 <thead>
 <tr>
-<th>方案</th>
-<th>时间</th>
-<th>空间</th>
-<th>代码复杂度</th>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>额外矩阵</td>
-<td>$O(n^2)$</td>
-<td>$O(n^2)$</td>
-<td>低，但不满足原地要求</td>
+<td>暴力法（新矩阵拷贝）</td>
+<td>O(n²)</td>
+<td>O(n²)</td>
+<td>遍历所有 n² 个元素，额外分配 n×n 矩阵</td>
 </tr>
 <tr>
-<td>四元环替换</td>
-<td>$O(n^2)$</td>
-<td>$O(1)$</td>
-<td>高，需处理边界和循环起点</td>
+<td>四元组原地交换</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+<td>按层遍历四分之一矩阵，每四个元素一组交换</td>
 </tr>
 <tr>
-<td><strong>转置 + 水平翻转</strong></td>
-<td><strong>$O(n^2)$</strong></td>
-<td><strong>$O(1)$</strong></td>
-<td><strong>低，两个简单操作的组合</strong></td>
+<td><strong>转置 + 翻转</strong></td>
+<td><strong>O(n²)</strong></td>
+<td><strong>O(1)</strong></td>
+<td><strong>先转置再逐行反转，代码最简洁</strong></td>
 </tr>
 </tbody></table>
-<p>转置 + 水平翻转的妙处在于：每一步的含义都非常明确，各自可以用经典的双指针&#x2F;对称交换实现，几乎不会写出 bug。面试中这个解法也容易解释清楚——“顺时针旋转 &#x3D; 转置 + 水平翻转”是一个经典的线性代数结论。</p>
-<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
-<li><strong>转置</strong>：遍历矩阵的上三角区域（$j &gt; i$），交换 <code>matrix[i][j]</code> 和 <code>matrix[j][i]</code>。</li>
-<li><strong>水平翻转</strong>：对于每一行，反转该行所有元素。即交换 <code>matrix[i][j]</code> 和 <code>matrix[i][n-1-j]</code>，$j$ 从 $0$ 到 $\lfloor n&#x2F;2 \rfloor - 1$。</li>
-</ol>
-<p>两步可以分开写，也可以合并为同一个双层循环（但分开写更清晰，减少出错的可能）。</p>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>分析</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>时间复杂度</td>
-<td>$O(n^2)$ — 转置遍历了约 $n(n-1)&#x2F;2$ 个元素，水平翻转遍历了全部 $n^2$ 个元素（每行 $n&#x2F;2$ 次交换，共 $n$ 行），总体 $O(n^2)$。矩阵中的每个元素至少被访问一次是绕不开的下限——因为旋转操作改变了每个元素的依赖关系。</td>
-</tr>
-<tr>
-<td>空间复杂度</td>
-<td>$O(1)$ — 只用了几个临时变量做交换，没有任何与 $n$ 相关的额外空间分配。</td>
-</tr>
-</tbody></table>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 将 n×n 矩阵顺时针旋转 90 度，原地修改。</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">rotate</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] matrix)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> matrix.length;<br><br>        <span class="hljs-comment">// 第一步：转置 —— 沿主对角线翻转</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-comment">// 只遍历 j &gt; i 的上三角区域，避免重复交换</span><br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> i + <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> matrix[i][j];<br>                matrix[i][j] = matrix[j][i];<br>                matrix[j][i] = tmp;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 第二步：水平翻转 —— 每行左右颠倒</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; n; i++) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">left</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, right = n - <span class="hljs-number">1</span>;<br>            <span class="hljs-keyword">while</span> (left &lt; right) &#123;<br>                <span class="hljs-type">int</span> <span class="hljs-variable">tmp</span> <span class="hljs-operator">=</span> matrix[i][left];<br>                matrix[i][left] = matrix[i][right];<br>                matrix[i][right] = tmp;<br>                left++;<br>                right--;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">rotate</span>(<span class="hljs-params">self, matrix: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]]</span>) -&gt; <span class="hljs-literal">None</span>:<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        将 n×n 矩阵顺时针旋转 90 度，原地修改。</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        n = <span class="hljs-built_in">len</span>(matrix)<br><br>        <span class="hljs-comment"># 第一步：转置 —— 沿主对角线翻转</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            <span class="hljs-comment"># 只遍历 j &gt; i 的上三角区域，避免重复交换</span><br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(i + <span class="hljs-number">1</span>, n):<br>                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]<br><br>        <span class="hljs-comment"># 第二步：水平翻转 —— 每行左右颠倒</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n):<br>            left, right = <span class="hljs-number">0</span>, n - <span class="hljs-number">1</span><br>            <span class="hljs-keyword">while</span> left &lt; right:<br>                matrix[i][left], matrix[i][right] = matrix[i][right], matrix[i][left]<br>                left += <span class="hljs-number">1</span><br>                right -= <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
-
-<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><blockquote>
-<p>学到了什么？</p>
-</blockquote>
-<p>矩阵的复合变换（旋转）往往可以分解为若干<strong>简单原子操作</strong>的组合——就像轮转数组里的”反转”一样，转置和行&#x2F;列翻转是矩阵操作中最基础也最实用的原子动作。熟悉这些简单操作，以后遇到更复杂的矩阵变换时，就能试着问自己：能不能把它拆成转置 + 翻转 + 行交换之类的组合？</p>
+<p>三种方法的时间复杂度都是 O(n²)，因为无论如何都需要处理矩阵中的每一个元素。但空间上，转置+翻转和四元组交换都达到了 O(1) 的原地操作。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><p><strong>这道题让我们学到了什么？</strong></p>
+<p>把一个复杂的变换拆解成多个简单操作的组合——这种思路远比硬记下标关系更有价值。旋转 90 度不好直接写，但转置和水平翻转都是我们非常熟悉的基本操作，把它们组合起来，问题就迎刃而解。很多看似复杂的矩阵或数组变换问题，都可以通过这种方式拆解。</p>
+<p>另外，几何变换中的”四元组循环”也是一个值得留意的模式——当我们需要在原地完成某种对称变换时，找到元素之间形成的置换环，每次处理一个环上的所有元素，就能以 O(1) 额外空间完成任务。</p>
+<p><strong>下次遇到类似问题优先观察什么？</strong></p>
+<ul>
+<li>如果问题是关于矩阵变换（旋转、翻转、对角线对称等），不妨先考虑是否能拆解成已知的基本操作</li>
+<li>尝试追踪一个元素在变换前后的位置变化，看看有没有形成规律性的循环</li>
+<li>对于 n×n 方阵，转置操作是一个特别有用的中间步骤，值得牢记</li>
+<li>如果题目要求原地操作，要关注额外空间的使用——常数空间往往意味着我们需要利用元素本身的存储位置来完成”搬运”</li>
+</ul>
+<hr>
 <blockquote>
-<p>下次遇到类似问题，你会优先观察什么？</p>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
 </blockquote>
-<p>遇到要求”原地变换矩阵&#x2F;数组”的题目，优先思考：<strong>这个变换能否分解为两个或多个你已经会写的简单操作？</strong> 拿出纸笔，先画一个 $3 \times 3$ 的小例子，跟踪每个元素在分解步骤中的位置变化——很多时候，结论会比你预想的更优雅。</p>
 
                 
               </div>
@@ -519,8 +486,22 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98%E8%A7%A3/" class="category-chain-item">算法题解</a>
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
   
 
       </span>
@@ -534,13 +515,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/LeetCode/" class="print-no-link">#LeetCode</a>
-      
         <a href="/tags/%E6%95%B0%E7%BB%84/" class="print-no-link">#数组</a>
       
-        <a href="/tags/Hot-100/" class="print-no-link">#Hot 100</a>
-      
-        <a href="/tags/%E6%95%B0%E5%AD%A6/" class="print-no-link">#数学</a>
+        <a href="/tags/%E5%8E%9F%E5%9C%B0%E6%93%8D%E4%BD%9C/" class="print-no-link">#原地操作</a>
       
         <a href="/tags/%E7%9F%A9%E9%98%B5/" class="print-no-link">#矩阵</a>
       
@@ -554,7 +531,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>LeetCode 48. 旋转图像（rotate-image）</div>
+      <div>旋转图像</div>
       <div>http://example.com/2026/07/13/20-旋转图像/</div>
     </div>
     <div class="license-meta">
@@ -599,9 +576,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/07/13/17-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" title="LeetCode 41. 缺失的第一个正数（first-missing-positive）">
+                      <a href="/2026/07/13/19-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/" title="螺旋矩阵">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">LeetCode 41. 缺失的第一个正数（first-missing-positive）</span>
+                        <span class="hidden-mobile">螺旋矩阵</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -609,8 +586,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/07/12/%E8%AE%A9AI%E5%8A%A9%E4%BD%A0%E7%90%86%E8%A7%A3Hot100%E7%AE%97%E6%B3%95%E9%A2%98/" title="让AI助你理解Hot100算法题">
-                        <span class="hidden-mobile">让AI助你理解Hot100算法题</span>
+                      <a href="/2026/07/13/22-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/" title="相交链表">
+                        <span class="hidden-mobile">相交链表</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

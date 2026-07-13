@@ -1,0 +1,1026 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/avatar.png">
+  <link rel="icon" href="/img/avatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="CodingOrange">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="从暴力递归到动态规划再到组合数学，一步步拆解 LeetCode 62「不同路径」的思考过程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="不同路径">
+<meta property="og:url" content="http://example.com/2026/07/13/91-%E4%B8%8D%E5%90%8C%E8%B7%AF%E5%BE%84/index.html">
+<meta property="og:site_name" content="CodingOrange">
+<meta property="og:description" content="从暴力递归到动态规划再到组合数学，一步步拆解 LeetCode 62「不同路径」的思考过程">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-13T10:46:00.327Z">
+<meta property="article:author" content="CodingOrange">
+<meta property="article:tag" content="动态规划">
+<meta property="article:tag" content="组合数学">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>不同路径 - CodingOrange</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CodingOrange</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content (desktop) -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile grid menu overlay -->
+<div id="mobile-grid-menu" class="d-lg-none">
+  <div class="mobile-grid-menu-inner">
+    <div class="container">
+      <div class="row">
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-home-fill"></i>
+                  <span>首页</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/archives/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-archive-fill"></i>
+                  <span>归档</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/categories/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-category-fill"></i>
+                  <span>分类</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/tags/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-tags-fill"></i>
+                  <span>标签</span>
+                </div>
+              </a>
+            </div>
+          
+        
+          
+          
+          
+          
+            <div class="col-4 mobile-grid-cell">
+              <a href="/about/" target="_self">
+                <div class="mobile-grid-item">
+                  <i class="iconfont icon-user-fill"></i>
+                  <span>关于</span>
+                </div>
+              </a>
+            </div>
+          
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-search-btn">
+            <a href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-search"></i>
+                <span>搜索</span>
+              </div>
+            </a>
+          </div>
+        
+        
+          <div class="col-4 mobile-grid-cell" id="mobile-color-toggle-btn"
+               data-label-light="开灯"
+               data-label-dark="关灯">
+            <a href="javascript:;" aria-label="Color Toggle">
+              <div class="mobile-grid-item">
+                <i class="iconfont icon-dark" id="mobile-color-toggle-icon"></i>
+                <span id="mobile-color-toggle-label">关灯</span>
+              </div>
+            </a>
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="不同路径"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-13 00:00" pubdate>
+          2026年7月13日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          51 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">不同路径</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="不同路径"><a href="#不同路径" class="headerlink" title="不同路径"></a>不同路径</h1><h2 id="核心思路"><a href="#核心思路" class="headerlink" title="核心思路"></a>核心思路</h2><h3 id="第一反应：暴力递归"><a href="#第一反应：暴力递归" class="headerlink" title="第一反应：暴力递归"></a>第一反应：暴力递归</h3><p>拿到这道题，我们先理解一下问题。</p>
+<p>一个机器人在左上角，要走到右下角，每次只能向右或向下走。问有多少条不同的路径。</p>
+<p>让我们从最简单的情况开始想：如果网格只有一行（<code>m = 1</code>），机器人只能一直向右走，只有 <strong>1</strong> 条路径。同理，如果网格只有一列（<code>n = 1</code>），机器人只能一直向下走，也只有 <strong>1</strong> 条路径。</p>
+<p>那么对于一般的情况呢？机器人从 <code>(0, 0)</code> 出发，第一步有两个选择：</p>
+<ul>
+<li><strong>向右</strong>走到 <code>(0, 1)</code>，然后从 <code>(0, 1)</code> 走到右下角</li>
+<li><strong>向下</strong>走到 <code>(1, 0)</code>，然后从 <code>(1, 0)</code> 走到右下角</li>
+</ul>
+<p>也就是说：</p>
+<blockquote>
+<p>从 <code>(0, 0)</code> 到终点的路径数 &#x3D; 从 <code>(0, 1)</code> 到终点的路径数 + 从 <code>(1, 0)</code> 到终点的路径数</p>
+</blockquote>
+<p>这不就是递归吗？我们把问题拆成了规模更小的子问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 暴力递归</span><br><span class="hljs-type">int</span> <span class="hljs-title function_">uniquePaths</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> &#123;<br>    <span class="hljs-keyword">return</span> countPaths(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, m, n);<br>&#125;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">countPaths</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j, <span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> &#123;<br>    <span class="hljs-comment">// 到达右下角，找到一条路径</span><br>    <span class="hljs-keyword">if</span> (i == m - <span class="hljs-number">1</span> &amp;&amp; j == n - <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">// 超出边界，此路不通</span><br>    <span class="hljs-keyword">if</span> (i &gt;= m || j &gt;= n) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-comment">// 向右走 + 向下走</span><br>    <span class="hljs-keyword">return</span> countPaths(i, j + <span class="hljs-number">1</span>, m, n) + countPaths(i + <span class="hljs-number">1</span>, j, m, n);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个解法很直观，但让我们想想它的效率。</p>
+<p>每个格子最多有两个分支，递归树是一棵二叉树。从 <code>(0, 0)</code> 走到 <code>(m-1, n-1)</code> 需要走 <code>(m-1) + (n-1)</code> 步，递归树的深度是 <code>m + n - 2</code>，而节点数是指数级的——大约是 <code>O(2^{m+n})</code>。</p>
+<p>当 <code>m = 3, n = 7</code> 时（LeetCode 上的一个测试用例），<code>2^{3+7} = 2^{10} = 1024</code>，还勉强能接受。但当 <code>m = 23, n = 12</code> 时，<code>2^{35} = 340 亿</code>——这显然是不可接受的。</p>
+<p>那么问题来了：<strong>这个递归为什么这么慢？有没有重复计算的地方？</strong></p>
+<h3 id="发现重叠子问题"><a href="#发现重叠子问题" class="headerlink" title="发现重叠子问题"></a>发现重叠子问题</h3><p>让我们画一个 <code>3 x 3</code> 的网格，看看递归调用树：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">countPaths</span><span class="hljs-params">(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span></span><br>  ├─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>)<br>  │    ├─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>)<br>  │    │    ├─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>) = <span class="hljs-number">0</span><br>  │    │    └─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) = <span class="hljs-number">1</span><br>  │    └─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>  │         ├─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>) = <span class="hljs-number">1</span>   ← 重复计算！<br>  │         └─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br>  │              ├─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>) = <span class="hljs-number">1</span><br>  │              └─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">3</span>, <span class="hljs-number">1</span>) = <span class="hljs-number">0</span><br>  └─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>)<br>       ├─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)           ← 又重复了！<br>       └─ <span class="hljs-built_in">countPaths</span>(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>)<br>            └─ ...<br></code></pre></td></tr></table></figure>
+
+<p>看到了吗？<code>countPaths(1, 1)</code> 被多次调用。对于同一个 <code>(i, j)</code>，它的路径数是固定的，但我们每次遇到它都要重新算一遍——这就是重复劳动。</p>
+<p><strong>有多少重复呢？</strong> 如果直接递归，<code>countPaths(1, 1)</code> 会被调用 <code>C(2, 1) = 2</code> 次。随着网格变大，中间的格子会被反复调用成百上千次。</p>
+<p>发现问题之后，解决方案就很自然了：<strong>把已经算过的结果记下来，下次直接取用。</strong> 这就是”记忆化搜索”（Memoization）。</p>
+<h3 id="记忆化搜索：缓存中间结果"><a href="#记忆化搜索：缓存中间结果" class="headerlink" title="记忆化搜索：缓存中间结果"></a>记忆化搜索：缓存中间结果</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">uniquePaths</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> &#123;<br>    <span class="hljs-type">int</span>[][] memo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[m][n];<br>    <span class="hljs-keyword">return</span> countPaths(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, m, n, memo);<br>&#125;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">countPaths</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> j, <span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n, <span class="hljs-type">int</span>[][] memo)</span> &#123;<br>    <span class="hljs-keyword">if</span> (i == m - <span class="hljs-number">1</span> &amp;&amp; j == n - <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">if</span> (i &gt;= m || j &gt;= n) <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (memo[i][j] != <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> memo[i][j]; <span class="hljs-comment">// 直接用缓存</span><br>    memo[i][j] = countPaths(i, j + <span class="hljs-number">1</span>, m, n, memo) <br>               + countPaths(i + <span class="hljs-number">1</span>, j, m, n, memo);<br>    <span class="hljs-keyword">return</span> memo[i][j];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>加上缓存之后，每个格子只计算一次，总共 <code>m * n</code> 个格子，时间复杂度骤降到 <code>O(m * n)</code>。空间复杂度也是 <code>O(m * n)</code>，用来存储记忆化数组。</p>
+<p>但这里有一个值得追问的地方：<strong>记忆化搜索本质上还是递归，递归调用有栈开销。能不能完全避免递归？</strong></p>
+<h3 id="动态规划：从递归到递推"><a href="#动态规划：从递归到递推" class="headerlink" title="动态规划：从递归到递推"></a>动态规划：从递归到递推</h3><p>递归是”从顶向下”，先想终点怎么来，再一步步拆到起点。反过来想，我们能不能”从底向上”，从起点开始推？</p>
+<p>让我们重新定义状态：</p>
+<blockquote>
+<p><code>dp[i][j]</code> 表示从 <code>(0, 0)</code> 出发，到达格子 <code>(i, j)</code> 的不同路径数。</p>
+</blockquote>
+<p>从起点 <code>(0, 0)</code> 到 <code>(0, 0)</code>，不走就是 1 条路径，所以 <code>dp[0][0] = 1</code>。</p>
+<p>要到达 <code>(i, j)</code>，只能从上方 <code>(i-1, j)</code> 走下来，或者从左方 <code>(i, j-1)</code> 走右来。所以：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j]</span> = dp<span class="hljs-comment">[i-1]</span><span class="hljs-comment">[j]</span> + dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j-1]</span><br></code></pre></td></tr></table></figure>
+
+<p>这就是状态转移方程。</p>
+<p><strong>边界条件</strong>也很清晰：</p>
+<ul>
+<li>第一行 <code>(0, j)</code>：只能从左方过来，所以 <code>dp[0][j] = 1</code></li>
+<li>第一列 <code>(i, 0)</code>：只能从上方过来，所以 <code>dp[i][0] = 1</code></li>
+</ul>
+<p>我们可以从 <code>(0, 0)</code> 开始层层递推，一行一行地填满整个表格，最终 <code>dp[m-1][n-1]</code> 就是答案。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">uniquePaths</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> &#123;<br>    <span class="hljs-type">int</span>[][] dp = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[m][n];<br>    <span class="hljs-comment">// 第一行和第一列都只有一条路径</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) dp[i][<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) dp[<span class="hljs-number">0</span>][j] = <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">// 递推填充</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>            dp[i][j] = dp[i-<span class="hljs-number">1</span>][j] + dp[i][j-<span class="hljs-number">1</span>];<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> dp[m-<span class="hljs-number">1</span>][n-<span class="hljs-number">1</span>];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>暴力递归的问题彻底解决了。每次计算 <code>dp[i][j]</code> 只需要常数时间，总体时间复杂度 <code>O(m * n)</code>，空间复杂度也是 <code>O(m * n)</code>。</p>
+<h3 id="空间还能再省吗？"><a href="#空间还能再省吗？" class="headerlink" title="空间还能再省吗？"></a>空间还能再省吗？</h3><p>让我们再看一眼状态转移方程：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j]</span> = dp<span class="hljs-comment">[i-1]</span><span class="hljs-comment">[j]</span> + dp<span class="hljs-comment">[i]</span><span class="hljs-comment">[j-1]</span><br></code></pre></td></tr></table></figure>
+
+<p>计算 <code>dp[i][j]</code> 的时候，只用到了当前行左边的格子 <code>dp[i][j-1]</code> 和上一行同一列的格子 <code>dp[i-1][j]</code>。换句话说，我们实际上<strong>不需要保留整个二维表格</strong>，只需要保留上一行的数据和当前行左边的一个值就够了。</p>
+<p>更巧妙的是，如果我们用一个一维数组 <code>dp[j]</code> 来表示当前行，那么：</p>
+<ul>
+<li><code>dp[j]</code> 在更新前代表 <code>dp[i-1][j]</code>（上一行的值）</li>
+<li><code>dp[j-1]</code> 在更新后代表 <code>dp[i][j-1]</code>（当前行左边的值）</li>
+</ul>
+<p>于是转移方程变成了：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">dp<span class="hljs-comment">[j]</span> = dp<span class="hljs-comment">[j]</span> + dp<span class="hljs-comment">[j-1]</span><br></code></pre></td></tr></table></figure>
+
+<p>什么意思？右边的 <code>dp[j]</code> 是上一行同一列的路径数，<code>dp[j-1]</code> 是当前行左边的路径数，加起来的和覆盖回 <code>dp[j]</code>，作为当前行这个格子的值。</p>
+<p>太妙了——一行代码，同时用到了上一行和本行的信息。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">uniquePaths</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> &#123;<br>    <span class="hljs-type">int</span>[] dp = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[n];<br>    <span class="hljs-comment">// 第一行全为 1</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) dp[j] = <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">// 从第二行开始逐行递推</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>            dp[j] = dp[j] + dp[j-<span class="hljs-number">1</span>];<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> dp[n-<span class="hljs-number">1</span>];<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>空间复杂度从 <code>O(m * n)</code> 降到了 <code>O(n)</code>。如果 <code>m &lt; n</code>，我们可以交换行列，保证 <code>n</code> 是较小的那个，这样空间就更省了。</p>
+<h3 id="另一种视野：组合数学"><a href="#另一种视野：组合数学" class="headerlink" title="另一种视野：组合数学"></a>另一种视野：组合数学</h3><p>到这里我们已经找到了时空都很优秀的解法。但让我们退一步，重新审视这个问题——<strong>它有没有一个更本质的数学解释？</strong></p>
+<p>机器人从左上角走到右下角，总共需要走 <code>(m-1) + (n-1) = m + n - 2</code> 步，其中向下走 <code>m - 1</code> 步，向右走 <code>n - 1</code> 步。</p>
+<p>关键来了：<strong>这 <code>m + n - 2</code> 步的顺序可以任意排列，只要总数固定。</strong> 每一种排列对应一条不同的路径。</p>
+<p>那么问题就转化成了：从 <code>m + n - 2</code> 个位置中选出 <code>m - 1</code> 个（或 <code>n - 1</code> 个）放”向下走”，剩下的放”向右走”。这不就是组合数吗？</p>
+<p>$$<br>\text{答案} &#x3D; C_{m+n-2}^{m-1} &#x3D; C_{m+n-2}^{n-1} &#x3D; \frac{(m+n-2)!}{(m-1)!(n-1)!}<br>$$</p>
+<p>以 <code>m = 3, n = 7</code> 为例：<code>C_{3+7-2}^{3-1} = C_8^2 = 28</code>，与动态规划的结果一致。</p>
+<p>组合数学解法的时间复杂度是 <code>O(min(m, n))</code>（只算一个组合数），空间复杂度 <code>O(1)</code>。但需要注意整数溢出，计算过程中要用 <code>long</code> 并及时约分。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">uniquePaths</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> &#123;<br>    <span class="hljs-comment">// 选较小的做组合数下标，减小计算量</span><br>    <span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> Math.min(m - <span class="hljs-number">1</span>, n - <span class="hljs-number">1</span>);<br>    <span class="hljs-type">int</span> <span class="hljs-variable">total</span> <span class="hljs-operator">=</span> m + n - <span class="hljs-number">2</span>;<br>    <span class="hljs-type">long</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-comment">// 计算 C(total, k)</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= k; i++) &#123;<br>        result = result * (total - k + i) / i;<br>    &#125;<br>    <span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>) result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这里用了一个小技巧：边乘边除，避免中间结果溢出。因为 <code>result * (total - k + i)</code> 一定能被 <code>i</code> 整除（组合数一定是整数），所以不会有精度问题。</p>
+<h3 id="三种方案的对比"><a href="#三种方案的对比" class="headerlink" title="三种方案的对比"></a>三种方案的对比</h3><p>让我们梳理一下思考路径：</p>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>思路</th>
+<th>发生了什么</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力递归</td>
+<td>把问题拆成两个子问题</td>
+<td>指数级重复计算</td>
+</tr>
+<tr>
+<td>记忆化搜索</td>
+<td>缓存已算过的结果</td>
+<td>时间降到 O(mn)，但保留递归栈</td>
+</tr>
+<tr>
+<td>动态规划</td>
+<td>自底向上递推填表</td>
+<td>完全消除递归，O(mn) 时间</td>
+</tr>
+<tr>
+<td>空间优化 DP</td>
+<td>只用一维数组</td>
+<td>O(mn) 时间，O(n) 空间</td>
+</tr>
+<tr>
+<td>组合数学</td>
+<td>把路径选择看成排列组合</td>
+<td>O(min(m,n)) 时间，O(1) 空间</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="完整-Java-代码"><a href="#完整-Java-代码" class="headerlink" title="完整 Java 代码"></a>完整 Java 代码</h2><h3 id="解法一：动态规划（空间优化）"><a href="#解法一：动态规划（空间优化）" class="headerlink" title="解法一：动态规划（空间优化）"></a>解法一：动态规划（空间优化）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">uniquePaths</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> &#123;<br>        <span class="hljs-comment">// 保证 n 是较小的那个，优化空间</span><br>        <span class="hljs-keyword">if</span> (m &lt; n) &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">temp</span> <span class="hljs-operator">=</span> m;<br>            m = n;<br>            n = temp;<br>        &#125;<br>        <span class="hljs-type">int</span>[] dp = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[n];<br>        <span class="hljs-comment">// 第一行全为 1</span><br>        Arrays.fill(dp, <span class="hljs-number">1</span>);<br>        <span class="hljs-comment">// 逐行递推</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt; m; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; j &lt; n; j++) &#123;<br>                <span class="hljs-comment">// dp[j]（旧值）是上方格子的路径数</span><br>                <span class="hljs-comment">// dp[j-1]（新值）是左方格子的路径数</span><br>                dp[j] = dp[j] + dp[j-<span class="hljs-number">1</span>];<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> dp[n-<span class="hljs-number">1</span>];<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="解法二：组合数学"><a href="#解法二：组合数学" class="headerlink" title="解法二：组合数学"></a>解法二：组合数学</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">uniquePaths</span><span class="hljs-params">(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n)</span> &#123;<br>        <span class="hljs-comment">// 选择较小的进行组合数计算</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> Math.min(m - <span class="hljs-number">1</span>, n - <span class="hljs-number">1</span>);<br>        <span class="hljs-type">int</span> <span class="hljs-variable">total</span> <span class="hljs-operator">=</span> m + n - <span class="hljs-number">2</span>;<br>        <span class="hljs-type">long</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>; i &lt;= k; i++) &#123;<br>            result = result * (total - k + i) / i;<br>        &#125;<br>        <span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>) result;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="完整-Python-代码"><a href="#完整-Python-代码" class="headerlink" title="完整 Python 代码"></a>完整 Python 代码</h2><h3 id="解法一：动态规划（空间优化）-1"><a href="#解法一：动态规划（空间优化）-1" class="headerlink" title="解法一：动态规划（空间优化）"></a>解法一：动态规划（空间优化）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">uniquePaths</span>(<span class="hljs-params">self, m: <span class="hljs-built_in">int</span>, n: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># 保证 n 是较小的那个</span><br>        <span class="hljs-keyword">if</span> m &lt; n:<br>            m, n = n, m<br>        dp = [<span class="hljs-number">1</span>] * n<br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, m):<br>            <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, n):<br>                <span class="hljs-comment"># dp[j]（旧值）= 上方格子，dp[j-1]（新值）= 左方格子</span><br>                dp[j] = dp[j] + dp[j-<span class="hljs-number">1</span>]<br>        <span class="hljs-keyword">return</span> dp[-<span class="hljs-number">1</span>]<br></code></pre></td></tr></table></figure>
+
+<h3 id="解法二：组合数学-1"><a href="#解法二：组合数学-1" class="headerlink" title="解法二：组合数学"></a>解法二：组合数学</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> math<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Solution</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">uniquePaths</span>(<span class="hljs-params">self, m: <span class="hljs-built_in">int</span>, n: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>        <span class="hljs-comment"># 计算 C(m+n-2, min(m-1, n-1))</span><br>        <span class="hljs-keyword">return</span> math.comb(m + n - <span class="hljs-number">2</span>, <span class="hljs-built_in">min</span>(m - <span class="hljs-number">1</span>, n - <span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
+
+<p>Python 的 <code>math.comb</code> 是 Python 3.8+ 内置的组合数函数，会处理大整数，一行搞定。</p>
+<hr>
+<h2 id="复杂度分析表"><a href="#复杂度分析表" class="headerlink" title="复杂度分析表"></a>复杂度分析表</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力递归</td>
+<td>$O(2^{m+n})$</td>
+<td>$O(m+n)$</td>
+<td>递归树深度为 m+n-2，节点数指数增长</td>
+</tr>
+<tr>
+<td>记忆化搜索</td>
+<td>$O(m \cdot n)$</td>
+<td>$O(m \cdot n)$</td>
+<td>缓存全部子问题结果，消除重复计算</td>
+</tr>
+<tr>
+<td>二维 DP</td>
+<td>$O(m \cdot n)$</td>
+<td>$O(m \cdot n)$</td>
+<td>自底向上填二维表格</td>
+</tr>
+<tr>
+<td>一维 DP（空间优化）</td>
+<td>$O(m \cdot n)$</td>
+<td>$O(\min(m, n))$</td>
+<td>滚动数组，只保留当前行</td>
+</tr>
+<tr>
+<td>组合数学</td>
+<td>$O(\min(m, n))$</td>
+<td>$O(1)$</td>
+<td>直接计算组合数值，不依赖网格遍历</td>
+</tr>
+</tbody></table>
+<p>需要注意的是：组合数学解法虽然时空最优，但如果题目稍微变化（比如网格中出现障碍物，即 LeetCode 63「不同路径 II」），组合数学就不适用了。动态规划的可扩展性更强。</p>
+<hr>
+<h2 id="延伸思考"><a href="#延伸思考" class="headerlink" title="延伸思考"></a>延伸思考</h2><h3 id="这道题让我们学到了什么？"><a href="#这道题让我们学到了什么？" class="headerlink" title="这道题让我们学到了什么？"></a>这道题让我们学到了什么？</h3><p><strong>「计数类」问题常常可以抽象成数学公式。</strong> 当我们需要数”有多少种方式”时，先看看能不能用排列组合直接算出来。</p>
+<p>但更重要的收获是<strong>从递归到动态规划的思维跃迁</strong>。这道题的进化路径非常清晰：</p>
+<ol>
+<li>先写出最直观的暴力递归——想清楚”递推关系”是什么</li>
+<li>发现重叠子问题——意识到同一个 <code>(i, j)</code> 被反复计算</li>
+<li>加缓存做记忆化——空间换时间，第一次优化</li>
+<li>自底向上改递推——消除递归栈开销</li>
+<li>观察依赖关系，压缩空间——只保留必要的数据</li>
+</ol>
+<p>每一步的改进都源于一个简单的追问：”这里能不能省？”</p>
+<h3 id="下次遇到类似问题优先观察什么？"><a href="#下次遇到类似问题优先观察什么？" class="headerlink" title="下次遇到类似问题优先观察什么？"></a>下次遇到类似问题优先观察什么？</h3><ol>
+<li><p><strong>问题是否满足”无后效性”？</strong> 即当前状态一旦确定，后续决策与之前如何到达这个状态无关。这道题中，到达 <code>(i, j)</code> 的路径数只与 <code>(i-1, j)</code> 和 <code>(i, j-1)</code> 有关，与之前具体的路径选择无关。这是能用 DP 的前提。</p>
+</li>
+<li><p><strong>状态转移是几维的？依赖哪些方向？</strong> 本题只有”上”和”左”两个方向的依赖，所以可以用一维数组滚动。如果依赖方向更多（比如”左上”也需要），空间压缩的方案就要相应调整。</p>
+</li>
+<li><p><strong>能否归结为组合数学问题？</strong> 当每一步的选择是二元的、且选择数量固定时，路径计数往往可以转化为组合数。但要注意，一旦出现障碍物、步数限制等额外约束，组合数学就会迅速复杂化，此时 DP 是更稳妥的选择。</p>
+</li>
+<li><p><strong>网格 DP 的通用模板。</strong> 很多二维网格 DP 题目（不同路径、最小路径和、最大正方形等）都可以套用”逐行扫描，滚动数组”的框架。掌握这个套路，遇到类似题目就能快速起步。</p>
+</li>
+</ol>
+<p>这道题虽被标记为 Medium，但它其实是一扇门——推开它，后面是动态规划、组合数学、滚动数组优化等一整个知识体系。</p>
+<hr>
+<blockquote>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>本文由 <a href="algomentor.cn">AlgoMentor</a> 原创，你的专属AI算法导师。刷题欢迎访问 <a href="algomentor.cn">algomentor.cn</a>。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/" class="category-chain-item">LeetCode</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AE%97%E6%B3%95/LeetCode/Hot100/" class="category-chain-item">Hot100</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="print-no-link">#动态规划</a>
+      
+        <a href="/tags/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/" class="print-no-link">#组合数学</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>不同路径</div>
+      <div>http://example.com/2026/07/13/91-不同路径/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>CodingOrange</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/07/13/89-%E5%88%86%E5%89%B2%E7%AD%89%E5%92%8C%E5%AD%90%E9%9B%86/" title="分割等和子集">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">分割等和子集</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/13/87-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" title="最长递增子序列">
+                        <span class="hidden-mobile">最长递增子序列</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    function isExpandAllEnabled() {
+      return CONFIG.toc && CONFIG.toc.expand_all === true;
+    }
+    function expandAllToc() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .tocbot-is-collapsed').removeClass('tocbot-is-collapsed');
+    }
+    function updateTocToggle($li, $childList) {
+      var $toggle = $li.children('.toc-toggle');
+      if ($toggle.length === 0) { return; }
+      var collapsed = $childList.hasClass('tocbot-is-collapsed');
+      $toggle
+        .toggleClass('toc-toggle-collapsed', collapsed)
+        .toggleClass('toc-toggle-expanded', !collapsed);
+    }
+    function bindTocToggle() {
+      if (!isExpandAllEnabled()) { return; }
+      jQuery('#toc-body .toc-list-item').each(function() {
+        var $li = jQuery(this);
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) {
+          if ($li.children('.toc-toggle').length === 0) {
+            $li.prepend('<span class="toc-toggle toc-toggle-placeholder" aria-hidden="true">›</span>');
+          }
+          return;
+        }
+
+        if ($li.children('.toc-toggle').length === 0) {
+          $li.prepend('<span class="toc-toggle toc-toggle-expanded" aria-hidden="true">›</span>');
+        }
+        updateTocToggle($li, $childList);
+      });
+      jQuery('#toc-body').off('click.tocToggle').on('click.tocToggle', '.toc-toggle', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $li = jQuery(this).parent('.toc-list-item');
+        var $childList = $li.children('ol');
+        if ($childList.length === 0) { return; }
+        $childList.toggleClass('tocbot-is-collapsed');
+        updateTocToggle($li, $childList);
+      });
+      if (!window.__tocToggleObserver) {
+        window.__tocToggleObserver = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type !== 'attributes' || mutation.attributeName !== 'class') { return; }
+            var $list = jQuery(mutation.target);
+            var $li = $list.parent('.toc-list-item');
+            if ($li.length === 0) { return; }
+            updateTocToggle($li, $list);
+          });
+        });
+        jQuery('#toc-body ol').each(function() {
+          window.__tocToggleObserver.observe(this, { attributes: true });
+        });
+      }
+    }
+    var tocConfig = Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc);
+    if (isExpandAllEnabled()) {
+      tocConfig.collapseDepth = 6;
+    }
+    window.tocbot.init(tocConfig);
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+    expandAllToc();
+    bindTocToggle();
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+        expandAllToc();
+        bindTocToggle();
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
